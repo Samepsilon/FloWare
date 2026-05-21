@@ -14,6 +14,9 @@ class utente:
 
     def setNome(self,nome):
         self.nome = nome
+        
+    def connexion(self):
+        quit    
 
 
 

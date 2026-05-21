@@ -1,0 +1,34 @@
+@startuml
+
+title UC6: Visualizzare sconti, promozioni
+
+actor Cliente
+participant "InterfacciaOfferte" as Boundary <<boundary>>
+participant "GestoreOfferte" as Control <<control>>
+participant "ArchivioOfferte" as Repo <<repository>>
+
+Cliente -> Boundary : seleziona "Offerte e promozioni"
+activate Boundary
+
+Boundary -> Control : recuperaOfferteAttive()
+activate Control
+
+Control -> Repo : cercaOfferteValide()
+activate Repo
+Repo --> Control : elenco delle offerte valide
+deactivate Repo
+
+
+alt nessuna offerta attiva
+    
+    Control --> Boundary : lista offerte (null)
+    Boundary --> Cliente : "Nessuna promozione attiva al momento"
+else sono presenti offerte attive
+    Cliente -> Boundary : seleziona una offerta
+    Boundary--> Cliente : il sistema mostra i dati dell'offerta
+end
+
+deactivate Control
+deactivate Boundary
+
+@enduml

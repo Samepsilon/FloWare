@@ -1,7 +1,6 @@
 from app.Models.utente import utente
 
-class utenteRepository:
+class cliente(utente):
 
-    def __init__(self):
+    def __init__(self,nome):
         quit
-

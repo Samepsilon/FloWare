@@ -1,0 +1,64 @@
+@startuml
+
+title UC3: Scegliere data e fascia oraria
+
+actor Cliente
+participant "InterfacciaScelta" as Boundary <<boundary>>
+participant "GestoreRichieste" as Control <<control>>
+participant "ArchivioCalendario" as Repo <<repository>>
+participant "SlotOrario" as Slot <<entity>>
+
+Cliente -> Boundary : richiede inserimento data/ora
+activate Boundary
+
+Boundary -> Control : recuperaDateDisponibili()
+activate Control
+
+Control -> Repo : trovaDateLibere()
+activate Repo
+Repo --> Control : elenco date disponibili
+deactivate Repo
+
+Control --> Boundary : mostra calendario
+deactivate Control
+Boundary --> Cliente : visualizza date disponibili
+deactivate Boundary
+
+Cliente -> Boundary : seleziona una data
+activate Boundary
+
+Boundary -> Control : recuperaFasceOrarie(data)
+activate Control
+
+Control -> Repo : trovaFascePerData(data)
+activate Repo
+Repo --> Control : elenco fasce orarie
+deactivate Repo
+
+Control --> Boundary : mostra fasce orarie
+deactivate Control
+Boundary --> Cliente : visualizza orari disponibili
+deactivate Boundary
+
+Cliente -> Boundary : seleziona fascia oraria
+activate Boundary
+
+Boundary -> Control : confermaScelta(data, ora)
+activate Control
+
+Control -> Slot : impostaData()
+activate Slot
+deactivate Slot
+
+Control -> Repo : salvaScelta(data, ora)
+activate Repo
+Repo --> Control : scelta memorizzata
+deactivate Repo
+
+Control --> Boundary : conferma visiva
+deactivate Control
+
+Boundary --> Cliente : mostra "Scelta effettuata con successo"
+deactivate Boundary
+
+@enduml

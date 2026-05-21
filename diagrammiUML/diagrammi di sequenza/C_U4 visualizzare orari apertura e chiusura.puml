@@ -1,0 +1,35 @@
+@startuml
+title UC4 - Visualizzare orari di apertura e chiusura
+skinparam actorStyle awesome
+actor Cliente
+participant "InterfacciaOrari" <<boundary>>
+participant "SistemaInfoNegozio" <<control>>
+participant "OrarioRepository" as Repo <<repository>>
+participant "Orario" as ORA <<entity>> 
+
+Cliente -> InterfacciaOrari : Accede alla sezione "Orari del negozio"
+activate InterfacciaOrari
+
+InterfacciaOrari -> SistemaInfoNegozio : richiediOrari()
+activate SistemaInfoNegozio
+
+SistemaInfoNegozio -> Repo : getOrariSettimanali()
+activate Repo
+Repo --> SistemaInfoNegozio : listaOrari (ListaOrario)
+deactivate Repo
+
+loop per ogni giorno della settimana
+    SistemaInfoNegozio -> "ORA" : getDettagliOrario()
+    activate "ORA"
+    "ORA" --> SistemaInfoNegozio : giorno, apertura, chiusura
+    deactivate "ORA"
+end
+
+SistemaInfoNegozio --> InterfacciaOrari : mostraTabellaOrari(dati)
+deactivate SistemaInfoNegozio
+
+InterfacciaOrari -> Cliente : Visualizza tabella 
+deactivate InterfacciaOrari
+
+
+@enduml

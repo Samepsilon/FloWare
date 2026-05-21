@@ -1,0 +1,46 @@
+@startuml
+
+title UC2a: Inviare richiesta consegna
+
+actor Cliente
+participant "InterfacciaRichiesta" as Boundary <<boundary>>
+participant "GestoreConsegne" as Control <<control>>
+participant "ConsegnaRepository" as RepoConsegna
+participant "NotificaRepository" as RepoNotifica
+participant "Consegna" as Consegna <<entity>>
+
+
+Cliente -> Boundary : seleziona "Richiedi consegna"
+activate Boundary
+Boundary --> Cliente : richiede dati consegna
+deactivate Boundary
+
+Cliente -> Boundary : inserisce dati (regione, città, via, ecc.)
+activate Boundary
+
+Boundary -> Control : confermaRichiesta(dati)
+activate Control
+
+alt (Dati incompleti o non validi)
+    Control --> Boundary : erroreDatiIncompleti
+    Boundary --> Cliente : mostra "Compila tutti i campi richiesti"
+else (Dati Validi)
+    
+    Control -> Consegna : <<crea>> (dati, stato="in attesa di presa in carico")
+    Control -> RepoConsegna : salva(consegna)
+    activate RepoConsegna
+    RepoConsegna --> Control : confermaSalvataggio
+    deactivate RepoConsegna
+    
+    Control -> RepoNotifica : inviaNotifica(negoziante, "Nuova consegna")
+    activate RepoNotifica
+    RepoNotifica --> Control : confermaInvio
+    deactivate RepoNotifica
+    
+    Control --> Boundary : esitoPositivo
+    deactivate Control
+    Boundary --> Cliente : mostraConfermaVisiva()
+    deactivate Boundary
+end
+@enduml
+

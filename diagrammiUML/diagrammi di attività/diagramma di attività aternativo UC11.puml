@@ -1,0 +1,28 @@
+@startuml
+start
+:Il Negoziante accede a "Gestione orari";
+:Il sistema mostra la tabella orari;
+
+:Il Negoziante seleziona un giorno/data;
+
+if (Giorno della settimana normale?)
+  :Modifica apertura/chiusura;
+  :Conferma modifiche;
+  :Sistema valida (apertura < chiusura);
+elseif (Giorno festivo)
+  :Seleziona "Chiuso";
+  :Conferma;
+elseif (Orario straordinario)
+  :Imposta apertura/chiusura speciale;
+  :Sistema valida;
+endif
+
+if (Dati non validi?) then (Sì)
+  :Mostra errore;
+  stop
+else (No)
+  :Salva modifiche;
+  :Messaggio "Orario aggiornato con successo";
+  stop
+endif
+@enduml

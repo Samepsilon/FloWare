@@ -50,7 +50,6 @@ else Notifiche presenti
     R --> AR: conferma
     AR --> G: statoAggiornato
     G -> Notif: <<create>> NotificaConferma(destinatario, richiesta)
-    activate Notif
     Notif --> G: notificaConferma
     
     G -> AN: salvaNotifica(notificaConferma)

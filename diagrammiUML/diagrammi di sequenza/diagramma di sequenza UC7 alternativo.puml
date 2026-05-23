@@ -1,0 +1,64 @@
+@startuml
+skinparam actorStyle awesome
+
+actor "Negoziante" as N
+actor "Cliente" as C
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "InterfacciaCliente" as IC <<boundary>>
+participant "GestoreNotifiche" as G <<control>>
+participant "ArchivioNotifiche" as AN <<repository>>
+participant "ArchivioRichieste" as AR <<repository>>
+participant "Richiesta" as R <<entity>>
+participant "Notifica" as Notif <<entity>>
+
+N -> IN: Accede a "Notifiche"
+IN -> G: visualizzaNotifiche()
+G -> AR: findNotificheNonLette()
+AR --> G: elencoNotifiche
+
+alt Nessuna notifica
+    G --> IN: "Nessuna nuova notifica"
+    IN --> N: Mostra messaggio
+    
+else Notifiche presenti
+    G --> IN: elencoNotifiche
+    IN --> N: Mostra notifiche (Appuntamenti, Preventivi, Consegne)
+    N -> IN: Seleziona notifica
+    
+    alt Tipo = "Appuntamento"
+        IN -> G: confermaAppuntamento(Richiesta)
+        
+    else Tipo = "Preventivo"
+        IN -> G: confermaPreventivo(Richiesta)
+    end
+    
+    G -> AR: verificaAnnullamento(Richiesta)
+    AR --> G: isAnnullata
+    
+    alt Notifica già annullata
+        G --> IN: errore "Notifica annullata"
+        IN --> N: Mostra errore
+        
+    else Notifica valida
+    G -> AR: cercaRichiesta(Richiesta)
+    AR -> R: TrovaRichiesta()
+    R --> AR: richiesta
+    AR --> G: richiesta
+    
+    G -> AR: aggiornaStatoRichiesta(Richiesta, stato)
+    AR -> R: setStato("Confermata" o "Presa in carico")
+    R --> AR: conferma
+    AR --> G: statoAggiornato
+    G -> Notif: <<create>> NotificaConferma(destinatario, richiesta)
+    activate Notif
+    Notif --> G: notificaConferma
+    
+    G -> AN: salvaNotifica(notificaConferma)
+    AN -> AN: ArchiviaNotifica(notificaConferma)
+    AN --> G: notificaSalvata
+    
+    G -> IC: inviaNotificaCliente(notificaConferma)
+    IC -> C: Mostra notifica di conferma
+    end
+    end
+    @enduml

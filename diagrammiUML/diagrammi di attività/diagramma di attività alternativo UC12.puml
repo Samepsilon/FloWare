@@ -1,0 +1,35 @@
+@startuml
+start
+:Il Negoziante accede a "Gestione Fornitori";
+:Il sistema visualizza l'elenco fornitori;
+:Il Negoziante seleziona operazione;
+
+if (Aggiungi?) then (sì)
+  :Inserisci dati nuovo fornitore;
+  if (Dati validi?) then (sì)
+    :Salva fornitore;
+    :Messaggio "Fornitore aggiunto con successo";
+  else (no)
+    :Mostra errore;
+  endif
+elseif (Modifica?) then (sì)
+  :Seleziona fornitore;
+  :Modifica dati;
+  if (Dati validi?) then (sì)
+    :Salva modifiche;
+    :Messaggio "Fornitore modificato";
+  else (no)
+    :Mostra errore;
+  endif
+else (Rimuovi)
+  :Seleziona fornitore;
+  :Conferma rimozione;
+  if (Confermato?) then (sì)
+    :Rimuovi fornitore;
+    :Messaggio "Fornitore rimosso";
+  else (no)
+    :Operazione annullata;
+  endif
+endif
+stop
+@enduml

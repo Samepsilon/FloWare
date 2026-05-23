@@ -1,0 +1,32 @@
+@startuml
+start
+:Il Negoziante accede a "Gestione Catalogo";
+:Il sistema visualizza l'elenco articoli;
+:Il Negoziante clicca su "Aggiungi nuovo articolo";
+:Il sistema mostra il modulo di inserimento;
+:Inserimento dati:
+- Nome
+- Tipologia
+- Prezzo
+- Quantità
+- Descrizione;
+
+if (Clicca "Annulla"?) then (Sì)
+  :Interrompi operazione;
+else (No)
+  :Validazione dati;
+  
+  if (Dati mancanti?) then (Sì)
+    :Mostra messaggio "Completare tutti i campi";
+    :Rimani nel modulo;
+  elseif (Articolo già esistente?) then (Sì)
+    :Mostra messaggio "Articolo già esistente";
+    :Rimani nel modulo;
+  else (No)
+    :Salva articolo nel sistema;
+    :Messaggio "Articolo aggiunto con successo";
+    :Aggiorna visualizzazione catalogo;
+  endif
+endif
+stop
+@enduml

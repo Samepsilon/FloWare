@@ -1,12 +1,12 @@
 @startuml
 start
-:Il negoziante accede alla sezione "Gestione Promozioni";
+:Il negoziante accede alla sezione "Gestione Offerte";
 :Il sistema visualizza l'elenco delle offerte attive;
-:Il negoziante seleziona l'offerta o promozione da eliminare;
+:Il negoziante seleziona lo sconto o promozione da eliminare;
 :Il negoziante clicca su "Elimina";
 :Il sistema richiede conferma;
 if (Conferma eliminazione?) then (Sì)
-  :Il sistema rimuove l'offerta o promozione;
+  :Il sistema rimuove lo sconto o promozione;
   :Il sistema aggiorna l'elenco delle offerte;
   :Il sistema mostra messaggio "Offerta eliminata con successo";
   :L'offerta non è più visualizzabile dai clienti;

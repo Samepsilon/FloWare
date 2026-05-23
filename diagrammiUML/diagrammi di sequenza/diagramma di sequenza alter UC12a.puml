@@ -1,0 +1,49 @@
+@startuml
+skinparam actorStyle awesome
+
+actor "Negoziante" as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreFornitori" as G <<control>>
+participant "CatalogoFornitori" as CF <<repository>>
+participant "Fornitore" as F <<entity>>
+
+N -> IN: Accede a "Gestione Fornitori"
+IN -> G: visualizzaFornitori()
+G -> CF: cercaFornitori()
+CF -> F: findAll()
+F --> CF: listaFornitori
+CF --> G: elencoFornitori
+G --> IN: elencoFornitori
+IN --> N: Mostra elenco fornitori
+N -> IN: Clicca "Aggiungi nuovo fornitore"
+IN -> IN: Mostra modulo inserimento
+N -> IN: Inserisce dati fornitore (nome, contatti, tipologiaMerce, servizioDomicilio)
+
+break Annullamento
+    N -> IN: Clicca "Annulla"
+    IN -> IN: Chiudi modulo
+    IN --> N: Mostra "Operazione annullata"
+end
+
+IN -> G: aggiungiFornitore(datiFornitore)
+G -> G: validaDatiFornitore(datiFornitore)
+
+alt dati non validi (campi mancanti o formato errato)
+    G --> IN: errore "Dati fornitori non validi"
+    IN --> N: Mostra errore
+    
+else dati validi
+    G -> CF: salvaFornitore(datiFornitore)
+    CF -> F: <<create>> Fornitore
+    CF --> G: NuovoFornitore
+    G --> IN: messaggio "Fornitore aggiunto con successo"
+    IN --> N: Mostra messaggio
+end
+IN -> G: aggiornaListaFornitori()
+G -> CF: cercaFornitori()
+CF -> F: findAll()
+F --> CF: listaFornitoriAggiornata
+CF --> G: elencoAggiornato
+G --> IN: elencoAggiornato
+IN --> N: Mostra elenco aggiornato
+@enduml

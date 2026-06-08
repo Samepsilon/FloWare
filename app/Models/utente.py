@@ -1,22 +1,19 @@
 
 class utente:
 
-    def __init__(self,nome,password):
-        self.nome = nome
+    def __init__(self,id,username,password):
+        self.id = id
+        self.username = username
         self.password = password
 
 
-    def getNome(self):
-        return self.nome
+    def getUsername(self):
+        return self.username
 
     def getPassword(self):
         return self.password
 
-    def setNome(self,nome):
-        self.nome = nome
-        
-    def connexion(self):
-        quit    
+
 
 
 

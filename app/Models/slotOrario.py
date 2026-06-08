@@ -7,4 +7,3 @@ class slotOrario:
         self.data = data
         self.Orario = Orario
 
-    

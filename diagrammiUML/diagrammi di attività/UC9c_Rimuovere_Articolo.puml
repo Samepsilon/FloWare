@@ -11,11 +11,12 @@ if (Conferma?) then (Sì)
   :Il sistema rimuove l'articolo dal catalogo attivo;
   :L'articolo non è più visualizzabile dai clienti ;
   :Messaggio di conferma operazione;
-  stop
+  
 else (No - Annulla)
   :Il sistema chiude la finestra di conferma;
   :Messaggio "Operazione annullata";
   :L'articolo rimane nel catalogo;
-  stop
+  
 endif
+stop 
 @enduml

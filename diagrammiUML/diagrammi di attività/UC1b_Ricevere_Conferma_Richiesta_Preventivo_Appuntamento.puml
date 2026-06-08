@@ -1,0 +1,24 @@
+@startuml
+
+title UC1b: Ricevere conferma richiesta
+
+start
+
+:Il sistema invia la notifica di conferma al dispositivo;
+
+:Il cliente visualizza e seleziona la notifica;
+
+:Richiesta dettagli della conferma (Data e Ora);
+
+:Il sistema recupera l'entità Richiesta dall'archivio;
+
+:Estrazione dei dati temporali confermati;
+
+:Visualizzazione dettagli della conferma al cliente;
+
+:Il sistema segna la notifica come "Letta";
+
+:Aggiornamento stato della richiesta a "Confermata";
+
+stop
+@enduml

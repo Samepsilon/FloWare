@@ -4,7 +4,7 @@ skinparam actorStyle awesome
 actor Cliente
 participant "Interfaccia Richiesta" as UI <<boundary>>
 participant "Sistema Richieste" as S <<control>>
-participant "RichiestaRepository" as Repo <<repository>>
+participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
 
 

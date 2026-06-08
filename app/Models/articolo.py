@@ -16,7 +16,7 @@ class Articolo:
 
     def applicataSconto(self,sconto):
         percentuale = sconto.getPercentuale()
-        self.prezzo = self.prezzo * (1 - percentuale)
+        self.prezzo = self.prezzo * (1 - percentuale/100)
 
     def rimuovieOfferta(self):
         self.prezzo = self.prezzoNoOfferta

@@ -1,11 +1,11 @@
-@startuml
+ @startuml
 
 title UC6: Visualizzare sconti, promozioni
 
 actor Cliente
 participant "InterfacciaOfferte" as Boundary <<boundary>>
 participant "GestoreOfferte" as Control <<control>>
-participant "ArchivioOfferte" as Repo <<repository>>
+participant "CatalogoOfferte" as Repo <<repository>>
 
 Cliente -> Boundary : seleziona "Offerte e promozioni"
 activate Boundary

@@ -8,3 +8,7 @@ class sconto:
         self.dataFine = dataFine
 
 
+    def getPercentuale(self):
+        return self.percentuale
+
+

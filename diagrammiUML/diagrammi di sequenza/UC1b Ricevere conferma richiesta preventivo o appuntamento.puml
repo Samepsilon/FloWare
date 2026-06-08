@@ -1,14 +1,14 @@
 @startuml
 
-show footbox
+skinparam actorStyle awesome
 
 title UC1b: Ricevere conferma richiesta preventivo o appuntamento
 
 actor Cliente
 participant "InterfacciaCliente" as BoundaryCli <<boundary>>
 participant "GestoreRichieste" as Control <<control>> 
-participant "RichiestaRepository" as RepoRichiesta
-participant "NotificaRepository" as RepoNotifica
+participant "ArchivioRichieste" as RepoRichiesta <<repository>>
+participant "ArchivioNotifiche" as RepoNotifica <<repository>>
 participant "Richiesta" as Richiesta <<entity>>
 
 note over Cliente : UC1b inizia a seguito della conferma del Negoziante (UC7)

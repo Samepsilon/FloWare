@@ -1,5 +1,6 @@
 @startuml
 
+skinparam actorStyle awesome
 title UC3: Scegliere data e fascia oraria
 
 actor Cliente

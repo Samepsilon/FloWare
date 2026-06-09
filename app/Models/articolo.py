@@ -2,22 +2,29 @@ from app.Models.sconto import sconto
 
 class Articolo:
 
-    def __init__(self,id,nome,prezzo,disponibile, descrizione):
+    def __init__(self, nome, descrizione, prezzo, disponibile=True, fornitore_id=None, percentuale=0.0, id=None):
         self.id = id
         self.nome = nome
-        self.prezzo = prezzo
-        self.prezzoNoOfferta = prezzo
-        self.disponibile = disponibile
         self.descrizione = descrizione
+        self.prezzo = prezzo
+        self.disponibile = disponibile
+        self.fornitore_id = fornitore_id
+        self.percentuale = percentuale  # percentage, e.g. 15.0 means 15%
 
+    def __repr__(self):
+        stato = "disponibile" if self.disponibile else "non disponibile"
+        sconto_str = f", sconto {self.sconto}%" if self.sconto else ""
+        return f"[{self.id}] {self.nome} — €{self.prezzo}{sconto_str} (finale: €{self.prezzo_finale()}) [{stato}]"
 
-    def getDettagli(self):
-        return {self.descrizione,self.descrizione,self.prezzo}
 
     def applicataSconto(self,sconto):
         percentuale = sconto.getPercentuale()
-        self.prezzo = self.prezzo * (1 - percentuale/100)
+        self.percentuale = percentuale
 
     def rimuovieOfferta(self):
-        self.prezzo = self.prezzoNoOfferta
+        self.percentuale = 0.0
+
+    def getPrezzo(self):
+        return round(self.prezzo * (1 - self.sconto / 100), 2)
+
 

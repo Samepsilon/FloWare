@@ -1,5 +1,5 @@
 
-    class Notifica:
+class Notifica:
     def __init__(self, destinatario, messaggio, letta, tipo, richiestaId = None, id = None):
         self.id = id
         self.destinatario = destinatario

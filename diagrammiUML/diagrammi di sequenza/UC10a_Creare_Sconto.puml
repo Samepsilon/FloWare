@@ -4,7 +4,7 @@ skinparam actorStyle awesome
 actor Negoziante as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
 participant "GestoreOfferte" as G <<control>>
-participant "CatalogoSconti" as CS <<repository>>
+participant "CatalogoOfferte" as CS <<repository>>
 participant "CatalogoArticoli" as CA <<repository>>
 participant "Sconto" as Sconto <<entity>>
 participant "Articolo" as Articolo <<entity>>
@@ -56,7 +56,7 @@ else dati validi
         G --> IN: messaggio "Sconto creato e associato ai prodotti selezionati"
         IN --> N: Mostra "Sconto percentuale creato con successo"
         
-        IN -> G: aggiornaListaSconti()
+        IN -> G: aggiornaCatalogoOfferte()
         G -> CS: cercaSconti()
         CS --> G: elenco aggiornato
         G --> IN: elenco aggiornato

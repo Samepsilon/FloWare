@@ -53,7 +53,7 @@ else Offerta trovata
     G --> IN: conferma rimozione
     IN --> N: Mostra "Offerta eliminata con successo"
     
-    IN -> G: aggiornaListaOfferte()
+    IN -> G: aggiornaCatalogoOfferte()
     G -> CO: cercaOfferte()
     CO --> G: elenco aggiornato
     G --> IN: elenco aggiornato

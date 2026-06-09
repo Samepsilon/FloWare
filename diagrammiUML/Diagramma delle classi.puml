@@ -409,8 +409,7 @@ Fornitore "1" --> "0..*" Articolo : fornisce
 
 ' Login
 "InterfacciaLogin" ..> SistemaAccesso : login
-SistemaAccesso ..> UtenteRepository 
-UtenteRepository ..> Utente 
+SistemaAccesso ..> UtenteRepository  
 SistemaAccesso ..> "InterfacciaCliente" 
 SistemaAccesso ..> "InterfacciaNegoziante" 
 
@@ -439,7 +438,6 @@ SistemaAccesso ..> "InterfacciaNegoziante"
 ' ─────────────────────────────────────────────
 
 SistemaRegistrazione ..> UtenteRepository
-SistemaAccesso ..> UtenteRepository
 SistemaRichieste ..> ArchivioRichieste
 SistemaRichieste ..> ArchivioCalendario
 GestoreConsegne ..> ConsegnaRepository

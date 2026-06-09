@@ -1,5 +1,6 @@
- @startuml
+@startuml
 
+skinparam actorStyle awesome
 title UC6: Visualizzare sconti, promozioni
 
 actor Cliente

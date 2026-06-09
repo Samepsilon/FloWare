@@ -1,0 +1,23 @@
+@startuml
+
+title UC1c: Annullare richiesta (Attività)
+
+start
+
+:Accesso alla sezione "Le mie richieste";
+
+:Il sistema recupera le richieste associate al cliente;
+:Visualizzazione dell'elenco richieste attive;
+
+:Selezione della richiesta specifica;
+:Il cliente clicca su "Annulla richiesta";
+
+:Recupero della richiesta selezionata dall'archivio;
+:Il sistema imposta lo stato della richiesta su "Annullata";
+:Salvataggio della richiesta aggiornata nell'archivio;
+
+:Invio notifica di annullamento al negoziante;
+:Visualizzazione messaggio "Annullamento avvenuto con successo";
+
+stop
+@enduml

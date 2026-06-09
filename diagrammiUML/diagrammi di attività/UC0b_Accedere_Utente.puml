@@ -1,0 +1,31 @@
+@startuml
+skinparam linetype ortho
+title UC0b: Accesso al Sistema
+
+start
+
+:Pagina Login;
+
+repeat
+  :Inserimento credenziali;
+  :Verifica credenziali;
+
+  if (Credenziali corrette?) then (si)
+    if (Email verificata? [solo Cliente]) then (si)
+        
+        if (Ruolo?) then ([Cliente])
+          :Dashboard Cliente;
+        else ([Negoziante])
+          :Dashboard Negoziante;
+        endif
+        stop
+    else (no)
+        :Mostra messaggio verifica email;
+    endif
+  else (no)
+    :Mostra errore credenziali;
+  endif
+
+repeat while (Riprova)
+
+@enduml

@@ -1,9 +1,11 @@
 @startuml
+
+skinparam actorStyle awesome
 title UC1c - Annullare richiesta di appuntamento o preventivo
 
 actor Cliente
 participant "Interfaccia Richieste" as UI <<boundary>>
-participant "Sistema Richieste" as S <<control>>
+participant "GestoreRichieste" as S <<control>>
 participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
 

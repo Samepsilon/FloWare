@@ -1,10 +1,11 @@
- @startuml
+@startuml
 
+skinparam actorStyle awesome
 title UC6: Visualizzare sconti, promozioni
 
 actor Cliente
 participant "InterfacciaOfferte" as Boundary <<boundary>>
-participant "GestoreOfferte" as Control <<control>>
+participant "SistemaOfferte" as Control <<control>>
 participant "CatalogoOfferte" as Repo <<repository>>
 
 Cliente -> Boundary : seleziona "Offerte e promozioni"

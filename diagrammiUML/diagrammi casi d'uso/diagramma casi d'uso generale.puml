@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor Cliente
+actor Negoziante
+actor Amministratore
+
+  package "Autenticazione" {
+    Cliente -- (UC0a: Registrazione)
+    (UC0b: Login) -- Cliente
+    (UC0b: Login) -- Negoziante
+    (UC0b: Login) -- Amministratore
+  }
+
+  package "Servizi Cliente" {
+    Cliente -- (UC1a: Richiesta Preventivo/Appunt.)
+    Cliente -- (UC2a: Richiesta Consegna)
+    Cliente -- (UC4: Visualizza Orari)
+    Cliente -- (UC5: Visualizza Catalogo)
+    Cliente -- (UC6: Visualizza Sconti)
+  }
+
+  package "Gestione Negozio" {
+    (UC7: Gestione Notifiche/Richieste) -- Negoziante
+    (UC9: Gestione Catalogo Articoli) -- Negoziante
+    (UC10: Gestione Sconti/Promozioni) -- Negoziante
+    (UC11: Aggiornamento Orari) -- Negoziante
+  }
+
+  package "Amministrazione e Risorse" {
+    (UC12: Gestione Fornitori) -- Negoziante
+    Amministratore -- (Creazione Account Negoziante)
+  }
+@enduml

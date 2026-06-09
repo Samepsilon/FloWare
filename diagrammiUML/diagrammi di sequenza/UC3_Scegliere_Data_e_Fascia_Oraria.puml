@@ -1,12 +1,13 @@
 @startuml
 
+skinparam actorStyle awesome
 title UC3: Scegliere data e fascia oraria
 
 actor Cliente
 participant "InterfacciaScelta" as Boundary <<boundary>>
 participant "GestoreRichieste" as Control <<control>>
 participant "ArchivioCalendario" as Repo <<repository>>
-participant "SlotOrario" as Slot <<entity>>
+participant "Data" as Slot <<entity>>
 
 Cliente -> Boundary : richiede inserimento data/ora
 activate Boundary

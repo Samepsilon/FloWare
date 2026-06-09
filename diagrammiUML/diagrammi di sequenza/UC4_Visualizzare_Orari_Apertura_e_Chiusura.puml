@@ -1,4 +1,5 @@
 @startuml
+skinparam actorStyle awesome
 title UC4 - Visualizzare orari di apertura e chiusura
 skinparam actorStyle awesome
 actor Cliente

@@ -1,5 +1,6 @@
 @startuml
 
+skinparam actorStyle awesome
 title UC2b: Ricevere conferma richiesta e stato consegna
 
 actor Cliente

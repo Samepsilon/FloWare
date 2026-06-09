@@ -1,4 +1,5 @@
 @startuml
+skinparam actorStyle awesome
 title UC5 - Visualizzare catalogo articoli
 
 actor Cliente

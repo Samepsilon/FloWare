@@ -1,0 +1,27 @@
+@startuml
+title UC2a: Inviare richiesta consegna (Attività)
+
+start
+:Selezione "Richiedi consegna";
+
+repeat
+  :Il sistema richiede i dati di destinazione;
+  :Inserimento dati (regione, città, via, destinatario, telefono);
+  :Conferma invio richiesta;
+
+  if (Dati completi e validi?) then (si)
+    
+    :Scegliere data e fascia oraria (UC3);
+    
+    :Creazione record Consegna (Stato: "In attesa");
+    :Salvataggio della consegna nell'archivio;
+    
+    :Invio notifica di nuova consegna al negoziante;
+    :Visualizzazione conferma visiva dell'invio;
+    stop
+  else (no)
+    :Mostra errore "Compila tutti i campi richiesti";
+    
+  endif
+repeat while (Riprova inserimento)
+@enduml

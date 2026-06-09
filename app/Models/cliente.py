@@ -1,6 +1,8 @@
-from app.Models.utente import utente
+from utente import Utente
 
-class cliente(utente):
+class Cliente(Utente):
 
-    def __init__(self,nome):
-        quit
+    def __init__(self, username, email, password, id=None):
+        super().__init__(username, email, password, ruolo="cliente", id=id)
+
+

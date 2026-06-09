@@ -3,7 +3,7 @@ skinparam actorStyle awesome
 
 actor Negoziante as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestorePromozioni" as G <<control>>
+participant "GestoreOfferte" as G <<control>>
 participant "CatalogoSconti" as CS <<repository>>
 participant "CatalogoArticoli" as CA <<repository>>
 participant "Sconto" as Sconto <<entity>>

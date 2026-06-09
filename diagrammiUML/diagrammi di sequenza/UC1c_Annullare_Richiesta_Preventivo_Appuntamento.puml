@@ -5,7 +5,7 @@ title UC1c - Annullare richiesta di appuntamento o preventivo
 
 actor Cliente
 participant "Interfaccia Richieste" as UI <<boundary>>
-participant "GestoreRichieste" as S <<control>>
+participant "SistemaRichieste" as S <<control>>
 participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
 

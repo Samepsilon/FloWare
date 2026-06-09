@@ -2,7 +2,7 @@
 title UC1a - Inviare richiesta preventivo/appuntamento
 skinparam actorStyle awesome
 actor Cliente
-participant "Interfaccia Richiesta" as UI <<boundary>>
+participant "Interfaccia Cliente" as UI <<boundary>>
 participant "Sistema Richieste" as S <<control>>
 participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
@@ -31,7 +31,7 @@ activate S
 create R
 S -> R : <<create>> Richiesta(richiesta)
 
-S -> Repo : salva(Richiesta)
+S -> Repo : salvaRichiesta(Richiesta)
 activate Repo
 Repo --> S : conferma
 deactivate Repo

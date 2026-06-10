@@ -1,0 +1,22 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+title Package: Servizi Cliente
+
+actor Cliente
+
+package "Servizi Cliente" {
+  (UC1a: Aggiornare Stato Consegna) ..> (UC3) : <<include>>
+  (UC2a: Aggiornare Stato Consegna) ..> (UC3) : <<include>>  
+  Cliente -- (UC1a: Inviare Richiesta Preventivo/Appunt.)
+  Cliente -- (UC1b: Ricevere Conferma Richiesta)
+  Cliente -- (UC1c: Annullare Richiesta)
+  Cliente -- (UC2a: Inviare Richiesta Consegna)
+  Cliente -- (UC2b: Ricevere Stato Consegna)
+  Cliente -- (UC3: Scegliere Data e Fascia Oraria)
+  Cliente -- (UC4: Visualizzare Orari)
+  Cliente -- (UC5: Visualizzare Catalogo Articoli)
+  Cliente -- (UC6: Visualizzare Sconti e Promozioni)
+
+}
+@enduml

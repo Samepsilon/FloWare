@@ -385,7 +385,7 @@ Cliente "1" --> "0..*" Richiesta : possiede
 Cliente "1" --> "0..*" Consegna : possiede
 
 ' Richiesta e SlotOrario
-Richiesta "1" --> "0..1" SlotOrario : ha
+Richiesta "1" --> "0..1" SlotOrario : occupa
 
 ' Notifiche generate da Richieste/Consegne
 Richiesta "1" --> "0..*" Notifica : genera

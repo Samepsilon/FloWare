@@ -135,8 +135,6 @@ class Orario {
     - giorno : String
     - apertura : String
     - chiusura : String
-    - pausaInizio : String
-    - pausaFine : String
     - tipo : String
     - dataSpecifica : Date
     --

@@ -7,3 +7,8 @@ class slotOrario:
         self.data = data
         self.Orario = Orario
 
+    def impostaData(self, data) -> None:
+        self.data = data
+    
+    def getData(self):
+        return self.data

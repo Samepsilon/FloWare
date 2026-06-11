@@ -1,5 +1,5 @@
 
-class offerta:
+class Offerta:
 
     def __init__(self, dataInizio, dataFine, id = None):
         self.id = id

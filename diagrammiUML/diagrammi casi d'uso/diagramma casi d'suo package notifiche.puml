@@ -16,8 +16,10 @@ package "Notifiche" {
   Cliente -- (UC2b: Ricevere stato della consegna)
   Cliente -- (UC3: Scegliere data e fascia oraria)
 
-  (UC7: Modificare notifiche richieste) -- Negoziante
+  Negoziante -- (UC7: Modificare notifiche richieste)
   (UC8: Aggiornare notifica stato consegna) -- Negoziante
   (UC8: Aggiornare notifica stato consegna) ..> (UC7) : <<extend>>       
 }
 @enduml
+
+

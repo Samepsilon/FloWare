@@ -1,4 +1,5 @@
 @startuml
+title UC8 Aggiornare notifica di stato di consegna
 start
 
 :Il Negoziante accede alla sezione "Notifiche";

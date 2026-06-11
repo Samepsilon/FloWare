@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+title Diagramma Casi d'Uso
+
+actor Cliente
+actor Negoziante
+actor Amministratore
+
+package "Autenticazione" {
+  Cliente -- (UC0a: Registrare Cliente)
+  (UC0b: Accedere Utente) -- Cliente
+  (UC0b: Accedere Utente) -- Negoziante
+  (UC0b: Accedere Utente) -- Amministratore
+  Amministratore -- (Creazione Account Negoziante)
+}
+@enduml

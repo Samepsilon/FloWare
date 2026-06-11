@@ -1,6 +1,6 @@
 @startuml
 
-title Caso d'uso: Registrazione cliente (UC0a)
+title UC0a Registrazione cliente
 
 start
 

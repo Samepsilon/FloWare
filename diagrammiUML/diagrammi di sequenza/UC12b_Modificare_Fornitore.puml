@@ -1,5 +1,5 @@
 @startuml
-title UC12b: Modifica fornitore
+title UC12b: Modificare fornitore
 skinparam actorStyle awesome
 
 actor "Negoziante" as N

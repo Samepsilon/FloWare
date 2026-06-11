@@ -1,4 +1,5 @@
 @startuml
+title UC12c: Eliminazione di un fornitore
 skinparam actorStyle awesome
 
 actor "Negoziante" as N

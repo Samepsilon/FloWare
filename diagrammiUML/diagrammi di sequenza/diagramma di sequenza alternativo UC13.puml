@@ -1,4 +1,5 @@
 @startuml
+title UC13: Mostra catalogo fornitori
 skinparam actorStyle awesome
 
 actor "Negoziante" as N

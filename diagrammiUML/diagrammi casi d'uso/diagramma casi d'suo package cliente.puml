@@ -5,13 +5,13 @@ title Package: Servizi Cliente
 
 actor Cliente
 
-package "Servizi Cliente" {
-  (UC1a: Aggiornare Stato Consegna) ..> (UC3) : <<include>>
-  (UC2a: Aggiornare Stato Consegna) ..> (UC3) : <<include>>  
+package "Servizi Cliente" {  
   Cliente -- (UC1a: Inviare Richiesta Preventivo/Appunt.)
+  (UC1a: Inviare Richiesta Preventivo/Appunt.) ..> (UC3) : <<include>>
   Cliente -- (UC1b: Ricevere Conferma Richiesta)
   Cliente -- (UC1c: Annullare Richiesta)
   Cliente -- (UC2a: Inviare Richiesta Consegna)
+  (UC2a: Inviare Richiesta Consegna) ..> (UC3) : <<include>>
   Cliente -- (UC2b: Ricevere Stato Consegna)
   Cliente -- (UC3: Scegliere Data e Fascia Oraria)
   Cliente -- (UC4: Visualizzare Orari)

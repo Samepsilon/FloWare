@@ -155,7 +155,11 @@ class Articolo {
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
 }
-
+class Offerte {
+    - id : Long
+    - dataInizio : Date
+    - dataFine : Date
+}
 class Sconto {
     - id : Long
     - percentuale : Double
@@ -392,8 +396,8 @@ Richiesta "1" --> "0..*" Notifica : genera
 Consegna "1" --> "0..*" Notifica : genera
 
 ' Articolo e promozioni
-Articolo "0..*" --> "0..*" Sconto : associato
-Articolo "0..*" --> "0..*" Promozione : associato
+Articolo "0..*" --> "0..*" Offerte : associato
+
 
 ' Fornitore e Articolo
 Fornitore "1" --> "0..*" Articolo : fornisce
@@ -467,10 +471,10 @@ ArchivioRichieste ..> Richiesta
 ConsegnaRepository ..> Consegna
 CatalogoOrari ..> Orario
 CatalogoArticoli ..> Articolo
-CatalogoOfferte ..> Sconto
-CatalogoOfferte ..> Promozione
+CatalogoOfferte ..> Offerte
 CatalogoFornitori ..> Fornitore
 NotificaRepository ..> Notifica
 ArchivioCalendario ..> SlotOrario
-
+Offerte <|-- Sconto
+Offerte <|-- Promozione
 @enduml

@@ -1,22 +1,23 @@
 @startuml
 left to right direction
 skinparam actorStyle awesome
-title Package: Servizi Cliente
 
 actor Cliente
+actor Negoziante
 
-package "Servizi Cliente" {  
-  Cliente -- (UC1a: Inviare Richiesta Preventivo/Appunt.)
-  (UC1a: Inviare Richiesta Preventivo/Appunt.) ..> (UC3) : <<include>>
-  Cliente -- (UC1b: Ricevere Conferma Richiesta)
-  Cliente -- (UC1c: Annullare Richiesta)
-  Cliente -- (UC2a: Inviare Richiesta Consegna)
-  (UC2a: Inviare Richiesta Consegna) ..> (UC3) : <<include>>
-  Cliente -- (UC2b: Ricevere Stato Consegna)
-  Cliente -- (UC3: Scegliere Data e Fascia Oraria)
-  Cliente -- (UC4: Visualizzare Orari)
-  Cliente -- (UC5: Visualizzare Catalogo Articoli)
-  Cliente -- (UC6: Visualizzare Sconti e Promozioni)
+package "Notifiche" {
+  
+  (UC1a: Inviare richiesta preventivo o appunt.) -- Cliente
+  (UC1a: Inviare richiesta preventivo o appunt.) ..> (UC3) : <<include>>
+  Cliente -- (UC1b: Ricevere conferma richieste)
+  Cliente -- (UC1c: Annullare richiesta)
+  (UC2a: Inviare richiesta consegna) -- Cliente
+  (UC2a: Inviare richiesta consegna) ..> (UC3) : <<include>>
+  Cliente -- (UC2b: Ricevere stato della consegna)
+  Cliente -- (UC3: Scegliere data e fascia oraria)
 
+  (UC7: Modificare notifiche richieste) -- Negoziante
+  (UC8: Aggiornare notifica stato consegna) -- Negoziante
+  (UC8: Aggiornare notifica stato consegna) ..> (UC7) : <<extend>>       
 }
 @enduml

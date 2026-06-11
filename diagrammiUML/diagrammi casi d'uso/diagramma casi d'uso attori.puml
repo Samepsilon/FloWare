@@ -8,7 +8,7 @@ actor Negoziante
 actor Amministratore
 
 
-Utente .. Cliente
-Utente .. Negoziante
+Utente <|-- Cliente
+Utente <|-- Negoziante
 
 @enduml

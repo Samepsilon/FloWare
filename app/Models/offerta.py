@@ -1,10 +1,7 @@
 
+class Offerta:
 
-class offerta:
-
-    def __init__(self):
-        self.id
-        self.tipo
-        self.descrizione
-        self.dataInizio
-        self.dataFine
+    def __init__(self, dataInizio, dataFine, id = None):
+        self.id = id
+        self.dataInizio = dataInizio
+        self.dataFine = dataFine

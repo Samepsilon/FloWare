@@ -1,4 +1,5 @@
 @startuml
+title UC10c: Eliminazione di un offerta
 skinparam actorStyle awesome
 
 actor Negoziante as N

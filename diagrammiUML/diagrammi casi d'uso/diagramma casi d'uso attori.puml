@@ -12,3 +12,4 @@ Utente <|-- Cliente
 Utente <|-- Negoziante
 
 @enduml
+

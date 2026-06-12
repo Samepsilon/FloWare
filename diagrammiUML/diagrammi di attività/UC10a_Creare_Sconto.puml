@@ -1,5 +1,7 @@
 @startuml
+title UC10a: Creare sconto
 start
+
 :Il Negoziante accede a "Gestione Promozioni";
 :Il sistema visualizza l'elenco sconti esistenti;
 :Il Negoziante clicca su "Crea sconto percentuale";
@@ -15,22 +17,27 @@ repeat
   if (Clicca "Annulla"?) then (Sì)
     :Interrompi operazione;
     :Messaggio "Operazione annullata";
-    
+    stop
   endif
   
   :Validazione dati;
   
   if (Dati non validi?) then (Sì)
     :Mostra errore specifico;
-    :Rimani nel modulo;
+    :Messaggio "Dati non validi. Vuoi riprovare?";
+    
+    if (Vuole riprovare con dati corretti?) then (Sì)
+      ->Rimani nel modulo;
+    else (No)
+      :Interrompi operazione;
+      :Messaggio "Operazione annullata";
+      stop
+    endif
+    
   else (No)
     :Salva sconto nel sistema;
     :Messaggio "Sconto creato con successo";
     :Aggiorna visualizzazione elenco;
-    
+    stop
   endif
-repeat while (Vuole riprovare con dati corretti?) is (Sì)
--> No;
-
-stop
 @enduml

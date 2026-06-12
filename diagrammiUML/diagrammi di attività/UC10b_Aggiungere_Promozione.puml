@@ -30,5 +30,6 @@ repeat
     stop
   else (No)
     :Mostra errore "Dati inseriti non validi";
+    :Rimani nel modulo;
   endif
 @enduml

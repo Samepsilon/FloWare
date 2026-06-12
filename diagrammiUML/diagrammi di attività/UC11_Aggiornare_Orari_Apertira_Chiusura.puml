@@ -3,24 +3,23 @@ title UC11 - Aggiornare Orari Apertira Chiusura
 start
 :Il Negoziante accede a "Gestione orari";
 :Il sistema mostra la tabella orari;
-
+repeat
 :Il Negoziante seleziona un giorno/data;
 
-if (Giorno della settimana normale?)
+if (Giorno della settimana?)
   :Modifica apertura/chiusura;
   :Conferma modifiche;
-  :Sistema valida (apertura < chiusura);
+  :Sistema valida modifiche;
 elseif (Giorno festivo)
   :Seleziona "Chiuso";
   :Conferma;
 elseif (Orario straordinario)
   :Imposta apertura/chiusura speciale;
-  :Sistema valida;
+  :Sistema valida modifiche;
 endif
 
 if (Dati non validi?) then (Sì)
   :Mostra errore;
-  stop
 else (No)
   :Salva modifiche;
   :Messaggio "Orario aggiornato con successo";

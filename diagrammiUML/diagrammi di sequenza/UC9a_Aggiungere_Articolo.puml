@@ -1,5 +1,5 @@
 @startuml
-title UC9a: Aggiungere articolo
+title UC9a - Aggiungere articolo
 skinparam actorStyle awesome
 
 actor "Negoziante" as N

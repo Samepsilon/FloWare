@@ -1,6 +1,6 @@
 @startuml
 
-title UC2b: Ricevere conferma e stato consegna (Attività)
+title UC2b - Ricevere conferma e stato consegna 
 
 start
 

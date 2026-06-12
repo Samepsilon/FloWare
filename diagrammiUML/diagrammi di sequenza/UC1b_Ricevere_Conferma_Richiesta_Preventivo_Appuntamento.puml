@@ -2,7 +2,7 @@
 
 skinparam actorStyle awesome 
 
-title UC1b: Ricevere conferma richiesta preventivo o appuntamento
+title UC1b - Ricevere conferma richiesta preventivo o appuntamento
 
 actor Cliente
 participant "InterfacciaCliente" as BoundaryCli <<boundary>>

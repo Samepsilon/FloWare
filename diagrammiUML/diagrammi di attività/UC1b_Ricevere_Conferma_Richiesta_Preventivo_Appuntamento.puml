@@ -1,6 +1,6 @@
 @startuml
 
-title UC1b: Ricevere conferma richiesta
+title UC1b - Ricevere conferma richiesta
 
 start
 

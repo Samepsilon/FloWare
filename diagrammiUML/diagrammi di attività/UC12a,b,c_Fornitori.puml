@@ -1,4 +1,5 @@
 @startuml
+title UC12a,b,c - Aggiungere/Modificare/Eliminare Fornitore
 start
 :Il Negoziante accede a "Gestione Fornitori";
 :Il sistema visualizza l'elenco fornitori;
@@ -21,7 +22,7 @@ elseif (Modifica) then
   else (no)
     :Mostra errore;
   endif
-elseif (Rimuovi) then 
+elseif (Rimuovere) then 
   :Seleziona fornitore;
   :Conferma rimozione;
   if (Confermato) then (sì)

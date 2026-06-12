@@ -1,6 +1,6 @@
 @startuml
 
-title UC4: Visualizzare orari
+title UC4 - Visualizzare orari
 start
 
 :Accesso alla sezione "Orari del negozio";

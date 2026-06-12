@@ -1,6 +1,6 @@
 @startuml
 skinparam linetype ortho
-title UC0b: Accesso al Sistema
+title UC0b - Accesso al Sistema
 
 start
 

@@ -1,7 +1,7 @@
 @startuml
 
 skinparam actorStyle awesome
-title UC3: Scegliere data e fascia oraria
+title UC3 - Scegliere data e fascia oraria
 
 actor Cliente
 participant "InterfacciaScelta" as Boundary <<boundary>>

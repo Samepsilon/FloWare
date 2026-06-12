@@ -1,6 +1,6 @@
 @startuml
 
-title UC1c: Annullare richiesta (Attività)
+title UC1c - Annullare richiesta
 
 start
 

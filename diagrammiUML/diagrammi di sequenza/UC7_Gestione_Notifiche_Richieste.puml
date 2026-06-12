@@ -1,5 +1,5 @@
 @startuml
-title UC7: Modificare richieste appuntamento o preventivo
+title UC7 - Modificare richieste appuntamento o preventivo
 skinparam actorStyle awesome
 
 actor "Negoziante" as N

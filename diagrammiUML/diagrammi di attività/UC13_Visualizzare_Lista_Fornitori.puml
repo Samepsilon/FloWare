@@ -1,5 +1,5 @@
 @startuml
-title UC13: Visualizzare lista fornitori
+title UC13 - Visualizzare lista fornitori
 start
 :Negoziante accede alla sezione 'Fornitori';
 if (Esistono fornitori?) then (sì)

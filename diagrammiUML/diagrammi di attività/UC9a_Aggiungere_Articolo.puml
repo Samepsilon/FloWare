@@ -1,4 +1,5 @@
 @startuml
+title UC9a - Aggiungere Articolo
 start
 :Il Negoziante accede a "Gestione Catalogo";
 :Il sistema visualizza l'elenco articoli;

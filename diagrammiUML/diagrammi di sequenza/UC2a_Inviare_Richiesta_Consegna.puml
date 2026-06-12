@@ -1,7 +1,7 @@
 @startuml
 
 skinparam actorStyle awesome
-title UC2a: Inviare richiesta consegna
+title UC2a - Inviare richiesta consegna
 
 actor Cliente
 participant "InterfacciaRichiesta" as Boundary <<boundary>>

@@ -1,5 +1,5 @@
 @startuml
-title UC9c: Rimozione di un articolo
+title UC9c - Rimozione di un articolo
 skinparam actorStyle awesome
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>

@@ -1,6 +1,6 @@
 @startuml
 
-title UC0a Registrazione cliente
+title UC0a - Registrazione cliente
 
 start
 

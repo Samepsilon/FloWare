@@ -4,27 +4,27 @@ start
 :Il sistema visualizza l'elenco fornitori;
 :Il Negoziante seleziona operazione;
 
-if (Aggiungi?) then (sì)
+if (Aggiungi) then 
   :Inserisci dati nuovo fornitore;
-  if (Dati validi?) then (sì)
+  if (Dati validi?) then (si)
     :Salva fornitore;
     :Messaggio "Fornitore aggiunto con successo";
   else (no)
     :Mostra errore;
   endif
-elseif (Modifica?) then (sì)
+elseif (Modifica) then 
   :Seleziona fornitore;
   :Modifica dati;
-  if (Dati validi?) then (sì)
+  if (Dati validi?) then (si)
     :Salva modifiche;
     :Messaggio "Fornitore modificato";
   else (no)
     :Mostra errore;
   endif
-else (Rimuovi)
+elseif (Rimuovi) then 
   :Seleziona fornitore;
   :Conferma rimozione;
-  if (Confermato?) then (sì)
+  if (Confermato) then (sì)
     :Rimuovi fornitore;
     :Messaggio "Fornitore rimosso";
   else (no)

@@ -1,4 +1,5 @@
 @startuml
+title UC9c: Rimuovere articolo
 start
 :Il negoziante accede alla sezione "Gestione Catalogo";
 :Il sistema visualizza l'elenco degli articoli presenti;

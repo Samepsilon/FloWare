@@ -1,0 +1,34 @@
+@startuml
+title UC10b: Aggiungere promozione
+start
+
+:Il Negoziante accede a "Gestione Promozioni";
+:Il sistema visualizza l'elenco promozioni esistenti;
+:Il Negoziante clicca su "Crea promozione";
+:Il sistema mostra il modulo per l'inserimento;
+
+repeat
+  :Inserimento dati:
+  - Nome promozione
+  - Condizioni (es. 3x2)
+  - Data inizio validità
+  - Data fine validità
+  - Prodotti coinvolti;
+  
+  if (Clicca "Annulla"?) then (Sì)
+    :Interrompi operazione;
+    :Messaggio "Operazione annullata";
+    stop
+  endif
+  
+  :Validazione dati;
+  
+  if (Dati validi?) then (Sì)
+    :Salva promozione nel sistema;
+    :Messaggio "Promozione creata con successo";
+    :Aggiorna visualizzazione elenco;
+    stop
+  else (No)
+    :Mostra errore "Dati inseriti non validi";
+  endif
+@enduml

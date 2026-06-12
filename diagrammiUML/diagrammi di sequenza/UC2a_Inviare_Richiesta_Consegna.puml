@@ -4,7 +4,7 @@ skinparam actorStyle awesome
 title UC2a - Inviare richiesta consegna
 
 actor Cliente
-participant "InterfacciaRichiesta" as Boundary <<boundary>>
+participant "InterfacciaCliente" as Boundary <<boundary>>
 participant "GestoreConsegne" as Control <<control>>
 participant "ArchivioRichieste" as RepoConsegna <<repository>>
 participant "ArchivioNotifiche" as RepoNotifica <<repository>>
@@ -40,7 +40,7 @@ else (Dati Validi)
     
     Control --> Boundary : esitoPositivo
     deactivate Control
-    Boundary --> Cliente : mostraConfermaVisiva()
+    Boundary --> Cliente : mostraConferma()
     deactivate Boundary
 end
 @enduml

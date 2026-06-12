@@ -6,7 +6,7 @@ title UC1b - Ricevere conferma richiesta preventivo o appuntamento
 
 actor Cliente
 participant "InterfacciaCliente" as BoundaryCli <<boundary>>
-participant "GestoreRichieste" as Control <<control>> 
+participant "SistemaRichieste" as Control <<control>> 
 participant "ArchivioRichieste" as RepoRichiesta <<repository>>
 participant "ArchivioNotifiche" as RepoNotifica <<repository>>
 participant "Richiesta" as Richiesta <<entity>>

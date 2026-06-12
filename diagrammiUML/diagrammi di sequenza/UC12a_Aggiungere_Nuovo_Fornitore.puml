@@ -9,7 +9,7 @@ participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
 N -> IN: Accede a "Gestione Fornitori"
-IN -> G: visualizzaFornitori()
+IN -> G: visualizzaListaFornitori()
 G -> CF: cercaFornitori()
 CF -> F: findAll()
 F --> CF: listaFornitori

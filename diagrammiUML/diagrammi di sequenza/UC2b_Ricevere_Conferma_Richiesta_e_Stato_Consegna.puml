@@ -5,10 +5,10 @@ title UC2b - Ricevere conferma richiesta e stato consegna
 
 actor Cliente
 participant "InterfacciaCliente" as BoundaryCli <<boundary>>
-participant "GestoreStatoConsegne" as Control <<control>>
-participant "ConsegnaRepository" as RepoConsegna
-participant "UtenteRepository" as RepoUtente
-participant "NotificaRepository" as RepoNotifica
+participant "GestoreConsegne" as Control <<control>>
+participant "ConsegnaRepository" as RepoConsegna <<Repository>>
+participant "UtenteRepository" as RepoUtente <<Repository>>
+participant "NotificaRepository" as RepoNotifica <<Repository>>
 participant "Consegna" as Consegna <<entity>>
 
 loop (per ogni cambio di stato: Presa in carico, In consegna, Eseguita)

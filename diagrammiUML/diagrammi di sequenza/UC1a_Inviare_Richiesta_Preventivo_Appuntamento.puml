@@ -31,7 +31,7 @@ activate S
 create R
 S -> R : <<create>> Richiesta(richiesta)
 
-S -> Repo : salvaRichiesta(Richiesta)
+S -> Repo : salva(Richiesta)
 activate Repo
 Repo --> S : conferma
 deactivate Repo

@@ -57,7 +57,7 @@ else dati validi
         G --> IN: messaggio "Sconto creato e associato ai prodotti selezionati"
         IN --> N: Mostra "Sconto percentuale creato con successo"
         
-        IN -> G: aggiornaCatalogoOfferte()
+        IN -> G: aggiornaListaOfferte()
         G -> CS: cercaSconti()
         CS --> G: elenco aggiornato
         G --> IN: elenco aggiornato

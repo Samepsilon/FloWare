@@ -9,7 +9,7 @@ participant "ArticoloRepository" <<repository>>
 participant "Articolo" <<entity>>
 
 Cliente -> "Interfaccia Catalogo" : accede alla sezione catalogo
-"Interfaccia Catalogo" -> "Sistema Catalogo" : richiediCatalogo()
+"Interfaccia Catalogo" -> "Sistema Catalogo" : visualizzaCatalogo()
 
 activate "Sistema Catalogo"
 

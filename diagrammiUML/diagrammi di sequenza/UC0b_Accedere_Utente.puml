@@ -19,7 +19,7 @@ activate Sistema
 deactivate Interfaccia_Login
 
 
-Sistema -> Repo : inviaCredenziali(username, password)
+Sistema -> Repo : trovaPerCredenziali(username, password)
 activate Repo
 Repo --> Sistema : utilizzatore (Utenti o null)
 deactivate Repo

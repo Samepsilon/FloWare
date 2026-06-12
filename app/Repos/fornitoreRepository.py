@@ -3,7 +3,7 @@ import csv
 from app.Models.fornitore import Fornitore
 
 FILE = "data/fornitori.csv"
-COLONNE = ["id", "nome", "contatti", "tipologia", "domicilio"]
+COLONNE = ["id", "nome", "contatti", "tipologia", "servizioDomicilio"]
 
 def leggi():
     if not os.path.exists(FILE):
@@ -16,7 +16,7 @@ def leggi():
                 nome=r["nome"],
                 contatti=r["contatti"],
                 tipologia=r["tipologia"],
-                domicilio=r["domicilio"] == "True",
+                servizioDomicilio=r["servizioDomicilio"] == "True",
             ))
         return righe
 
@@ -31,7 +31,7 @@ def scrivi(fornitori):
                 "nome": f_.nome,
                 "contatti": f_.contatti,
                 "tipologia": f_.tipologia,
-                "domicilio": f_.domicilio,
+                "servizioDomicilio": f_.servizioDomicilio,
             })
 
 def salva_fornitore(fornitore):
@@ -51,8 +51,10 @@ def trova_fornitore(id):
     return None
 
 
-def elimina_fornitore(id):
+def rimuoviFornitore(id):
     tutti = leggi()
     filtrati = [f for f in tutti if f.id != id]
     scrivi(filtrati)
 
+def caricaListaForniori():
+    return leggi()

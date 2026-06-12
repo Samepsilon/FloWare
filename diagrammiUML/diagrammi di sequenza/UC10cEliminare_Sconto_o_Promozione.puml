@@ -12,7 +12,7 @@ participant "Articolo" as Articolo <<entity>>
 
 N -> IN: Accede a "Gestione Promozioni"
 IN -> G: visualizzaOfferteAttive()
-G -> CO: cercaOfferte()
+G -> CO: cercaOfferteValide()
 CO --> G: elenco offerte (sconti e promozioni)
 G --> IN: elenco offerte
 IN --> N: Mostra elenco offerte

@@ -1,6 +1,6 @@
 @startuml
 
-title UC1a: Inviare richiesta preventivo o appuntamento
+title UC1a - Inviare richiesta preventivo o appuntamento
 
 start
 

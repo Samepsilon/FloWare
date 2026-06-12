@@ -1,7 +1,7 @@
 @startuml
 
 skinparam actorStyle awesome
-title UC6: Visualizzare sconti, promozioni
+title UC6 - Visualizzare sconti, promozioni
 
 actor Cliente
 participant "InterfacciaOfferte" as Boundary <<boundary>>

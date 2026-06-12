@@ -1,6 +1,6 @@
 @startuml
 
-title UC5: Visualizzare catalogo articoli 
+title UC5 - Visualizzare catalogo articoli 
 
 start
 

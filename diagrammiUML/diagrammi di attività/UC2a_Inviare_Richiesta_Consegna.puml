@@ -1,5 +1,5 @@
 @startuml
-title UC2a: Inviare richiesta consegna (Attività)
+title UC2a - Inviare richiesta consegna 
 
 start
 :Selezione "Richiedi consegna";

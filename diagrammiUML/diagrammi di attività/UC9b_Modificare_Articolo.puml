@@ -1,5 +1,5 @@
 @startuml
-title UC9b: Modificare articolo
+title UC9b - Modificare articolo
 start
 
 :Il Negoziante accede a "Gestione Catalogo";

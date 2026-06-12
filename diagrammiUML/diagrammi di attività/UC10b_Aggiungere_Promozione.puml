@@ -1,5 +1,5 @@
 @startuml
-title UC10b: Aggiungere promozione
+title UC10b - Aggiungere promozione
 start
 
 :Il Negoziante accede a "Gestione Promozioni";

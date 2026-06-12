@@ -18,9 +18,9 @@ elseif (Orario straordinario)
   :Sistema valida modifiche;
 endif
 
-if (Dati non validi?) then (Sì)
+if (Dati validi?) then (no)
   :Mostra errore;
-else (No)
+else (si)
   :Salva modifiche;
   :Messaggio "Orario aggiornato con successo";
   stop

@@ -2,6 +2,7 @@ import csv
 import os
 from app.Models.promozione import Promozione
 from app.Models.sconto import Sconto
+from app.Models.offerta import Offerta
 
 FILE = "data/offerte.csv"
 COLONNE = ["id", "tipo", "dataInizio", "dataFine", "descrizione", "percentuale", "prodottoId"]

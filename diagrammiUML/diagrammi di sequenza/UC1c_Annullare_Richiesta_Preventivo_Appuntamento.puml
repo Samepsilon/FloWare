@@ -34,7 +34,7 @@ deactivate Repo
 
 S -> R : setStato("Annullata")
 
-S -> Repo : salva(Richiesta)
+S -> Repo : verificaAnnullamento(Richiesta)
 activate Repo
 Repo --> S : conferma
 deactivate Repo

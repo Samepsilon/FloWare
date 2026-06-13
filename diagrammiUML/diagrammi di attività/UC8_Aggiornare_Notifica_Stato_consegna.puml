@@ -16,19 +16,13 @@ start
 - Presa in carico
 - In consegna
 - Eseguita;
-
-:Sistema aggiorna lo stato della richiesta di consegna;
-
-:Sistema invia notifica di conferma al cliente 
-con il nuovo stato;
-
 if (Lo stato aggiornato è "Eseguita"?) then (Sì)
   :La consegna risulta completata;
   :Il cliente non riceverà ulteriori aggiornamenti;
 else (No)
-  :Il sistema rimane in attesa di 
-  successivi aggiornamenti di stato;
+:Sistema aggiorna lo stato della richiesta di consegna;
+:Sistema invia notifica di conferma al cliente 
+con il nuovo stato;
 endif
-
 stop
 @enduml

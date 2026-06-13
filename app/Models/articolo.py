@@ -1,4 +1,4 @@
-from app.Models.sconto import sconto
+from app.Models.sconto import Sconto
 
 class Articolo:
 
@@ -25,6 +25,6 @@ class Articolo:
         self.percentuale = 0.0
 
     def getPrezzo(self):
-        return round(self.prezzo * (1 - self.sconto / 100), 2)
+        return round(self.prezzo * (1 - (self.percentuale / 100)), 2)
 
 

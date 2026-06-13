@@ -9,23 +9,35 @@ participant "CatalogoOrari" as CO <<repository>>
 participant "Orario" as O <<entity>>
 
 N -> IN: Accede a "Gestione Orari"
+activate IN
 IN -> G: visualizzaOrari()
+activate G
 G -> CO: cercaOrari()
+activate CO
 CO --> G: listaOrari (settimanali + speciali)
+deactivate CO
 G --> IN: Mostra orari
 IN --> N: Mostra tabella orari
+deactivate G
+deactivate IN
 
 N -> IN: Seleziona giorno della settimana (es. Lunedì)
+activate IN
 N -> IN: Modifica orari (apertura, chiusura, pausa_inizio, pausa_fine)
 IN -> IN: Mostra modulo modifica
+deactivate IN
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN --> N: Mostra "Operazione annullata"
+    deactivate IN
 end
 
 N -> IN: Clicca "Conferma modifiche"
+activate IN
 IN -> G: aggiornaOrarioSettimanale(giorno, nuoviOrari)
+activate G
 
 G -> G: validaOrario(nuoviOrari)
 
@@ -34,39 +46,58 @@ alt apertura >= chiusura
     IN --> N: Mostra errore   
 else Orari validi
     G -> CO: cercaOrarioPerGiorno(giorno, "settimanale")
+    activate CO
     CO --> G: orario già esistente o non esistente   
+    deactivate CO
+    
     alt orario già esistente
         G -> CO: aggiornaOrario(orarioEsistente.id, nuoviOrari)
+        activate CO
         CO -> O: AggiornaOrario()
+        activate O
+        deactivate O
+        deactivate CO
     else orario non esistente
         G -> CO: salvaOrario(giorno, nuoviOrari, "settimanale")
+        activate CO
         CO -> O: <<create>> nuovoOrario
+        activate O
+        deactivate O
+        deactivate CO
     end
-    O --> CO: Orario Salvato
-    CO --> G: Orario modificato
     G --> IN: conferma "Orario settimanale aggiornato"
     IN --> N: Mostra conferma
 end
+
 opt Chiusura straordinaria
     N -> IN: Seleziona "Chiuso" per data specifica
     IN -> G: impostaChiusuraStraordinaria(data)
     
     G -> CO: cercaOrarioPerData(data)
+    activate CO
     CO --> G: orario già esistente o orario non esistente
+    deactivate CO
     
     alt orario già esistente
         G -> CO: aggiornaOrario(orarioEsistente.id, tipo="chiusura")
+        activate CO
         CO -> O: AggiornaOrario()
+        activate O
+        deactivate O
+        deactivate CO
     else
         G -> CO: salvaOrario()
+        activate CO
         CO -> O: <<create>> ChiusuraStraordinaria
+        activate O
+        deactivate O
+        deactivate CO
     end
     
-    O --> CO: Salva ChiusuraStraordinaria
-    CO --> G: Chiusura straordinaria Impostata
     G --> IN: messaggio "Chiusura straordinaria impostata"
     IN --> N: Mostra messaggio
 end
+
 opt Orario temporaneo
     N -> IN: Seleziona data specifica
     N -> IN: Imposta orario speciale (apertura, chiusura)
@@ -80,25 +111,39 @@ opt Orario temporaneo
         
     else orario valido
         G -> CO: cercaOrarioPerData(data)
+        activate CO
         CO --> G: Orario già esistente o orario non esistente
+        deactivate CO
         
         alt orario già esistente
             G -> CO: aggiornaOrario(orarioEsistente.id, orario, "temporaneo")
+            activate CO
             CO -> O: AggiornaOrario()
+            activate O
+            deactivate O
+            deactivate CO
         else
             G -> CO: salvaOrario()
+            activate CO
             CO -> O: <<create>> OrarioTemporaneo
+            activate O
+            deactivate O
+            deactivate CO
         end
         
-        O --> CO: salva Orario Temporaneo
-        CO --> G: Orario temporaneo impostato
         G --> IN: messaggio "Orario temporaneo impostato"
         IN --> N: Mostra messaggio
     end
 end
+
 IN -> G: aggiornaVisualizzazioneOrari()
 G -> CO: cercaOrari()
+activate CO
 CO --> G: listaOrariAggiornata
+deactivate CO
 G --> IN: orariAggiornati
 IN --> N: Mostra tabella aggiornata
+
+deactivate G
+deactivate IN
 @enduml

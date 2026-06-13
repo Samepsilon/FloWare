@@ -1,0 +1,57 @@
+@startuml
+title Package di Analisi: Notifiche
+
+' Boundary e Control
+interface InterfacciaCliente <<boundary>>
+interface InterfacciaNegoziante <<boundary>>
+class SistemaRichieste <<control>>
+class GestoreConsegne <<control>>
+class GestoreNotifiche <<control>>
+
+' Entity
+class Richiesta <<entity>> {
+    - id : Long
+    - tipo : String
+    - stato : String
+    - data : Date
+    - ora : String
+    - contatti : String
+    - descrizione : String
+    - clienteId : Long
+}
+
+class Consegna <<entity>> {
+    - id : Long
+    - regione : String
+    - citta : String
+    - via : String
+    - civico : String
+    - stato : String
+    - clienteId : Long
+}
+
+class Notifica <<entity>> {
+    - id : Long
+    - destinatario : String
+    - messaggio : String
+    - letta : Boolean
+    - tipo : String
+    - richiestaId : Long
+}
+
+class SlotOrario <<entity>> {
+    - id : Long
+    - data : Date
+    - fasciaOraria : String
+}
+
+' Relazioni
+InterfacciaCliente ..> SistemaRichieste
+InterfacciaNegoziante ..> GestoreConsegne
+InterfacciaNegoziante ..> GestoreNotifiche
+
+SistemaRichieste --> Richiesta
+SistemaRichieste --> SlotOrario
+GestoreConsegne --> Consegna
+Richiesta "1" -- "0..*" Notifica
+@enduml

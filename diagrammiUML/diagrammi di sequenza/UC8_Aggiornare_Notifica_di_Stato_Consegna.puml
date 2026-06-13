@@ -13,34 +13,49 @@ participant "NotificaRepository" as NR <<repository>>
 participant "InterfacciaCliente" as IC <<boundary>>
 participant "Consegna" as CON <<entity>>
 
-' 1. Visualizzazione consegne in sospeso
 N -> IN: accede a "Gestione Notifiche/Consegne"
+activate IN
 IN -> GN: visualizzaConsegne()
+activate GN
 GN -> CR: trovaConsegne(Id, Stato)
+activate CR
 CR --> GN: lista di Consegna
+deactivate CR
 GN --> IN: mostra elenco consegne 
 IN --> N: visualizza lista consegne
+deactivate GN
+deactivate IN
 
-' 2. Selezione e aggiornamento stato
 N -> IN: seleziona una consegna e sceglie "Aggiorna stato" (es. "Presa in carico")
+activate IN
 IN -> GN: aggiornaStatoConsegna(id, nuovoStato)
+activate GN
 
-' 3. Recupero consegna e verifica stato
 GN -> CR: trovaPerId(id)
+activate CR
 CR --> GN: restituisce Consegna
+deactivate CR
 
 alt Consegna in sospeso
     GN -> CON: setStato(nuovoStato)
+    activate CON
     CON --> GN: stato aggiornato
+    deactivate CON
     
     GN -> CR: salva(consegnaAggiornata)
+    activate CR
     CR --> GN: conferma salvataggio
+    deactivate CR
     
     GN -> NR: inviaNotificaCliente(Notifica)
+    activate NR
     NR --> GN: notifica inviata
+    deactivate NR
     
     GN -> IC: mostraMessaggio(messaggio)
+    activate IC
     IC --> C: visualizza messaggio (es. "La tua consegna è stata presa in carico")
+    deactivate IC
     
     GN --> IN: mostraConferma()
     IN --> N: mostra messaggio "Stato consegna aggiornato a [nuovoStato]"
@@ -49,6 +64,9 @@ else Consegna Eseguita
     GN --> IN: mostraErrore("Stato non aggiornabile")
     IN --> N: mostra messaggio "Stato non aggiornabile: consegna già eseguita"
 end
+
+deactivate GN
+deactivate IN
 
 @enduml
 

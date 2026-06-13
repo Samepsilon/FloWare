@@ -8,17 +8,25 @@ participant "GestoreFornitori" as G <<control>>
 participant "CatalogoFornitori" as CF <<repository>>
 
 N -> IN: Accede a sezione "Fornitori"
+activate IN
 IN -> G: visualizzaListaFornitori()
+activate G
 G -> CF: caricaListaFornitori()
+activate CF
 CF --> G: elencoFornitori
+deactivate CF
 G --> IN: elencoFornitori
-
+deactivate G
 alt elenco vuoto
     IN --> N: Mostra "Nessun fornitore presente in elenco"
     
 else elenco non vuoto
     IN --> N: Mostra elenco fornitori con:\n- Nome\n- Contatti (telefono, email)\n- Tipologia merce\n- Servizio a domicilio (Sì/No)
+    
+    deactivate IN
+    
     N -> IN: Scorre/consulta l'elenco
+    activate IN
+    deactivate IN
 end
-
 @enduml

@@ -19,7 +19,6 @@ activate Repo
 Repo --> Control : elenco delle offerte valide
 deactivate Repo
 
-
 alt nessuna offerta attiva
     
     Control --> Boundary : lista offerte (null)

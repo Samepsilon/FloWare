@@ -9,45 +9,74 @@ participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
 N -> IN: Accede a "Gestione Fornitori"
+activate IN
 IN -> G: visualizzaFornitori()
+activate G
 G -> CF: cercaFornitori()
+activate CF
 CF -> F: findAll()
+activate F
 F --> CF: listaFornitori
+deactivate F
 CF --> G: elencoFornitori
+deactivate CF
 G --> IN: elencoFornitori
 IN --> N: Mostra elenco fornitori
+deactivate G
+deactivate IN
+
 N -> IN: Seleziona fornitore dalla lista
+activate IN
 N -> IN: Clicca "Elimina fornitore"
-    N -> IN: Clicca "Rimuovi"
-    IN -> IN: Mostra conferma "Sei sicuro?"
+N -> IN: Clicca "Rimuovi"
+IN -> IN: Mostra conferma "Sei sicuro?"
+deactivate IN
+
+break Annullamento Rimozione
+    N -> IN: Clicca "Annulla"
+    activate IN
+    IN -> IN: Chiudi conferma
+    IN --> N: Mostra "Operazione annullata"
+    deactivate IN
+end
+
+N -> IN: Conferma
+activate IN
+IN -> G: eliminaFornitore(Fornitore)
+activate G
+
+alt Fornitore non trovato
+    G -> CF: cercaFornitore(Fornitore)
+    activate CF
+    CF --> G: Nessun fornitore presente con tali dati
+    deactivate CF
+    G --> IN: errore "Fornitore non trovato"
+    IN --> N: Mostra errore
     
-    break Annullamento Rimozione
-        N -> IN: Clicca "Annulla"
-        IN -> IN: Chiudi conferma
-        IN --> N: Mostra "Operazione annullata"
-    end
-    
-    N -> IN: Conferma
-    IN -> G: eliminaFornitore(Fornitore)
-    
-    alt Fornitore non trovato
-        G -> CF: cercaFornitore(Fornitore)
-        CF --> G: Nessun fornitore presente con tali dati
-        G --> IN: errore "Fornitore non trovato"
-        IN --> N: Mostra errore
-        
-    else Fornitore trovato
-        G -> CF: rimuoviFornitore(Fornitore)
-        CF -> F: <<destroy>> Fornitore
-        CF --> G: messaggio "Fornitore rimosso con successo"
-        G --> IN: conferma rimozione
-        IN --> N: Mostra "Fornitore rimosso con successo"
-    end
+else Fornitore trovato
+    G -> CF: rimuoviFornitore(Fornitore)
+    activate CF
+    CF -> F: <<destroy>> Fornitore
+    activate F
+    deactivate F
+    CF --> G: messaggio "Fornitore rimosso con successo"
+    deactivate CF
+    G --> IN: conferma rimozione
+    IN --> N: Mostra "Fornitore rimosso con successo"
+end
+
 IN -> G: aggiornaListaFornitori()
 G -> CF: cercaFornitori()
+activate CF
 CF -> F: findAll()
+activate F
 F --> CF: listaFornitoriAggiornata
+deactivate F
 CF --> G: elencoAggiornato
+deactivate CF
 G --> IN: elencoAggiornato
 IN --> N: Mostra elenco aggiornato
+
+deactivate G
+deactivate IN
 @enduml

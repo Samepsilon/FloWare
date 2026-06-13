@@ -9,26 +9,42 @@ participant "CatalogoArticolo" as CA <<repository>>
 participant "Articolo" as Articolo <<entity>>
 
 N -> IN: Accede a "Gestione Catalogo"
+activate IN
 IN -> G: visualizzaCatalogo()
+activate G
 G -> CA: mostraCatalogo()
+activate CA
 CA --> IN: Elenco articoli
+deactivate G
+deactivate CA
 IN --> N: Mostra catalogo
 
+deactivate IN
+
 N -> IN: Clicca "Aggiungi nuovo articolo"
+activate IN
 IN -> IN: Mostra modulo inserimento
+
 
 break annullamento
     N -> IN: Clicca "Annulla"
+    
     IN -> G: annullaCreazione()
+    activate G
     G --> IN: operazione annullata
+    deactivate G
     IN --> N: Mostra "Operazione annullata"
+    deactivate IN
 end
 
 N -> IN: Inserisce dati articolo e clicca "Conferma"
+activate IN
 IN -> G: aggiungiArticolo(dati)
+activate G
 
 G -> Articolo: <<create>> Articolo(dati)
-G -> G: validaArticolo(articolo)
+activate Articolo
+deactivate Articolo
 
 alt dati non validi
     G --> IN: errore "Dati non validi"
@@ -39,11 +55,15 @@ else articolo duplicato
     IN --> N: Mostra errore
     
 else dati validi
-    G -> G: aggiungiACatalogo(articolo)
     G -> CA: aggiornaCatalogo()
+    activate CA
     CA --> G: Articolo aggiunto
+    deactivate CA
     G --> IN: conferma "Articolo aggiunto"
     IN --> N: Mostra conferma
 end
+
+deactivate G
+deactivate IN
 
 @enduml

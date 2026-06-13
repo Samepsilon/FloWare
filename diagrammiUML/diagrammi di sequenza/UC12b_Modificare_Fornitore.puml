@@ -9,35 +9,55 @@ participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
 N -> IN: Accede a "Gestione Fornitori"
+activate IN
 IN -> G: visualizzaListaFornitori()
+activate G
 G -> CF: cercaFornitori()
+activate CF
 CF -> F: findAll()
+activate F
 F --> CF: listaFornitori
+deactivate F
 CF --> G: elencoFornitori
+deactivate CF
 G --> IN: elencoFornitori
 IN --> N: Mostra elenco fornitori
+deactivate G
+deactivate IN
 
 N -> IN: seleziona fornitore 
+activate IN
 N -> IN: Clicca "Modifica Fornitore"
 
 IN -> G: getFornitore(Fornitore)
+activate G
 G -> CF: cercaFornitore(Fornitore)
+activate CF
 CF -> F: find(Fornitore)
+activate F
 F --> CF: datiFornitore
+deactivate F
 CF --> G: datiFornitore
+deactivate CF
 G --> IN: datiFornitore
 IN --> N: Mostra modulo con dati correnti
+deactivate G
+deactivate IN
 
 N -> IN: Modifica campi desiderati (nome, contatti, tipologiaMerce, servizioDomicilio)
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN -> IN: Chiudi modulo senza salvare
     IN --> N: Mostra "Modifica annullata"
+    deactivate IN
 end
 
+activate IN
 N -> IN: Conferma modifica
 IN -> G: modificaFornitore(Fornitore, nuoviDati)
+activate G
 G -> G: validaDatiFornitore(nuoviDati)
 
 alt nuoviDati non validi
@@ -46,19 +66,29 @@ alt nuoviDati non validi
 
 else nuoviDati validi
     G -> CF: aggiornaFornitore(idFornitore, nuoviDati)
+    activate CF
     CF -> F: aggiornaProprietà(nuoviDati)
+    activate F
     F --> CF: confermaAggiornamento
+    deactivate F
     CF --> G: successo
+    deactivate CF
     G --> IN: messaggio("Fornitore modificato con successo")
     IN --> N: Mostra messaggio di successo
-    
 end
-    IN -> G: aggiornaListaFornitori()
-    G -> CF: cercaFornitori()
-    CF -> F: findAll()
-    F --> CF: listaFornitoriAggiornata
-    CF --> G: elencoAggiornato
-    G --> IN: elencoAggiornato
-    IN --> N: Mostra elenco aggiornato
 
+IN -> G: aggiornaListaFornitori()
+G -> CF: cercaFornitori()
+activate CF
+CF -> F: findAll()
+activate F
+F --> CF: listaFornitoriAggiornata
+deactivate F
+CF --> G: elencoAggiornato
+deactivate CF
+G --> IN: elencoAggiornato
+IN --> N: Mostra elenco aggiornato
+
+deactivate G
+deactivate IN
 @enduml

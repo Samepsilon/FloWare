@@ -1,0 +1,28 @@
+@startuml
+title Package di Analisi: Autenticazione
+
+' Boundary e Control
+interface InterfacciaLogin <<boundary>>
+class SistemaRegistrazione <<control>>
+class SistemaAccesso <<control>>
+
+' Entity (Astratte e Concrete)
+abstract class Utente <<entity>> {
+    - id : Long
+    - username : String
+    - email : String
+    - password : String
+    - ruolo : String
+}
+
+class Cliente <<entity>>
+class Negoziante <<entity>>
+
+' Gerarchia e Relazioni
+Utente <|-- Cliente
+Utente <|-- Negoziante
+
+InterfacciaLogin ..> SistemaRegistrazione
+InterfacciaLogin ..> SistemaAccesso
+SistemaAccesso --> Utente
+@enduml

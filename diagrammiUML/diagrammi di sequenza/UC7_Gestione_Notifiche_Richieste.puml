@@ -13,9 +13,13 @@ participant "Richiesta" as R <<entity>>
 participant "Notifica" as Notif <<entity>>
 
 N -> IN: Accede a "Notifiche"
+activate IN
 IN -> G: visualizzaNotifiche()
+activate G
 G -> AR: findNotificheNonLette()
+activate AR
 AR --> G: elencoNotifiche
+deactivate AR
 
 alt Nessuna notifica
     G --> IN: "Nessuna nuova notifica"
@@ -24,41 +28,67 @@ alt Nessuna notifica
 else Notifiche presenti
     G --> IN: elencoNotifiche
     IN --> N: Mostra notifiche (Appuntamenti, Preventivi, Consegne)
+    deactivate G
+    deactivate IN
+    
     N -> IN: Seleziona notifica
+    activate IN
     
     alt Tipo = "Appuntamento"
         IN -> G: confermaAppuntamento(Richiesta)
+        activate G
         
     else Tipo = "Preventivo"
         IN -> G: confermaPreventivo(Richiesta)
+        
     end
     
     G -> AR: verificaAnnullamento(Richiesta)
+    activate AR
     AR --> G: isAnnullata
+    deactivate AR
     
     alt Notifica già annullata
         G --> IN: errore "Notifica annullata"
         IN --> N: Mostra errore
         
     else Notifica valida
-    G -> AR: cercaRichiesta(Richiesta)
-    AR -> R: TrovaRichiesta()
-    R --> AR: richiesta
-    AR --> G: richiesta
-    
-    G -> AR: aggiornaStatoRichiesta(Richiesta, stato)
-    AR -> R: setStato("Confermata" o "Presa in carico")
-    R --> AR: conferma
-    AR --> G: statoAggiornato
-    G -> Notif: <<create>> NotificaConferma(destinatario, richiesta)
-    Notif --> G: notificaConferma
-    
-    G -> AN: salvaNotifica(notificaConferma)
-    AN -> AN: ArchiviaNotifica(notificaConferma)
-    AN --> G: notificaSalvata
-    
-    G -> IC: inviaNotificaCliente(notificaConferma)
-    IC -> C: Mostra notifica di conferma
+        G -> AR: cercaRichiesta(Richiesta)
+        activate AR
+        AR -> R: TrovaRichiesta()
+        activate R
+        R --> AR: richiesta
+        deactivate R
+        AR --> G: richiesta
+        deactivate AR
+        
+        G -> AR: aggiornaStatoRichiesta(Richiesta, stato)
+        activate AR
+        AR -> R: setStato("Confermata" o "Presa in carico")
+        activate R
+        R --> AR: conferma
+        deactivate R
+        AR --> G: statoAggiornato
+        deactivate AR
+        
+        G -> Notif: <<create>> NotificaConferma(destinatario, richiesta)
+        activate Notif
+        Notif --> G: notificaConferma
+        deactivate Notif
+        
+        G -> AN: salvaNotifica(notificaConferma)
+        activate AN
+        AN -> AN: ArchiviaNotifica(notificaConferma)
+        
+        AN --> G: notificaSalvata
+        deactivate AN
+        
+        G -> IC: inviaNotificaCliente(notificaConferma)
+        activate IC
+        IC -> C: Mostra notifica di conferma
+        deactivate IC
     end
-    end
-    @enduml
+    deactivate G
+    deactivate IN
+end
+@enduml

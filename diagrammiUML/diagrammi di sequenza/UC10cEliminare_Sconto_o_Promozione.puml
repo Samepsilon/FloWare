@@ -11,53 +11,81 @@ participant "Offerta" as O <<entity>>
 participant "Articolo" as Articolo <<entity>>
 
 N -> IN: Accede a "Gestione Promozioni"
+activate IN
 IN -> G: visualizzaOfferteAttive()
+activate G
 G -> CO: cercaOfferteValide()
+activate CO
 CO --> G: elenco offerte (sconti e promozioni)
+deactivate CO
 G --> IN: elenco offerte
 IN --> N: Mostra elenco offerte
+deactivate G
+deactivate IN
 
 N -> IN: Seleziona offerta da eliminare (sconto o promozione)
+activate IN
 N -> IN: Clicca "Elimina"
 
 IN --> N: Mostra "Sei sicuro? [Conferma/Annulla]"
+deactivate IN
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN --> N: Mostra "Operazione annullata"
+    deactivate IN
 end
 
 N -> IN: Clicca "Conferma"
+activate IN
 IN -> G: eliminaOfferta()
+activate G
 
 alt Offerta non trovata
     G -> CO: cercaOfferta()
+    activate CO
     CO --> G: Nessuna offerta presente
-    G --> IN: errore "Offerta non trovata"
+    deactivate CO
+    G --> IN: errore "Offerta non trovato"
     IN --> N: Mostra errore
     
 else Offerta trovata
     G -> CO: getArticoliAssociati()
+    activate CO
     CO --> G: listaArticoli
+    deactivate CO
     
-        loop Per ogni Articolo selezionato in CatalogoArticoli
-            G -> CA: rimuoviRiferimentoOfferta(Articolo, Offerta)
-            CA -> Articolo: rimuoviOfferta()
-            Articolo --> CA: conferma
-        end
-        CA --> G: articoliAggiornati
+    loop Per ogni Articolo selezionato in CatalogoArticoli
+        G -> CA: rimuoviRiferimentoOfferta(Articolo, Offerta)
+        activate CA
+        CA -> Articolo: rimuoviOfferta()
+        activate Articolo
+        Articolo --> CA: conferma
+        deactivate Articolo
+        deactivate CA
+    end
     
     G -> CO: rimuoviOfferta()
+    activate CO
     CO -> O: <<destroy>> Offerta
+    activate O
+    deactivate O
     CO --> G: messaggio "Offerta rimossa con successo"
+    deactivate CO
     
     G --> IN: conferma rimozione
     IN --> N: Mostra "Offerta eliminata con successo"
     
     IN -> G: aggiornaListaOfferte()
     G -> CO: cercaOfferte()
+    activate CO
     CO --> G: elenco aggiornato
+    deactivate CO
     G --> IN: elenco aggiornato
     IN --> N: Mostra elenco aggiornato
 end
+
+deactivate G
+deactivate IN
 @enduml

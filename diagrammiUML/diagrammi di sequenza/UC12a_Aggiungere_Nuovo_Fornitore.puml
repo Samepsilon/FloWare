@@ -9,24 +9,39 @@ participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
 N -> IN: Accede a "Gestione Fornitori"
+activate IN
 IN -> G: visualizzaListaFornitori()
+activate G
 G -> CF: cercaFornitori()
+activate CF
 CF -> F: findAll()
+activate F
 F --> CF: listaFornitori
+deactivate F
 CF --> G: elencoFornitori
+deactivate CF
 G --> IN: elencoFornitori
 IN --> N: Mostra elenco fornitori
+deactivate G
+deactivate IN
+
 N -> IN: Clicca "Aggiungi nuovo fornitore"
+activate IN
 IN -> IN: Mostra modulo inserimento
+deactivate IN
 N -> IN: Inserisce dati fornitore (nome, contatti, tipologiaMerce, servizioDomicilio)
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN -> IN: Chiudi modulo
     IN --> N: Mostra "Operazione annullata"
+    deactivate IN
 end
 
+activate IN
 IN -> G: aggiungiFornitore(datiFornitore)
+activate G
 G -> G: validaDatiFornitore(datiFornitore)
 
 alt dati non validi (campi mancanti o formato errato)
@@ -35,16 +50,28 @@ alt dati non validi (campi mancanti o formato errato)
     
 else dati validi
     G -> CF: salvaFornitore(datiFornitore)
+    activate CF
     CF -> F: <<create>> Fornitore
+    activate F
+    deactivate F
     CF --> G: NuovoFornitore
+    deactivate CF
     G --> IN: messaggio "Fornitore aggiunto con successo"
     IN --> N: Mostra messaggio
 end
+
 IN -> G: aggiornaListaFornitori()
 G -> CF: cercaFornitori()
+activate CF
 CF -> F: findAll()
+activate F
 F --> CF: listaFornitoriAggiornata
+deactivate F
 CF --> G: elencoAggiornato
+deactivate CF
 G --> IN: elencoAggiornato
 IN --> N: Mostra elenco aggiornato
+
+deactivate G
+deactivate IN
 @enduml

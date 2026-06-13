@@ -23,7 +23,6 @@ alt listaArticoli vuota
 else listaArticoli non vuota
     "SistemaCatalogo" --> "InterfacciaCliente" : listaArticoli
     
-    
     Cliente -> "InterfacciaCliente" : selezionaArticolo(idArticolo)
     "InterfacciaCliente" -> "SistemaCatalogo" : richiediDettagli(idArticolo)
     

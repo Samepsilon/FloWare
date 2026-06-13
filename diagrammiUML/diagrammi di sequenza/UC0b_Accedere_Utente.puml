@@ -31,7 +31,6 @@ alt Credenziali errate (utilizzatore== null)
     deactivate InterfacciaLogin
 else Credenziali corrette (utilizzatore != null)
     
-    
     Sistema -> Utente : reindirizzaPerRuolo()
     activate Utente
     Utente --> Sistema : ruolo (Cliente/Negoziante)

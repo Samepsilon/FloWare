@@ -7,7 +7,6 @@ participant "InterfacciaLogin" <<boundary>>
 participant "SistemaRegistrazione" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
 
-
 Cliente -> InterfacciaLogin : Accede alla pagina di registrazione
 activate InterfacciaLogin
 InterfacciaLogin -> Cliente : mostraFormRegistrazione()
@@ -18,7 +17,6 @@ activate InterfacciaLogin
 InterfacciaLogin -> Sistema : inviaRegistrazione(dati)
 activate Sistema
 deactivate InterfacciaLogin
-
 
 Sistema -> Repo : trovaPerUsername(username)
 activate Repo
@@ -32,7 +30,6 @@ opt Username non univoco
     deactivate InterfacciaLogin
 end  
 
-
 Sistema -> Sistema : verificaFormatoEmail(email)
 opt E-mail non valida
     Sistema -> InterfacciaLogin : Errore "Inserire un indirizzo email valido"
@@ -40,7 +37,6 @@ opt E-mail non valida
     InterfacciaLogin -> Cliente : MostraErrore   
     deactivate InterfacciaLogin
 end
-
 
 Sistema -> Sistema : VerificaCriteriPassword(min 8 car., 1 num, 1 spec)
 opt Password non valida
@@ -58,7 +54,6 @@ opt Le password non coincidono
     InterfacciaLogin -> Cliente : MostraErrore
     deactivate InterfacciaLogin
 end
-
 
 create nuovoCliente
 Sistema -> nuovoCliente : <<create>> Cliente(username, email, password)

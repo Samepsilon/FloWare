@@ -11,23 +11,35 @@ participant "Sconto" as Sconto <<entity>>
 participant "Articolo" as Articolo <<entity>>
 
 N -> IN: Accede a "Gestione Promozioni"
+activate IN
 IN -> G: visualizzaScontiAttivi()
+activate G
 G -> CS: cercaSconti()
+activate CS
 CS --> G: elenco sconti
+deactivate CS
 G --> IN: elenco sconti
 IN --> N: Mostra sconti esistenti
+deactivate G
+deactivate IN
 
 N -> IN: Clicca "Crea sconto percentuale"
+activate IN
 IN -> IN: Mostra modulo creazione sconto
+deactivate IN
 N -> IN: Inserisce dati (percentuale, evento, data inizio, data fine, listaProdottiSelezionati)
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN --> N: Mostra "Operazione annullata"
     IN -> IN: Chiudi modulo
+    deactivate IN
 end
 
+activate IN
 IN -> G: creaSconto(datiSconto)
+activate G
 G -> G: validaDatiSconto(datiSconto)
 
 alt percentuale > 100 or percentuale <= 0
@@ -36,7 +48,9 @@ alt percentuale > 100 or percentuale <= 0
     
 else dati validi
     G -> CA: verificaProdotti(listaProdottiSelezionati)
+    activate CA
     CA --> G: prodottiValidi
+    deactivate CA
     
     alt uno o più prodotti non presenti
         G --> IN: errore "Uno o più prodotti selezionati non sono presenti nel catalogo"
@@ -44,24 +58,36 @@ else dati validi
         
     else prodotti presenti
         G -> CS: salvaSconto(datiSconto)
+        activate CS
         CS -> Sconto: <<create>> Sconto
+        activate Sconto
+        deactivate Sconto
         CS --> G: idSconto
+        deactivate CS
         
         loop Per ogni articolo in listaProdottiSelezionati
             G -> CA: associaScontoAdArticolo(Articolo, Sconto, percentuale, dataInizio, dataFine)
+            activate CA
             CA -> Articolo: applicaSconto(Sconto, percentuale, dataInizio, dataFine)
+            activate Articolo
             Articolo --> CA: conferma
+            deactivate Articolo
+            deactivate CA
         end
-        CA --> G: articoliAggiornati
         
         G --> IN: messaggio "Sconto creato e associato ai prodotti selezionati"
         IN --> N: Mostra "Sconto percentuale creato con successo"
         
         IN -> G: aggiornaListaOfferte()
         G -> CS: cercaSconti()
+        activate CS
         CS --> G: elenco aggiornato
+        deactivate CS
         G --> IN: elenco aggiornato
         IN --> N: Mostra elenco aggiornato
     end
 end
+
+deactivate G
+deactivate IN
 @enduml

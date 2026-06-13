@@ -8,36 +8,47 @@ participant "GestoreCatalogo" as G <<control>>
 participant "CatalogoArticoli" as CA <<repository>>
 participant "Articolo" as A <<entity>>
 
-' 1. Visualizzazione catalogo
 N -> IN: Accede a "Gestione Catalogo"
+activate IN
 IN -> G: visualizzaCatalogo()
+activate G
 G -> CA: getArticoliDisponibili()
+activate CA
 CA --> G: elenco articoli
+deactivate CA
 G --> IN: mostraElencoArticoli(articoli)
 IN --> N: Mostra catalogo
+deactivate G
+deactivate IN
 
-' 2. Selezione articolo da modificare
 N -> IN: Seleziona articolo dall'elenco
+activate IN
 N -> IN: Clicca "Modifica"
 IN -> G: getArticolo(id)
+activate G
 G -> CA: trovaPerId(id)
+activate CA
 CA --> G: restituisce Articolo
+deactivate CA
 G --> IN: mostraModuloModificaArticolo(dati correnti)
 IN --> N: Mostra dati articolo (nome, tipologia, prezzo, quantità, descrizione)
+deactivate G
+deactivate IN
 
-' 3. Flusso di annullamento (break)
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN -> G: annullaOperazione()
     IN --> N: mostraMessaggio("Operazione annullata")
+    deactivate IN
 end
 
-' 4. Modifica articolo
 N -> IN: Modifica uno o più campi
+activate IN
 N -> IN: Clicca "Conferma"
 
 IN -> G: modificaArticolo(id, nuoviDati)
-G -> G: validaArticolo(nuoviDati)
+activate G
 
 alt Dati non validi (es. prezzo negativo, quantità non numerica)
     G --> IN: mostraErrore("Dati inseriti non validi")
@@ -45,7 +56,9 @@ alt Dati non validi (es. prezzo negativo, quantità non numerica)
     
 else Dati validi
     G -> CA: trovaPerId(id)
+    activate CA
     CA --> G: restituisce Articolo esistente
+    deactivate CA
     
     alt Articolo non trovato
         G --> IN: mostraErrore("Articolo non trovato")
@@ -53,14 +66,21 @@ else Dati validi
         
     else Articolo trovato
         G -> A: setDati(nuoviDati)
+        activate A
         A --> G: dati aggiornati
+        deactivate A
         
         G -> CA: aggiornaCatalogo()
+        activate CA
         CA --> G: conferma aggiornamento
+        deactivate CA
         
         G --> IN: mostraConferma("Articolo modificato con successo")
         IN --> N: Mostra conferma
     end
 end
+
+deactivate G
+deactivate IN
 
 @enduml

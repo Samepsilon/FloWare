@@ -1,0 +1,63 @@
+@startuml
+title Package di Analisi: Locale
+
+' Boundary e Control
+interface InterfacciaCliente <<boundary>>
+interface InterfacciaNegoziante <<boundary>>
+class GestoreCatalogo <<control>>
+class GestoreOfferte <<control>>
+class GestoreOrari <<control>>
+
+' Entity
+class Articolo <<entity>> {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+}
+
+abstract class Offerte <<entity>> {
+    - id : Long
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Sconto <<entity>> {
+    - id : Long
+    - percentuale : Double
+    - evento : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Promozione <<entity>> {
+    - id : Long
+    - descrizione : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Orario <<entity>> {
+    - id : Long
+    - giorno : String
+    - apertura : String
+    - chiusura : String
+    - tipo : String
+    - dataSpecifica : Date
+}
+
+' Gerarchia e Relazioni
+Offerte <|-- Sconto
+Offerte <|-- Promozione
+
+InterfacciaCliente ..> GestoreOrari
+InterfacciaNegoziante ..> GestoreCatalogo
+InterfacciaNegoziante ..> GestoreOfferte
+
+GestoreCatalogo --> Articolo
+GestoreOfferte --> Offerte
+GestoreOrari --> Orario
+Articolo "0..*" -- "0..1" Offerte
+@enduml

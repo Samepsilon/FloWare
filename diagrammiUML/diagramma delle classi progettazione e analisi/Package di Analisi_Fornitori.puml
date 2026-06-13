@@ -1,0 +1,20 @@
+@startuml
+title Package di Analisi: Fornitori
+
+' Boundary e Control
+interface InterfacciaNegoziante <<boundary>>
+class GestoreFornitori <<control>>
+
+' Entity
+class Fornitore <<entity>> {
+    - id : Long
+    - nome : String
+    - contatti : String
+    - tipologiaMerce : String
+    - servizioDomicilio : Boolean
+}
+
+' Relazioni
+InterfacciaNegoziante ..> GestoreFornitori
+GestoreFornitori --> Fornitore
+@enduml

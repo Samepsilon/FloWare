@@ -11,23 +11,35 @@ participant "Promozione" as P <<entity>>
 participant "Articolo" as A <<entity>>
 
 N -> IN: Accede a "Gestione Offerte"
+activate IN
 IN -> G: visualizzaOfferteAttive()
+activate G
 G -> CO: cercaPromozioni()
+activate CO
 CO --> G: elenco promozioni
+deactivate CO
 G --> IN: elenco promozioni
 IN --> N: Mostra promozioni esistenti
+deactivate G
+deactivate IN
 
 N -> IN: Clicca "Crea promozione"
+activate IN
 IN -> IN: mostraModuloCreazionePromozione()
+deactivate IN
 N -> IN: Inserisce dati (nome, condizioni, data inizio, data fine, prodotti coinvolti)
 
 break Annullamento
     N -> IN: Clicca "Annulla"
+    activate IN
     IN --> N: mostraMessaggio("Operazione annullata")
     IN -> IN: Chiudi modulo
+    deactivate IN
 end
 
+activate IN
 IN -> G: creaPromozione(datiPromozione)
+activate G
 G -> G: validaDatiPromozione(datiPromozione)
 
 alt dataFine < dataInizio
@@ -40,7 +52,9 @@ else condizioni non specificate
     
 else dati validi
     G -> CA: verificaProdotti(listaProdottiSelezionati)
+    activate CA
     CA --> G: prodottiValidi
+    deactivate CA
     
     alt uno o più prodotti non presenti
         G --> IN: mostraErrore("Uno o più prodotti selezionati non sono presenti nel catalogo")
@@ -48,24 +62,36 @@ else dati validi
         
     else prodotti presenti
         G -> CO: salvaPromozione(datiPromozione)
+        activate CO
         CO -> P: <<create>> Promozione(dati)
+        activate P
+        deactivate P
         CO --> G: idPromozione
+        deactivate CO
         
         loop Per ogni articolo in listaProdottiSelezionati
             G -> CA: associaPromozioneAdArticolo(articolo, promozione)
+            activate CA
             CA -> A: applica la Promozione 
+            activate A
             A --> CA: conferma
+            deactivate A
+            deactivate CA
         end
-        CA --> G: articoliAggiornati
         
         G --> IN: mostraConferma("Promozione creata e associata ai prodotti selezionati")
         IN --> N: mostraMessaggio("Promozione creata con successo")
         
         IN -> G: aggiornaListaOfferte()
         G -> CO: cercaPromozioni()
+        activate CO
         CO --> G: elenco aggiornato
+        deactivate CO
         G --> IN: elenco aggiornato
         IN --> N: Mostra elenco promozioni aggiornato
     end
 end
+
+deactivate G
+deactivate IN
 @enduml

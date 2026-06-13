@@ -7,7 +7,7 @@ actor Cliente
 participant "InterfacciaCliente" as Boundary <<boundary>>
 participant "GestoreConsegne" as Control <<control>>
 participant "ArchivioRichieste" as RepoConsegna <<repository>>
-participant "ArchivioNotifiche" as RepoNotifica <<repository>>
+participant "NotificheRopository" as RepoNotifica <<repository>>
 participant "Consegna" as Consegna <<entity>>
 
 

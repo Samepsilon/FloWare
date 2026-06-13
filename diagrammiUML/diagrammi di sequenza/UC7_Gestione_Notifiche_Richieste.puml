@@ -7,7 +7,7 @@ actor "Cliente" as C
 participant "InterfacciaNegoziante" as IN <<boundary>>
 participant "InterfacciaCliente" as IC <<boundary>>
 participant "GestoreNotifiche" as G <<control>>
-participant "ArchivioNotifiche" as AN <<repository>>
+participant "NotificaRepository" as AN <<repository>>
 participant "ArchivioRichieste" as AR <<repository>>
 participant "Richiesta" as R <<entity>>
 participant "Notifica" as Notif <<entity>>

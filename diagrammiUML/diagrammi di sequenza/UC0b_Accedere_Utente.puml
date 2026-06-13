@@ -2,21 +2,21 @@
 title UC0b - Accesso al Sistema
 skinparam actorStyle awesome
 actor "Cliente / Negoziante" as Utenti
-participant "Interfaccia_Login" <<boundary>>
+participant "InterfacciaLogin" <<boundary>>
 participant "Sistema di Accesso" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
 participant "Utente" <<entity>> 
 
-Utenti -> Interfaccia_Login : Accede alla pagina di login
-activate Interfaccia_Login
-Interfaccia_Login -> Utenti : Richiede username/e-mail e password
-deactivate Interfaccia_Login
+Utenti -> InterfacciaLogin : Accede alla pagina di login
+activate InterfacciaLogin
+InterfacciaLogin -> Utenti : Richiede username/e-mail e password
+deactivate InterfacciaLogin
 
-Utenti -> Interfaccia_Login : Inserisce credenziali
-activate Interfaccia_Login
-Interfaccia_Login -> Sistema : Invia credenziali
+Utenti -> InterfacciaLogin : Inserisce credenziali
+activate InterfacciaLogin
+InterfacciaLogin -> Sistema : InviaCredenziali(username/email, password)
 activate Sistema
-deactivate Interfaccia_Login
+deactivate InterfacciaLogin
 
 
 Sistema -> Repo : trovaPerCredenziali(username, password)
@@ -25,30 +25,30 @@ Repo --> Sistema : utilizzatore (Utenti o null)
 deactivate Repo
 
 alt Credenziali errate (utilizzatore== null)
-    Sistema -> Interfaccia_Login : Messaggio "Username o password non validi"
-    activate Interfaccia_Login
-    Interfaccia_Login -> Utenti : Mostra errore
-    deactivate Interfaccia_Login
+    Sistema -> InterfacciaLogin : Messaggio "Username o password non validi"
+    activate InterfacciaLogin
+    InterfacciaLogin -> Utenti : Mostra errore
+    deactivate InterfacciaLogin
 else Credenziali corrette (utilizzatore != null)
     
     
-    Sistema -> Utente : reindirizzaRuolo()
+    Sistema -> Utente : reindirizzaPerRuolo()
     activate Utente
     Utente --> Sistema : ruolo (Cliente/Negoziante)
     deactivate Utente
 
     alt ruolo == "Cliente"
         Sistema -> Sistema : impostaSessione("Cliente")
-        Sistema -> Interfaccia_Login : Reindirizza a Dashboard Cliente
-        activate Interfaccia_Login
-        Interfaccia_Login -> Utenti : Mostra Dashboard Cliente
-        deactivate Interfaccia_Login
+        Sistema -> InterfacciaLogin : Reindirizza a Dashboard Cliente
+        activate InterfacciaLogin
+        InterfacciaLogin -> Utenti : Mostra Dashboard Cliente
+        deactivate InterfacciaLogin
     else ruolo == "Negoziante"
         Sistema -> Sistema : impostaSessione("Negoziante")
-        Sistema -> Interfaccia_Login : Reindirizza a Dashboard Negoziante
-        activate Interfaccia_Login
-        Interfaccia_Login -> Utenti : Mostra Dashboard Negoziante
-        deactivate Interfaccia_Login
+        Sistema -> InterfacciaLogin : Reindirizza a Dashboard Negoziante
+        activate InterfacciaLogin
+        InterfacciaLogin -> Utenti : Mostra Dashboard Negoziante
+        deactivate InterfacciaLogin
     end
 end
 

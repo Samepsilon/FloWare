@@ -361,7 +361,6 @@ class GestoreOrari <<control>> {
 }
 
 class GestoreFornitori <<control>> {
-    + visualizzaFornitori() : List<Fornitore>
     + aggiungiFornitore(dati : Object) : void
     + validaDatiFornitore(dati : Object) : Boolean
     + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void

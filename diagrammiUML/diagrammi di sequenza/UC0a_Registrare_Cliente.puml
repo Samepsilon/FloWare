@@ -3,21 +3,21 @@ title UC0a - Registra Cliente
 skinparam actorStyle awesome
 actor Cliente
 
-participant "Interfaccia_Login" <<boundary>>
-participant "Sistema di registrazione" as Sistema <<control>>
+participant "InterfacciaLogin" <<boundary>>
+participant "SistemaRegistrazione" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
 
 
-Cliente -> Interfaccia_Login : Accede alla pagina di registrazione
-activate Interfaccia_Login
-Interfaccia_Login -> Cliente : Mostra form registrazione
-deactivate Interfaccia_Login
+Cliente -> InterfacciaLogin : Accede alla pagina di registrazione
+activate InterfacciaLogin
+InterfacciaLogin -> Cliente : mostraFormRegistrazione()
+deactivate InterfacciaLogin
 
-Cliente -> Interfaccia_Login : Inserisce username, e-mail, password, conferma password
-activate Interfaccia_Login
-Interfaccia_Login -> Sistema : inviaRegistrazione(dati)
+Cliente -> InterfacciaLogin : Inserisce username, e-mail, password, conferma password
+activate InterfacciaLogin
+InterfacciaLogin -> Sistema : inviaRegistrazione(dati)
 activate Sistema
-deactivate Interfaccia_Login
+deactivate InterfacciaLogin
 
 
 Sistema -> Repo : trovaPerUsername(username)
@@ -26,37 +26,37 @@ Repo --> Sistema : cliente (o null)
 deactivate Repo
 
 opt Username non univoco
-    Sistema -> Interfaccia_Login : Errore "Username già in uso. Scegline un altro"
-    activate Interfaccia_Login
-    Interfaccia_Login -> Cliente : Mostra errore
-    deactivate Interfaccia_Login
+    Sistema -> InterfacciaLogin : Errore "Username già in uso. Scegline un altro"
+    activate InterfacciaLogin
+    InterfacciaLogin -> Cliente : MostraErrore
+    deactivate InterfacciaLogin
 end  
 
 
-Sistema -> Sistema : Verifica formato e-mail
+Sistema -> Sistema : verificaFormatoEmail(email)
 opt E-mail non valida
-    Sistema -> Interfaccia_Login : Errore "Inserire un indirizzo email valido"
-    activate Interfaccia_Login
-    Interfaccia_Login -> Cliente : Mostra errore   
-    deactivate Interfaccia_Login
+    Sistema -> InterfacciaLogin : Errore "Inserire un indirizzo email valido"
+    activate InterfacciaLogin
+    InterfacciaLogin -> Cliente : MostraErrore   
+    deactivate InterfacciaLogin
 end
 
 
-Sistema -> Sistema : Verifica criteri (min 8 car., 1 num, 1 spec)
+Sistema -> Sistema : VerificaCriteriPassword(min 8 car., 1 num, 1 spec)
 opt Password non valida
-    Sistema -> Interfaccia_Login : Mostra criteri richiesti
-    activate Interfaccia_Login
-    Interfaccia_Login -> Cliente : Mostra errore
-    deactivate Interfaccia_Login
+    Sistema -> InterfacciaLogin : Mostra criteri richiesti
+    activate InterfacciaLogin
+    InterfacciaLogin -> Cliente : MostraErrore
+    deactivate InterfacciaLogin
 end    
 
 
-Sistema -> Sistema : Confronta password e conferma password
+Sistema -> Sistema : ConfrontaPassword(password, conferma)
 opt Le password non coincidono
-    Sistema -> Interfaccia_Login : Errore "Le password non corrispondono"
-    activate Interfaccia_Login
-    Interfaccia_Login -> Cliente : Mostra errore
-    deactivate Interfaccia_Login
+    Sistema -> InterfacciaLogin : Errore "Le password non corrispondono"
+    activate InterfacciaLogin
+    InterfacciaLogin -> Cliente : MostraErrore
+    deactivate InterfacciaLogin
 end
 
 
@@ -69,11 +69,11 @@ Repo --> Sistema : conferma salvataggio
 deactivate Repo
 
 
-Sistema -> Interfaccia_Login : Mostra "Account Cliente creato con successo"
-activate Interfaccia_Login
-Sistema -> Interfaccia_Login : Reindirizza a login
-Interfaccia_Login -> Cliente : Mostra conferma e pagina login
-deactivate Interfaccia_Login
+Sistema -> InterfacciaLogin : Mostra "Account Cliente creato con successo"
+activate InterfacciaLogin
+Sistema -> InterfacciaLogin : Reindirizza a Login
+InterfacciaLogin -> Cliente : Mostra conferma e pagina login
+deactivate InterfacciaLogin
 
 deactivate Sistema
 

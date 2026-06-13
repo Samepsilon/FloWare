@@ -54,8 +54,6 @@ def salva_richiesta(richiesta):
     scrivi(tutti)
     return richiesta
 
-
-
 def salva_richiesta(richiesta):
     tutti = leggi()
     if richiesta.id is None:
@@ -87,5 +85,8 @@ def aggiornaStatoRichiesta(id, nuovo_stato):
 
 def verificaAnnullamento(richiesta):
     return richiesta is not None and richiesta.stato == "in attesa"
+
+def richiesteInAttesa():
+    return [r for r in leggi() if r.stato == "in_attesa"]
 
 

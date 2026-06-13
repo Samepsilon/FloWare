@@ -1,6 +1,7 @@
 import csv
 import os
 from app.Models.articolo import Articolo
+from app.Models.sconto import Sconto
 
 
 FILE = "data/articoli.csv"
@@ -40,7 +41,7 @@ def scrivi(articoli):
                 "sconto": a.sconto,
             })
 
-def salva_articolo(articolo):
+def salvaArticolo(articolo):
     tutti = leggi()
     if articolo.id is None:
         articolo.id = max((a.id for a in tutti), default=0) + 1
@@ -50,19 +51,30 @@ def salva_articolo(articolo):
     scrivi(tutti)
     return articolo
 
-def trova_articolo(id):
+def trovaArticolo(id):
     for a in leggi():
         if a.id == id:
             return a
     return None
 
-def articoli_del_fornitore(fornitore_id):
+def articoliDelFornitore(fornitore_id):
     return [a for a in leggi() if a.fornitore_id == fornitore_id]
 
 
-def elimina_articolo(id):
+def rimuoviArticolo(id):
     tutti = leggi()
     filtrati = [a for a in tutti if a.id != id]
     scrivi(filtrati)
+def getArticoliDisponibili():
+    tutti = leggi()
 
+def mostraCatalogo():
+
+
+def verificaArticolo():
+
+def associaScontoAdArticolo(articolo, sconto)
+
+def rimuoviRiferimentoArticolo(articolo):
+    
 

@@ -2,7 +2,7 @@ from app.Models.richiesta import Richiesta
 from app.Models.slotOrario import slotOrario
 from app.Models.notifica import Notifica
 
-from app.Repos import richiestaRepository as repo
+from app.Repos import archivioRichieste as repo
 from app.Repos import notificaRepository as repoN
 from app.Repos import utenteRepository as repoU
 
@@ -34,13 +34,20 @@ def invia_richiesta(cliente_id, tipo, descrizione, contatti, data="", ora=""):
     repoN.salvaNotifica(n)
     return richiesta
 
-def annulla_richiesta(richiesta_id, cliente_id):
-    r = repo.trova_richiesta(richiesta_id)
+def annullaRichiesta(richiesta_id, cliente_id):
+    r = repo.trovaPerId(richiesta_id)
     if r is None:
         raise ValueError(f"Richiesta con id={richiesta_id} non trovata.")
     if r.cliente_id != cliente_id:
         raise ValueError("Non puoi annullare una richiesta di un altro cliente.")
     if not repo.verificaAnnullamento(richiesta_id):
         raise ValueError("La richiesta non è più annullabile (non è in attesa).")
-    return repo.aggiorna_stato_richiesta(richiesta_id, "annullata")
+    return repo.aggiornaStatoRichiesta(richiesta_id, "annullata")
+
+def recuperaRichieste(cliente_id):
+    return repo.trovaPerCliente(cliente_id)
+
+def recuperaRichiesteInAttesa():
+
+    return repo.richieste_in_attesa()
 

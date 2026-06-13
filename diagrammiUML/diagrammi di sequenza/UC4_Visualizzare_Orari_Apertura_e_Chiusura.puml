@@ -3,15 +3,15 @@ skinparam actorStyle awesome
 title UC4 - Visualizzare orari di apertura e chiusura
 skinparam actorStyle awesome
 actor Cliente
-participant "InterfacciaOrari" <<boundary>>
+participant "InterfacciaCliente" <<boundary>>
 participant "SistemaInfoNegozio" <<control>>
-participant "OrarioRepository" as Repo <<repository>>
+participant "CatalogoOrari" as Repo <<repository>>
 participant "Orario" as ORA <<entity>> 
 
-Cliente -> InterfacciaOrari : Accede alla sezione "Orari del negozio"
-activate InterfacciaOrari
+Cliente -> InterfacciaCliente : Accede alla sezione "Orari del negozio"
+activate InterfacciaCliente
 
-InterfacciaOrari -> SistemaInfoNegozio : richiediOrari()
+InterfacciaCliente -> SistemaInfoNegozio : richiediOrari()
 activate SistemaInfoNegozio
 
 SistemaInfoNegozio -> Repo : getOrariSettimanali()
@@ -26,11 +26,11 @@ loop per ogni giorno della settimana
     deactivate "ORA"
 end
 
-SistemaInfoNegozio --> InterfacciaOrari : mostraTabellaOrari(dati)
+SistemaInfoNegozio --> InterfacciaCliente : mostraTabellaOrari(dati)
 deactivate SistemaInfoNegozio
 
-InterfacciaOrari -> Cliente : Visualizza tabella 
-deactivate InterfacciaOrari
+InterfacciaCliente -> Cliente : Visualizza tabella 
+deactivate InterfacciaCliente
 
 
 @enduml

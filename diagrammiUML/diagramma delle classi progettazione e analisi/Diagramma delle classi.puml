@@ -325,7 +325,6 @@ class SistemaCatalogo <<control>> {
 
 class SistemaOfferte <<control>> {
     + recuperaOfferteAttive() : List<Promozione>
-    + visualizzaOfferteAttive() : List<Promozione>
 }
 
 class GestoreCatalogo <<control>> {

@@ -4,7 +4,7 @@ skinparam actorStyle awesome
 title UC3 - Scegliere data e fascia oraria
 
 actor Cliente
-participant "InterfacciaScelta" as Boundary <<boundary>>
+participant "InterfacciaCliente" as Boundary <<boundary>>
 participant "GestoreRichieste" as Control <<control>>
 participant "ArchivioCalendario" as Repo <<repository>>
 participant "Data" as Slot <<entity>>

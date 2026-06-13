@@ -1,0 +1,71 @@
+@startuml
+skinparam actorStyle awesome
+title UC10b - Creazione promozione
+
+actor Negoziante as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreOfferte" as G <<control>>
+participant "CatalogoOfferte" as CO <<repository>>
+participant "CatalogoArticoli" as CA <<repository>>
+participant "Promozione" as P <<entity>>
+participant "Articolo" as A <<entity>>
+
+N -> IN: Accede a "Gestione Offerte"
+IN -> G: visualizzaOfferteAttive()
+G -> CO: cercaPromozioni()
+CO --> G: elenco promozioni
+G --> IN: elenco promozioni
+IN --> N: Mostra promozioni esistenti
+
+N -> IN: Clicca "Crea promozione"
+IN -> IN: mostraModuloCreazionePromozione()
+N -> IN: Inserisce dati (nome, condizioni, data inizio, data fine, prodotti coinvolti)
+
+break Annullamento
+    N -> IN: Clicca "Annulla"
+    IN --> N: mostraMessaggio("Operazione annullata")
+    IN -> IN: Chiudi modulo
+end
+
+IN -> G: creaPromozione(datiPromozione)
+G -> G: validaDatiPromozione(datiPromozione)
+
+alt dataFine < dataInizio
+    G --> IN: mostraErrore("Data fine non valida: deve essere successiva alla data inizio")
+    IN --> N: Mostra errore
+    
+else condizioni non specificate
+    G --> IN: mostraErrore("Condizioni promozione non specificate")
+    IN --> N: Mostra errore
+    
+else dati validi
+    G -> CA: verificaProdotti(listaProdottiSelezionati)
+    CA --> G: prodottiValidi
+    
+    alt uno o più prodotti non presenti
+        G --> IN: mostraErrore("Uno o più prodotti selezionati non sono presenti nel catalogo")
+        IN --> N: Mostra errore
+        
+    else prodotti presenti
+        G -> CO: salvaPromozione(datiPromozione)
+        CO -> P: <<create>> Promozione(dati)
+        CO --> G: idPromozione
+        
+        loop Per ogni articolo in listaProdottiSelezionati
+            G -> CA: associaPromozioneAdArticolo(articolo, promozione)
+            CA -> A: applica la Promozione 
+            A --> CA: conferma
+        end
+        CA --> G: articoliAggiornati
+        
+        G --> IN: mostraConferma("Promozione creata e associata ai prodotti selezionati")
+        IN --> N: mostraMessaggio("Promozione creata con successo")
+        
+        IN -> G: aggiornaListaOfferte()
+        G -> CO: cercaPromozioni()
+        CO --> G: elenco aggiornato
+        G --> IN: elenco aggiornato
+        IN --> N: Mostra elenco promozioni aggiornato
+    end
+end
+@enduml

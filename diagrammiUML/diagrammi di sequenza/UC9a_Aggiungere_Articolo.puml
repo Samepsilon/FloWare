@@ -10,7 +10,7 @@ participant "Articolo" as Articolo <<entity>>
 
 N -> IN: Accede a "Gestione Catalogo"
 IN -> G: visualizzaCatalogo()
-G -> CA: MostraCatalogo()
+G -> CA: mostraCatalogo()
 CA --> IN: Elenco articoli
 IN --> N: Mostra catalogo
 

@@ -1,0 +1,66 @@
+@startuml
+title UC9b - Modificare articolo
+skinparam actorStyle awesome
+
+actor "Negoziante" as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreCatalogo" as G <<control>>
+participant "CatalogoArticoli" as CA <<repository>>
+participant "Articolo" as A <<entity>>
+
+' 1. Visualizzazione catalogo
+N -> IN: Accede a "Gestione Catalogo"
+IN -> G: visualizzaCatalogo()
+G -> CA: getArticoliDisponibili()
+CA --> G: elenco articoli
+G --> IN: mostraElencoArticoli(articoli)
+IN --> N: Mostra catalogo
+
+' 2. Selezione articolo da modificare
+N -> IN: Seleziona articolo dall'elenco
+N -> IN: Clicca "Modifica"
+IN -> G: getArticolo(id)
+G -> CA: trovaPerId(id)
+CA --> G: restituisce Articolo
+G --> IN: mostraModuloModificaArticolo(dati correnti)
+IN --> N: Mostra dati articolo (nome, tipologia, prezzo, quantità, descrizione)
+
+' 3. Flusso di annullamento (break)
+break Annullamento
+    N -> IN: Clicca "Annulla"
+    IN -> G: annullaOperazione()
+    IN --> N: mostraMessaggio("Operazione annullata")
+end
+
+' 4. Modifica articolo
+N -> IN: Modifica uno o più campi
+N -> IN: Clicca "Conferma"
+
+IN -> G: modificaArticolo(id, nuoviDati)
+G -> G: validaArticolo(nuoviDati)
+
+alt Dati non validi (es. prezzo negativo, quantità non numerica)
+    G --> IN: mostraErrore("Dati inseriti non validi")
+    IN --> N: Mostra errore
+    
+else Dati validi
+    G -> CA: trovaPerId(id)
+    CA --> G: restituisce Articolo esistente
+    
+    alt Articolo non trovato
+        G --> IN: mostraErrore("Articolo non trovato")
+        IN --> N: Mostra errore
+        
+    else Articolo trovato
+        G -> A: setDati(nuoviDati)
+        A --> G: dati aggiornati
+        
+        G -> CA: aggiornaCatalogo()
+        CA --> G: conferma aggiornamento
+        
+        G --> IN: mostraConferma("Articolo modificato con successo")
+        IN --> N: Mostra conferma
+    end
+end
+
+@enduml

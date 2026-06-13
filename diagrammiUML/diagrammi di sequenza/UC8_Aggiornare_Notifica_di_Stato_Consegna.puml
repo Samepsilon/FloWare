@@ -1,0 +1,54 @@
+@startuml
+skinparam actorStyle awesome
+title Diagramma di Sequenza UC8 - Aggiornare stato di consegna
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+actor "Negoziante" as N
+actor "Cliente" as C
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreNotifiche" as GN <<control>>
+participant "CatalogoConsegne" as CR <<repository>>
+participant "NotificaRepository" as NR <<repository>>
+participant "InterfacciaCliente" as IC <<boundary>>
+participant "Consegna" as CON <<entity>>
+
+' 1. Visualizzazione consegne in sospeso
+N -> IN: accede a "Gestione Notifiche/Consegne"
+IN -> GN: visualizzaConsegne()
+GN -> CR: trovaConsegne(Id, Stato)
+CR --> GN: lista di Consegna
+GN --> IN: mostra elenco consegne 
+IN --> N: visualizza lista consegne
+
+' 2. Selezione e aggiornamento stato
+N -> IN: seleziona una consegna e sceglie "Aggiorna stato" (es. "Presa in carico")
+IN -> GN: aggiornaStatoConsegna(id, nuovoStato)
+
+' 3. Recupero consegna e verifica stato
+GN -> CR: trovaPerId(id)
+CR --> GN: restituisce Consegna
+
+alt Consegna in sospeso
+    GN -> CON: setStato(nuovoStato)
+    CON --> GN: stato aggiornato
+    
+    GN -> CR: salva(consegnaAggiornata)
+    CR --> GN: conferma salvataggio
+    
+    GN -> NR: inviaNotificaCliente(Notifica)
+    NR --> GN: notifica inviata
+    
+    GN -> IC: mostraMessaggio(messaggio)
+    IC --> C: visualizza messaggio (es. "La tua consegna è stata presa in carico")
+    
+    GN --> IN: mostraConferma()
+    IN --> N: mostra messaggio "Stato consegna aggiornato a [nuovoStato]"
+
+else Consegna Eseguita
+    GN --> IN: mostraErrore("Stato non aggiornabile")
+    IN --> N: mostra messaggio "Stato non aggiornabile: consegna già eseguita"
+end
+
+@enduml
+

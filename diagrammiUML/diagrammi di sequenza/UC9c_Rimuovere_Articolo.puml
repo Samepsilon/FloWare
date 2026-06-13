@@ -26,8 +26,8 @@ break Annullamento
     IN --> N: Mostra "Operazione annullata"
 end
 alt Negoziante conferma
-    IN -> G: rimuoviArticolo()
-    CA -> CA: verificaArticolo()
+    IN -> G: rimuoviArticolo(id : Long)
+    G -> CA: verificaArticolo()
     alt Articolo non esiste
         G --> IN: errore "Articolo non trovato"
         IN --> N: Mostra errore

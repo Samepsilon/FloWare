@@ -3,41 +3,41 @@ skinparam actorStyle awesome
 title UC5 - Visualizzare catalogo articoli
 
 actor Cliente
-participant "Interfaccia Catalogo" <<boundary>>
-participant "Sistema Catalogo" <<control>>
-participant "ArticoloRepository" <<repository>>
+participant "InterfacciaCliente" <<boundary>>
+participant "SistemaCatalogo" <<control>>
+participant "CatalogoArticoli" <<repository>>
 participant "Articolo" <<entity>>
 
-Cliente -> "Interfaccia Catalogo" : accede alla sezione catalogo
-"Interfaccia Catalogo" -> "Sistema Catalogo" : visualizzaCatalogo()
+Cliente -> "InterfacciaCliente" : accede alla sezione catalogo
+"InterfacciaCliente" -> "SistemaCatalogo" : visualizzaCatalogo()
 
-activate "Sistema Catalogo"
+activate "SistemaCatalogo"
 
 
-"Sistema Catalogo" -> "ArticoloRepository" : getArticoliDisponibili()
-"ArticoloRepository" --> "Sistema Catalogo" : listaArticoli
+"SistemaCatalogo" -> "CatalogoArticoli" : getArticoliDisponibili()
+"CatalogoArticoli" --> "SistemaCatalogo" : listaArticoli
 
 alt listaArticoli vuota
-    "Sistema Catalogo" --> "Interfaccia Catalogo" : esitoVuoto
-    "Interfaccia Catalogo"--> Cliente : mostra("Nessun articolo disponibile")
+    "SistemaCatalogo" --> "InterfacciaCliente" : esitoVuoto
+    "InterfacciaCliente"--> Cliente : mostra("Nessun articolo disponibile")
 else listaArticoli non vuota
-    "Sistema Catalogo" --> "Interfaccia Catalogo" : listaArticoli
+    "SistemaCatalogo" --> "InterfacciaCliente" : listaArticoli
     
     
-    Cliente -> "Interfaccia Catalogo" : selezionaArticolo(idArticolo)
-    "Interfaccia Catalogo" -> "Sistema Catalogo" : richiediDettagli(idArticolo)
+    Cliente -> "InterfacciaCliente" : selezionaArticolo(idArticolo)
+    "InterfacciaCliente" -> "SistemaCatalogo" : richiediDettagli(idArticolo)
     
-    "Sistema Catalogo" -> "ArticoloRepository" : trovaPerId(idArticolo)
-    "ArticoloRepository" --> "Sistema Catalogo" : articolo
+    "SistemaCatalogo" -> "CatalogoArticoli" : trovaPerId(idArticolo)
+    "CatalogoArticoli" --> "SistemaCatalogo" : articolo
     
-    "Sistema Catalogo" -> "Articolo" : getDettagli(Nome, Descrizione, Prezzo)
-    "Articolo" --> "Sistema Catalogo" : dettagli
+    "SistemaCatalogo" -> "Articolo" : getDettagli(Nome, Descrizione, Prezzo)
+    "Articolo" --> "SistemaCatalogo" : dettagli
     
-    "Sistema Catalogo" --> "Interfaccia Catalogo" : dettagli
+    "SistemaCatalogo" --> "InterfacciaCliente" : dettagli
 end
 
-deactivate "Sistema Catalogo"
+deactivate "SistemaCatalogo"
 
-"Interfaccia Catalogo" --> Cliente : mostraDettagli(dettagli)
+"InterfacciaCliente" --> Cliente : mostraDettagli(dettagli)
 
 @enduml

@@ -1,4 +1,5 @@
-from datetime import date
+TIPI_VALIDI = ["preventivo", "appuntamento"]
+STATI_VALIDI = ["in attesa", "confermata", "annullata"]
 
 class Richiesta:
 
@@ -20,8 +21,3 @@ class Richiesta:
     def getStato(self):
         return self.stato
 
-    # +getDataOra() : String
-    def getDataOra(self):
-        # Se data è un oggetto date, lo formattiamo, altrimenti lo usiamo direttamente
-        data_str = self.data.strftime("%d/%m/%Y") if hasattr(self.data, 'strftime') else str(self.data)
-        return f"{data_str} {self.ora}"

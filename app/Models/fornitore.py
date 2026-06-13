@@ -1,5 +1,3 @@
-
-
 class Fornitore:
     def __init__(self, nome, contatti, tipologia, servizioDomicilio=False, id=None):
         self.id = id

@@ -2,9 +2,6 @@ from app.Models.fornitore import Fornitore
 from app.Repos import fornitoreRepository as repo
 from app.Repos import articoloRepository as repoA
 
-
-
-
 def visualizzaFornitori():
     return repo.caricaListaForniori()
 

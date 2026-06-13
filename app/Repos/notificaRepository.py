@@ -39,7 +39,7 @@ def scrivi(notifiche):
             })
 
 
-def salva_notifica(notifica):
+def salvaNotifica(notifica):
     tutti = leggi()
     if notifica.id is None:
         notifica.id = max((n.id for n in tutti), default=0) + 1
@@ -50,34 +50,30 @@ def salva_notifica(notifica):
     return notifica
 
 
-def trova_notifica(id):
+def trovaNotifica(id):
     for n in leggi():
         if n.id == id:
             return n
     return None
 
 
-def trovaPerId(id):
-    return trova_notifica(id)
-
-
-def notifiche_del_destinatario(destinatario):
+def notificheDelDestinatario(destinatario):
     return [n for n in leggi() if n.destinatario == destinatario]
 
 
-def notifiche_non_lette():
+def notificheNonLette():
     return [n for n in leggi() if not n.letta]
 
 
-def notifiche_per_tipo(tipo):
+def notifichePerTipo(tipo):
     return [n for n in leggi() if n.tipo == tipo]
 
 
-def notifiche_per_richiesta(richiestaId):
+def notifichePerRichiesta(richiestaId):
     return [n for n in leggi() if n.richiestaId == richiestaId]
 
 
-def elimina_notifica(id):
+def eliminaNotifica(id):
     tutti = leggi()
     filtrati = [n for n in tutti if n.id != id]
     scrivi(filtrati)
@@ -91,9 +87,9 @@ def elimina_notifiche_del_destinatario(destinatario):
 
 def segna_come_letta(id):
     """Aggiorna lo stato 'letta' di una notifica"""
-    notifica = trova_notifica(id)
+    notifica = trovaNotifica(id)
     if notifica:
         notifica.letta = True
-        salva_notifica(notifica)
+        salvaNotifica(notifica)
         return True
     return False

@@ -1,9 +1,10 @@
-import os
 import csv
+import os
 from app.Models.fornitore import Fornitore
 
 FILE = "data/fornitori.csv"
 COLONNE = ["id", "nome", "contatti", "tipologia", "servizioDomicilio"]
+
 
 def leggi():
     if not os.path.exists(FILE):
@@ -15,10 +16,11 @@ def leggi():
                 id=int(r["id"]),
                 nome=r["nome"],
                 contatti=r["contatti"],
-                tipologia=r["tipologia"],
+                tipologiaMerce=r["tipologia"],
                 servizioDomicilio=r["servizioDomicilio"] == "True",
             ))
         return righe
+
 
 def scrivi(fornitori):
     os.makedirs("data", exist_ok=True)
@@ -30,11 +32,12 @@ def scrivi(fornitori):
                 "id": f_.id,
                 "nome": f_.nome,
                 "contatti": f_.contatti,
-                "tipologia": f_.tipologia,
+                "tipologia": f_.tipologiaMerce,
                 "servizioDomicilio": f_.servizioDomicilio,
             })
 
-def salva_fornitore(fornitore):
+
+def salvaFornitore(fornitore):
     tutti = leggi()
     if fornitore.id is None:
         fornitore.id = max((f.id for f in tutti), default=0) + 1
@@ -44,17 +47,36 @@ def salva_fornitore(fornitore):
     scrivi(tutti)
     return fornitore
 
-def trova_fornitore(id):
+
+def cercaFornitori(id):
     for f in leggi():
         if f.id == id:
             return f
     return None
 
 
-def rimuoviFornitore(id):
-    tutti = leggi()
-    filtrati = [f for f in tutti if f.id != id]
-    scrivi(filtrati)
-
-def caricaListaForniori():
+def caricaListaFornitori():
     return leggi()
+
+
+def cercaFornitore(Nome):
+    for f in leggi():
+        if f.nome == Nome:
+            return f
+    return None
+
+
+def aggiornaFornitore(id, dati):
+    fornitore = cercaFornitori(id)
+    if fornitore is None:
+        return None
+    fornitore.aggiornaProprietà(dati)
+    return salvaFornitore(fornitore)
+
+
+def rimuoviFornitore(fornitore):
+    id_fornitore = fornitore if isinstance(fornitore, int) else fornitore.id
+    scrivi([f for f in leggi() if f.id != id_fornitore])
+
+
+

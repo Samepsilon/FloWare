@@ -1,77 +1,64 @@
 from app.Models.articolo import Articolo
-from app.Repos import articoloRepository as repo
-from app.Repos import fornitoreRepository as repoF
+from app.Repos import catalogoArticoli as repo
+from app.Repos import catalogoFornitori as repoF
 
 
-def aggiungi_articolo(nome, descrizione, prezzo, fornitore_id=None, disponibile=True):
-    if fornitore_id is not None and repoF.trova_fornitore(fornitore_id) is None:
-        raise ValueError(f"Fornitore con id={fornitore_id} non esiste.")
-    a = Articolo(nome=nome, descrizione=descrizione, prezzo=prezzo,
-                 disponibile=disponibile, fornitore_id=fornitore_id)
-    return repo.salva_articolo(a)
-
-
-def aggiorna_articolo(id, nome=None, descrizione=None, prezzo=None, disponibile=None, fornitore_id=None):
-    a = repo.trova_articolo(id)
-    if a is None:
-        raise ValueError(f"Articolo con id={id} non trovato.")
-    if nome is not None:
-        a.nome = nome
-    if descrizione is not None:
-        a.descrizione = descrizione
-    if prezzo is not None:
-        a.prezzo = prezzo
-    if disponibile is not None:
-        a.disponibile = disponibile
-    if fornitore_id is not None:
-        if repoF.trova_fornitore(fornitore_id) is None:
+def aggiungiArticolo(dati):
+    if isinstance(dati, Articolo):
+        articolo = dati
+    else:
+        fornitore_id = dati.get("fornitore_id")
+        if fornitore_id is not None and repoF.trovaPerId(fornitore_id) is None:
             raise ValueError(f"Fornitore con id={fornitore_id} non esiste.")
-        a.fornitore_id = fornitore_id
-    return repo.salva_articolo(a)
+        articolo = Articolo(
+            nome=dati["nome"],
+            descrizione=dati.get("descrizione", ""),
+            prezzo=float(dati["prezzo"]),
+            quantita=int(dati.get("quantita", 0)),
+            disponibile=dati.get("disponibile", True),
+            fornitore_id=fornitore_id,
+        )
+    if not validaArticolo(articolo):
+        raise ValueError("Dati articolo non validi.")
+    return aggiungiACatalogo(articolo)
 
 
-def rimuovi_articolo(id):
-    if repo.trova_articolo(id) is None:
+def validaArticolo(articolo):
+    return repo.verificaArticolo(articolo)
+
+
+def aggiungiACatalogo(articolo):
+    return repo.salvaArticolo(articolo)
+
+
+def modificaArticolo(id, nuoviDati):
+    articolo = repo.trovaPerId(id)
+    if articolo is None:
         raise ValueError(f"Articolo con id={id} non trovato.")
-    repo.elimina_articolo(id)
+    articolo.setDati(nuoviDati)
+    return repo.salvaArticolo(articolo)
 
 
-def applica_sconto(id, percentuale):
-    a = repo.trova_articolo(id)
-    if a is None:
+def getArticolo(id):
+    articolo = repo.trovaPerId(id)
+    if articolo is None:
         raise ValueError(f"Articolo con id={id} non trovato.")
-    a.sconto = percentuale
-    return repo.salva_articolo(a)
+    return articolo
 
 
-def rimuovi_sconto(id):
-    return applica_sconto(id, 0.0)
-
-
-def segna_disponibile(id, disponibile):
-    a = repo.trova_articolo(id)
-    if a is None:
+def rimuoviArticolo(id):
+    if not repo.verificaArticolo(id):
         raise ValueError(f"Articolo con id={id} non trovato.")
-    a.disponibile = disponibile
-    return repo.salva_articolo(a)
+    repo.rimuoviArticolo(id)
 
 
-def get_catalogo():
-    return repo.tutti_gli_articoli()
+def aggiornaCatalogo():
+    return repo.aggiornaCatalogo()
 
 
-def get_catalogo_disponibile():
-    return [a for a in repo.tutti_gli_articoli() if a.disponibile]
+def annullaCreazione():
+    return None
 
 
-def get_articoli_in_sconto():
-    return [a for a in repo.tutti_gli_articoli() if a.sconto > 0]
-
-
-def cerca_per_nome(nome):
-    return [a for a in repo.tutti_gli_articoli() if nome.lower() in a.nome.lower()]
-
-
-def cerca_per_fascia_prezzo(minimo, massimo):
-    return [a for a in repo.tutti_gli_articoli() if minimo <= a.prezzo_finale() <= massimo]
-
+def visualizzaCatalogo():
+    return repo.mostraCatalogo()

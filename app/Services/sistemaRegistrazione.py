@@ -1,37 +1,39 @@
-from app.Models.utente import Utente
+import re
 from app.Models.negoziante import Negoziante
 from app.Models.cliente import Cliente
 from app.Repos import utenteRepository as repo
 
-#Regex per verificatoEmail e verificatoCriteriPassword
-import re
 mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-password_pattern =  r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#%])[A-Za-z\d@$#%]{6,20}$"
+password_pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#%])[A-Za-z\d@$#%]{6,20}$"
 
 
-def inviaRegistrazione(username, email, password, ruolo):
-        if ruolo == "negoziante":
-            u = Negoziante(username, email, password, ruolo)
-        else :
-            u = Cliente(username, email, password, ruolo)
-        return repo.salva_utente(u)
+def inviaRegistrazione(dati):
+    username = dati["username"]
+    email = dati["email"]
+    password = dati["password"]
+    ruolo = dati.get("ruolo", "cliente")
+
+    if repo.trovaPerUsername(username):
+        raise ValueError(f"Username '{username}' già in uso.")
+    if not verificaFormatoEmail(email):
+        raise ValueError("Formato email non valido.")
+    if not verificaCriteriPassword(password):
+        raise ValueError("La password non rispetta i criteri richiesti.")
+
+    if ruolo == "negoziante":
+        utente = Negoziante(username, email, password)
+    else:
+        utente = Cliente(username, email, password)
+    return repo.salva(utente)
 
 
-def verificatoFormatoEmail(mail):
-    return bool(re.match(mail_pattern, mail))
+def verificaFormatoEmail(email):
+    return bool(re.match(mail_pattern, email))
 
-def verificatoCriteriPassword(password):
-    """
-    La password deve:
-    Contenere almeno un numero
-    Contenere almeno una lettera maiuscola
-    Contenere almeno una lettera minuscola
-    Contenere almeno un carattere speciale ($, @, #, %)
-    Avere una lunghezza compresa tra 6 e 20 caratteri
-    """
+
+def verificaCriteriPassword(password):
     return bool(re.search(password_pattern, password))
 
 
-
-def confrontaPassword(password , conferma ):
+def confrontaPassword(password, conferma):
     return password == conferma

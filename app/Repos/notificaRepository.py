@@ -50,6 +50,36 @@ def salvaNotifica(notifica):
     return notifica
 
 
+def segnaComeLetta(idNotifica):
+    notifica = trovaNotifica(idNotifica)
+    if notifica:
+        notifica.letta = True
+        salvaNotifica(notifica)
+        return True
+    return False
+
+
+def creaNotifica(cliente, stato):
+    destinatario = cliente.username if hasattr(cliente, "username") else str(cliente)
+    notifica = Notifica(
+        destinatario=destinatario,
+        messaggio=f"Stato aggiornato: {stato}",
+        letta=False,
+        tipo="stato",
+    )
+    return salvaNotifica(notifica)
+
+
+def inviaNotifica(destinatario, messaggio):
+    notifica = Notifica(
+        destinatario=destinatario,
+        messaggio=messaggio,
+        letta=False,
+        tipo="generica",
+    )
+    return salvaNotifica(notifica)
+
+
 def trovaNotifica(id):
     for n in leggi():
         if n.id == id:
@@ -57,12 +87,12 @@ def trovaNotifica(id):
     return None
 
 
-def notificheDelDestinatario(destinatario):
-    return [n for n in leggi() if n.destinatario == destinatario]
-
-
 def notificheNonLette():
     return [n for n in leggi() if not n.letta]
+
+
+def notificheDelDestinatario(destinatario):
+    return [n for n in leggi() if n.destinatario == destinatario]
 
 
 def notifichePerTipo(tipo):
@@ -74,22 +104,4 @@ def notifichePerRichiesta(richiestaId):
 
 
 def eliminaNotifica(id):
-    tutti = leggi()
-    filtrati = [n for n in tutti if n.id != id]
-    scrivi(filtrati)
-
-
-def elimina_notifiche_del_destinatario(destinatario):
-    tutti = leggi()
-    filtrati = [n for n in tutti if n.destinatario != destinatario]
-    scrivi(filtrati)
-
-
-def segna_come_letta(id):
-    """Aggiorna lo stato 'letta' di una notifica"""
-    notifica = trovaNotifica(id)
-    if notifica:
-        notifica.letta = True
-        salvaNotifica(notifica)
-        return True
-    return False
+    scrivi([n for n in leggi() if n.id != id])

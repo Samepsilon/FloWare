@@ -19,7 +19,6 @@ def leggi():
                     username=r["username"],
                     email=r["email"],
                     password=r["password"],
-                    ruolo=r["ruolo"],
                 ))
             else:
                 utenti.append(Negoziante(
@@ -27,7 +26,6 @@ def leggi():
                     username=r["username"],
                     email=r["email"],
                     password=r["password"],
-                    ruolo=r["ruolo"],
                 ))
         return utenti
 
@@ -47,51 +45,53 @@ def scrivi(utenti):
             })
 
 
-def salva_utente(utente):
+def salva(nuovoCliente):
     tutti = leggi()
-    if utente.id is None:
-        utente.id = max((u.id for u in tutti), default=0) + 1
-        tutti.append(utente)
+    if nuovoCliente.id is None:
+        nuovoCliente.id = max((u.id for u in tutti), default=0) + 1
+        tutti.append(nuovoCliente)
     else:
-        tutti = [utente if u.id == utente.id else u for u in tutti]
+        tutti = [nuovoCliente if u.id == nuovoCliente.id else u for u in tutti]
     scrivi(tutti)
-    return utente
+    return nuovoCliente
 
 
-def trova_utente(id):
+def trovaPerCredenziali(username, password):
+    for u in leggi():
+        if u.username == username and u.password == password:
+            return u
+    return None
+
+
+def trovaPerId(id):
     for u in leggi():
         if u.id == id:
             return u
     return None
 
 
-def trova_per_username(username):
+def trovaPerUsername(username):
     for u in leggi():
         if u.username == username:
             return u
     return None
 
 
-def trova_per_email(email):
+def trovaPerEmail(email):
     for u in leggi():
         if u.email == email:
             return u
     return None
 
 
-def tutti_i_clienti():
+def tuttiClienti():
     return [u for u in leggi() if u.ruolo == "cliente"]
 
 
-def tutti_i_negozianti():
+def tuttiNegozianti():
     return [u for u in leggi() if u.ruolo == "negoziante"]
 
 
-def elimina_utente(id):
+def eliminaUtente(id):
     tutti = leggi()
-    filtrati = [u for u in tutti if u.id != id]
-    scrivi(filtrati)
-
-
-
-
+    scrivi([u for u in tutti if u.id != id])

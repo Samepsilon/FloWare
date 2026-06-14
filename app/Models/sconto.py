@@ -1,12 +1,13 @@
-from offerta import Offerta
-class Sconto (Offerta):
+from app.Models.offerte import Offerte
 
-    def __init__(self,id,evento,percentuale,dataInizio,dataFine):
-      super().__init__(dataInizio, dataFine, ruolo = "sconto", id=id)  
-      self.evento = evento
-      self.percentuale = percentuale
+
+class Sconto(Offerte):
+
+    def __init__(self, evento, percentuale, dataInizio, dataFine, id=None):
+        super().__init__(dataInizio, dataFine, id=id)
+        self.evento = evento
+        self.percentuale = percentuale
+        self.tipo = "sconto"
 
     def getPercentuale(self):
         return self.percentuale
-
-

@@ -241,6 +241,7 @@ class CatalogoArticoli <<repository>> {
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
 }
@@ -250,9 +251,9 @@ class CatalogoOfferte <<repository>> {
     + salvaSconto(dati : Object) : Long
     + rimuoviSconto(id : Long) : void
     + cercaPromozioni() : List<Promozione>
-    + cercaPromozione(id : Long) : Promozione
+    + cercaOfferta(id : Long) : fferta
     + salvaPromozione(dati : Object) : Long
-    + rimuoviPromozione(id : Long) : void
+    + rimuoviOfferta(id : Long) : void
     + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
     + cercaOfferteValide() : List<Promozione>
     + recuperaOfferteAttive() : List<Promozione>
@@ -361,7 +362,6 @@ class GestoreOrari <<control>> {
 }
 
 class GestoreFornitori <<control>> {
-    + visualizzaFornitori() : List<Fornitore>
     + aggiungiFornitore(dati : Object) : void
     + validaDatiFornitore(dati : Object) : Boolean
     + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void

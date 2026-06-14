@@ -3,7 +3,7 @@ import os
 from app.Models.consegna import Consegna
 
 FILE = "data/consegne.csv"
-COLONNE = ["id", "regione", "città", "via", "civico", "stato", "clienteId"]
+COLONNE = ["id", "regione", "citta", "via", "civico", "stato", "clienteId"]
 
 
 def leggi():
@@ -15,7 +15,7 @@ def leggi():
             righe.append(Consegna(
                 id=int(r["id"]),
                 regione=r["regione"],
-                città=r["città"],
+                citta=r.get("citta") or r.get("città", ""),
                 via=r["via"],
                 civico=r["civico"],
                 stato=r["stato"] if r["stato"] else None,
@@ -33,7 +33,7 @@ def scrivi(consegne):
             w.writerow({
                 "id": c.id,
                 "regione": c.regione,
-                "città": c.città,
+                "citta": c.citta,
                 "via": c.via,
                 "civico": c.civico,
                 "stato": c.stato if c.stato is not None else "",
@@ -41,7 +41,7 @@ def scrivi(consegne):
             })
 
 
-def salva_consegna(consegna):
+def salva(consegna):
     tutti = leggi()
     if consegna.id is None:
         consegna.id = max((c.id for c in tutti), default=0) + 1
@@ -52,23 +52,24 @@ def salva_consegna(consegna):
     return consegna
 
 
-def trova_consegna(id):
+def trovaPerId(id):
     for c in leggi():
         if c.id == id:
             return c
     return None
 
 
-def consegne_del_cliente(clienteId):
+def cercaConsegne():
+    return leggi()
+
+def consegneDelCliente(clienteId):
     return [c for c in leggi() if c.clienteId == clienteId]
 
 
-def consegne_per_stato(stato):
-    return [c for c in leggi() if c.stato == stato]
+def consegnePerStato(stato,clienteId):
+    listConsegna = [c for c in leggi() if c.clienteId == clienteId]
+    return [c for c in listConsegna if c.stato == stato]
 
 
-def elimina_consegna(id):
-    tutti = leggi()
-    filtrati = [c for c in tutti if c.id != id]
-    scrivi(filtrati)
-   
+def eliminaConsegna(id):
+    scrivi([c for c in leggi() if c.id != id])

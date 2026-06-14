@@ -39,7 +39,7 @@ def scrivi(orari):
             })
 
 
-def salva_orario(orario):
+def salvaOrario(orario):
     tutti = leggi()
     if orario.id is None:
         orario.id = max((o.id for o in tutti), default=0) + 1
@@ -50,45 +50,62 @@ def salva_orario(orario):
     return orario
 
 
-def trova_orario(id):
+def getOrariSettimanali():
+    return [o for o in leggi() if o.tipo == "settimanale"]
+
+
+def cercaOrari():
+    return leggi()
+
+
+def cercaOrarioPerGiorno(giorno, tipo="settimanale"):
+    for o in leggi():
+        if o.giorno == giorno and o.tipo == tipo:
+            return o
+    return None
+
+
+def cercaOrarioPerData(data):
+    for o in leggi():
+        if o.tipo == "speciale" and str(o.dataSpecifica) == str(data):
+            return o
+    return None
+
+
+def nuovoOrario(giorno, nuoviOrari, tipo="settimanale"):
+    dati = nuoviOrari if isinstance(nuoviOrari, dict) else {}
+    orario = Orario(
+        giorno=giorno,
+        apertura=dati.get("apertura"),
+        chiusura=dati.get("chiusura"),
+        tipo=tipo,
+        dataSpecifica=dati.get("dataSpecifica"),
+    )
+    return salvaOrario(orario)
+
+
+def aggiornaOrario(id, nuoviOrari):
+    orario = trovaPerId(id)
+    if orario is None:
+        return None
+    dati = nuoviOrari if isinstance(nuoviOrari, dict) else {}
+    orario.impostaNuoviOrari(dati)
+    orario.aggiornaOrario()
+    if "giorno" in dati:
+        orario.giorno = dati["giorno"]
+    if "tipo" in dati:
+        orario.tipo = dati["tipo"]
+    if "dataSpecifica" in dati:
+        orario.dataSpecifica = dati["dataSpecifica"]
+    return salvaOrario(orario)
+
+
+def trovaPerId(id):
     for o in leggi():
         if o.id == id:
             return o
     return None
 
 
-def trovaPerId(id):
-    return trova_orario(id)
-
-
-def orari_settimanali():
-    """Restituisce tutti gli orari di tipo settimanale"""
-    return [o for o in leggi() if o.tipo == "settimanale"]
-
-
-def orari_speciali():
-    """Restituisce tutti gli orari di tipo speciale"""
-    return [o for o in leggi() if o.tipo == "speciale"]
-
-
-def orari_per_giorno(giorno):
-    """Restituisce gli orari settimanali per un giorno specifico"""
-    return [o for o in leggi() if o.tipo == "settimanale" and o.giorno == giorno]
-
-
-def orari_per_data(dataSpecifica):
-    """Restituisce gli orari speciali per una data specifica"""
-    return [o for o in leggi() if o.tipo == "speciale" and o.dataSpecifica == dataSpecifica]
-
-
-def elimina_orario(id):
-    tutti = leggi()
-    filtrati = [o for o in tutti if o.id != id]
-    scrivi(filtrati)
-
-
-def elimina_orari_per_giorno(giorno):
-    """Elimina tutti gli orari settimanali per un giorno"""
-    tutti = leggi()
-    filtrati = [o for o in tutti if not (o.tipo == "settimanale" and o.giorno == giorno)]
-    scrivi(filtrati)
+def eliminaOrario(id):
+    scrivi([o for o in leggi() if o.id != id])

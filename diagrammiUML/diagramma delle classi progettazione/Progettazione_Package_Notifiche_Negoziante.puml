@@ -1,5 +1,5 @@
 @startuml
-title Package di Analisi: Notifiche
+title  Diagramma delle Classi di Programmazione Package: Notifiche (Negoziante)
 
 interface InterfacciaNegoziante <<boundary>>
 class GestoreNotifiche <<control>>

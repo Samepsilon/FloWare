@@ -1,0 +1,173 @@
+@startuml
+title Diagramma delle Classi di Progettazione Package: Locale (Negoziante)
+
+
+interface InterfacciaNegoziante <<boundary>>
+class GestoreCatalogo <<control>>
+class GestoreOfferte <<control>>
+class GestoreOrari <<control>>
+class Offerte <<entity>>
+class CatalogoArticoli <<entity>>
+class CatalogoOrari <<repository>>
+class CatalogoOfferte <<repository>>
+
+
+interface "InterfacciaNegoziante" <<boundary>> {
+    ' Dashboard
+    + mostraDashboardNegoziante() : void
+    ' Gestione Catalogo
+    + mostraElencoArticoli(articoli : List<Articolo>) : void
+    + mostraModuloInserimentoArticolo() : void
+    + mostraModuloModificaArticolo(dati : Map) : void
+    ' Gestione Fornitori
+    + mostraElencoFornitori(fornitori : List<Fornitore>) : void
+    + mostraModuloInserimentoFornitore() : void
+    + mostraModuloModificaFornitore(dati : Map) : void
+    ' Gestione Orari
+    + mostraTabellaOrariConModifica(orari : List<Orario>) : void
+    + mostraModuloOrario(data : Date) : void
+    ' Gestione Offerte
+    + mostraElencoSconti(sconti : List<Sconto>) : void
+    + mostraElencoPromozioni(promozioni : List<Promozione>) : void
+    + mostraModuloCreazioneSconto() : void
+    + mostraModuloCreazionePromozione() : void
+    ' Gestione Notifiche
+    + mostraElencoNotifiche(notifiche : List<Notifica>) : void
+    + mostraDettagliRichiesta(richiesta : Richiesta) : void
+    + mostraDettagliConsegna(consegna : Consegna) : void
+    ' Messaggi comuni
+    + mostraConferma(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
+}
+class GestoreCatalogo <<control>> {
+    + aggiungiArticolo(dati : Object) : void
+    + validaArticolo(articolo : Articolo) : Boolean
+    + aggiungiACatalogo(articolo : Articolo) : void
+    + modificaArticolo(id : Long, nuoviDati : Object) : void
+    + getArticolo(id : Long) : Articolo
+    + rimuoviArticolo(id : Long) : void
+    + aggiornaCatalogo() : void
+    + annullaCreazione() : void
+    + visualizzaCatalogo() : List<Articolo>
+}
+
+class GestoreOfferte <<control>> {
+    + visualizzaScontiAttivi() : List<Sconto>
+    + creaSconto(dati : Object) : void
+    + validaDatiSconto(dati : Object) : Boolean
+    + creaPromozione(dati : Object) : void
+    + validaDatiPromozione(dati : Object) : Boolean
+    + eliminaOfferta(id : Long, tipo : String) : void
+    + aggiornaListaSconti() : void
+    + aggiornaListaOfferte() : void
+    + visualizzaOfferteAttive() : List<Promozione>
+}
+
+class GestoreOrari <<control>> {
+    + visualizzaOrari() : List<Orario>
+    + aggiornaOrarioSettimanale(giorno : String, nuoviOrari : Object) : void
+    + validaOrario(nuoviOrari : Object) : Boolean
+    + impostaChiusuraStraordinaria(data : Date) : void
+    + impostaOrarioTemporaneo(data : Date, orario : Object) : void
+    + aggiornaVisualizzazioneOrari() : List<Orario>
+}
+class CatalogoOrari <<repository>> {
+    + getOrariSettimanali() : List<Orario>
+    + cercaOrari() : List<Orario>
+    + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
+    + cercaOrarioPerData(data : Date) : Orario
+    + salvaOrario(giorno : String, nuoviOrari : Object, tipo : String) : void
+    + aggiornaOrario(id : Long, nuoviOrari : Object) : void
+}
+
+class CatalogoArticoli <<repository>> {
+    + getArticoliDisponibili() : List<Articolo>
+    + mostraCatalogo() : List<Articolo>
+    + trovaPerId(id : Long) : Articolo
+    + aggiornaCatalogo() : void
+    + rimuoviArticolo() : void
+    + verificaArticolo() : Boolean
+    + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
+    + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
+    + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
+}
+
+class CatalogoOfferte <<repository>> {
+    + cercaSconti() : List<Sconto>
+    + salvaSconto(dati : Object) : Long
+    + rimuoviSconto(id : Long) : void
+    + cercaPromozioni() : List<Promozione>
+    + cercaOfferta(id : Long) : fferta
+    + salvaPromozione(dati : Object) : Long
+    + rimuoviOfferta(id : Long) : void
+    + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
+    + cercaOfferteValide() : List<Promozione>
+    + recuperaOfferteAttive() : List<Promozione>
+}
+class Articolo <<entity>> {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+    --
+    + getDettagli() : String
+    + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + rimuoviOfferta() : void
+    + setDati(nuoviDati : Map) : void
+}
+
+
+abstract class Offerte <<entity>> {
+    - id : Long
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Sconto <<entity>> {
+    - id : Long
+    - percentuale : Double
+    - evento : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Promozione <<entity>> {
+    - id : Long
+    - descrizione : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Orario <<entity>> {
+    - id : Long
+    - giorno : String
+    - apertura : String
+    - chiusura : String
+    - tipo : String
+    - dataSpecifica : Date
+    --
+    + getDettagliOrario() : String
+    + aggiornaOrario() : void
+}
+
+Offerte <|-- Sconto
+Offerte <|-- Promozione
+
+CatalogoArticoli ..> Articolo
+Articolo "1" --> "0..*" Offerte
+
+InterfacciaNegoziante ..> GestoreOrari
+GestoreOrari ..> CatalogoOrari
+InterfacciaNegoziante ..> GestoreOfferte
+GestoreOfferte ..> CatalogoOfferte
+GestoreOfferte ..> CatalogoArticoli
+InterfacciaNegoziante ..> GestoreCatalogo
+GestoreCatalogo ..> CatalogoArticoli
+CatalogoOrari ..> Orario
+CatalogoOfferte ..> Offerte
+
+
+@enduml

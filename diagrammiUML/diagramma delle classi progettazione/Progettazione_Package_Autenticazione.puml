@@ -1,0 +1,58 @@
+@startuml
+title Diagramma delle classi di progettazione Package: Autenticazione
+
+
+interface InterfacciaLogin <<boundary>>
+class SistemaRegistrazione <<control>>
+class SistemaAccesso <<control>>
+class UtenteRepository <<repository>>
+class Cliente <<entity>>
+class Negoziante <<entity>>
+
+class "InterfacciaLogin" <<boundary>> {
+    ' Autenticazione
+    + richiediCredenziali() : void
+    + mostraErroreLogin(messaggio : String) : void
+    ' Registrazione (PRE-login)
+    + mostraFormRegistrazione() : void
+    + mostraConfermaRegistrazione(messaggio : String) : void
+    + mostraErroreRegistrazione(messaggio : String) : void
+    + reindirizzaLogin() : void
+}
+abstract class Utente <<entity>> {
+    - id : Long
+    - username : String
+    - email : String
+    - password : String
+    - ruolo : String
+    --
+    + getRuolo() : String
+}
+class UtenteRepository <<repository>> {
+    ' Gestione generica utenti
+    + trovaPerCredenziali(username : String, password : String) : Utente
+    + trovaPerId(id : Long) : Utente
+    + trovaPerUsername(username : String) : Utente
+    + salva(nuovoCliente : Utente) : void
+}
+class SistemaRegistrazione <<control>> {
+    + inviaRegistrazione(dati : Object) : void
+    + verificaFormatoEmail(email : String) : Boolean
+    + verificaCriteriPassword(password : String) : Boolean
+    + confrontaPassword(password : String, conferma : String) : Boolean
+}
+class SistemaAccesso <<control>> {
+    + inviaCredenziali(username : String, password : String) : void
+    + impostaSessione(ruolo : String) : void
+    + reindirizzaPerRuolo(ruolo : String) : void
+}
+
+Utente <|-- Cliente
+Utente <|-- Negoziante
+
+InterfacciaLogin ..> SistemaRegistrazione
+SistemaRegistrazione ..> UtenteRepository
+SistemaAccesso ..> UtenteRepository
+UtenteRepository ..> Utente
+InterfacciaLogin ..> SistemaAccesso
+@enduml

@@ -1,0 +1,207 @@
+@startuml
+
+title: Diagramma delle classi di Progettazione Package: Locale (Cliente)
+
+
+class "InterfacciaCliente" <<boundary>> {
+    ' Dashboard
+    + mostraDashboardCliente() : void
+    ' Gestione richieste
+    + mostraCampi(tipo : String) : void
+    + mostraElencoRichieste(richieste : List<Richiesta>) : void
+    ' Visualizzazione
+    + mostraCatalogo(articoli : List<Articolo>) : void
+    + mostraDettagliArticolo(dettagli : Map) : void
+    + mostraTabellaOrari(orari : List<Orario>) : void
+    + mostraOfferte(offerte : List<Promozione>) : void
+    + mostraMessaggio(messaggio : String) : void
+    + mostraConferma(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
+}
+class SistemaInfoNegozio <<control>> {
+    + richiediOrari() : List<Orario>
+}
+
+class SistemaCatalogo <<control>> {
+    + visualizzaCatalogo() : List<Articolo>
+    + richiediDettagli(idArticolo : Long) : Articolo
+}
+
+class SistemaOfferte <<control>> {
+    + recuperaOfferteAttive() : List<Promozione>
+}
+class SistemaRichieste <<control>> {
+    + richiediOpzioni() : List<String>
+    + inviaRichiesta(richiesta : Richiesta) : void
+    + annullaRichiesta(idRichiesta : Long) : void
+    + recuperaRichieste(clienteId : Long) : List<Richiesta>
+    + getDettagliRichiesta(idRichiesta : Long) : Richiesta
+    + recuperaDateDisponibili() : List<Date>
+    + recuperaFasceOrarie(data : Date) : List<String>
+    + confermaScelta(data : Date, ora : String) : void
+}
+class ArchivioCalendario <<repository>> {
+    + trovaDateLibere() : List<Date>
+    + trovaFascePerData(data : Date) : List<String>
+    + salvaScelta(data : Date, ora : String) : void
+}
+class GestoreConsegne <<control>> {
+    + confermaRichiesta(dati : Object) : void
+    + trovaPerId(idConsegna : Long) : Consegna
+    + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
+}
+class ConsegnaRepository <<repository>> {
+    + salva(consegna : Consegna) : void
+    + trovaPerId(id : Long) : Consegna
+}
+class CatalogoOrari <<repository>> {
+    + getOrariSettimanali() : List<Orario>
+    + cercaOrari() : List<Orario>
+    + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
+    + cercaOrarioPerData(data : Date) : Orario
+    + salvaOrario(giorno : String, nuoviOrari : Object, tipo : String) : void
+    + aggiornaOrario(id : Long, nuoviOrari : Object) : void
+}
+
+class CatalogoArticoli <<repository>> {
+    + getArticoliDisponibili() : List<Articolo>
+    + mostraCatalogo() : List<Articolo>
+    + trovaPerId(id : Long) : Articolo
+    + aggiornaCatalogo() : void
+    + rimuoviArticolo() : void
+    + verificaArticolo() : Boolean
+    + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
+    + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
+    + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
+}
+
+class CatalogoOfferte <<repository>> {
+    + cercaSconti() : List<Sconto>
+    + salvaSconto(dati : Object) : Long
+    + rimuoviSconto(id : Long) : void
+    + cercaPromozioni() : List<Promozione>
+    + cercaOfferta(id : Long) : fferta
+    + salvaPromozione(dati : Object) : Long
+    + rimuoviOfferta(id : Long) : void
+    + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
+    + cercaOfferteValide() : List<Promozione>
+    + recuperaOfferteAttive() : List<Promozione>
+}
+class Orario {
+    - id : Long
+    - giorno : String
+    - apertura : String
+    - chiusura : String
+    - tipo : String
+    - dataSpecifica : Date
+    --
+    + getDettagliOrario() : String
+    + aggiornaOrario() : void
+}
+
+class Articolo {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+    --
+    + getDettagli() : String
+    + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + rimuoviOfferta() : void
+    + setDati(nuoviDati : Map) : void
+}
+abstract class Offerte {
+    - id : Long
+    - dataInizio : Date
+    - dataFine : Date
+}
+class Sconto {
+    - id : Long
+    - percentuale : Double
+    - evento : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Promozione {
+    - id : Long
+    - descrizione : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+class SlotOrario {
+    - id : Long
+    - data : Date
+    - fasciaOraria : String
+    --
+    + impostaData() : void
+}
+class Consegna {
+    - id : Long
+    - regione : String
+    - citta : String
+    - via : String
+    - civico : String
+    - stato : String
+    - clienteId : Long
+    --
+    + setStato(nuovoStato : String) : void
+    + getStato() : String
+    + getClienteId() : Long
+}
+class ArchivioRichieste <<repository>> {
+    + salva(richiesta : Richiesta) : void
+    + trovaPerId(id : Long) : Richiesta
+    + trovaPerCliente(clienteId : Long) : List<Richiesta>
+    + getDettagliConferma(id : Long) : Richiesta
+    + findNotificheNonLette() : List<Notifica>
+    + verificaAnnullamento(richiesta : Richiesta) : Boolean
+    + cercaRichiesta(richiesta : Richiesta) : Richiesta
+    + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+}
+class Richiesta {
+    - id : Long
+    - tipo : String
+    - stato : String
+    - data : Date
+    - ora : String
+    - contatti : String
+    - descrizione : String
+    - clienteId : Long
+    --
+    + setStato(stato : String) : void
+    + getStato() : String
+    + getDataOra() : String
+}
+
+InterfacciaCliente ..> SistemaCatalogo
+SistemaCatalogo ..> CatalogoArticoli
+CatalogoArticoli ..> Articolo
+Articolo "1" --> "0..*" Offerte :associato
+Offerte <|-- Sconto
+Offerte <|-- Promozione
+
+InterfacciaCliente ..> SistemaOfferte
+SistemaOfferte ..> CatalogoOfferte
+CatalogoOfferte ..> Offerte
+
+InterfacciaCliente ..> SistemaInfoNegozio
+SistemaInfoNegozio ..> CatalogoOrari
+CatalogoOrari..> Orario
+
+GestoreConsegne ..> ConsegnaRepository
+ConsegnaRepository ..> Consegna
+
+InterfacciaCliente ..> SistemaRichieste
+SistemaRichieste ..> ArchivioRichieste
+ArchivioRichieste ..> Richiesta
+Richiesta "1" --> "0..1" SlotOrario :occupa
+
+SistemaRichieste ..> ArchivioCalendario
+ArchivioCalendario ..> SlotOrario
+
+InterfacciaCliente ..> GestoreConsegne
+@enduml

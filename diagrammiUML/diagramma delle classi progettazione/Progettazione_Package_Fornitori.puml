@@ -1,0 +1,83 @@
+@startuml
+title Diagramma delle Classi di Progettazione Package: Fornitori
+
+
+interface InterfacciaNegoziante <<boundary>>
+class GestoreFornitori <<control>>
+class CatalogoFornitori <<repository>>
+class Articolo <<entity>>
+
+class "InterfacciaNegoziante" <<boundary>> {
+    ' Dashboard
+    + mostraDashboardNegoziante() : void
+    ' Gestione Catalogo
+    + mostraElencoArticoli(articoli : List<Articolo>) : void
+    + mostraModuloInserimentoArticolo() : void
+    + mostraModuloModificaArticolo(dati : Map) : void
+    ' Gestione Fornitori
+    + mostraElencoFornitori(fornitori : List<Fornitore>) : void
+    + mostraModuloInserimentoFornitore() : void
+    + mostraModuloModificaFornitore(dati : Map) : void
+    ' Gestione Orari
+    + mostraTabellaOrariConModifica(orari : List<Orario>) : void
+    + mostraModuloOrario(data : Date) : void
+    ' Gestione Offerte
+    + mostraElencoSconti(sconti : List<Sconto>) : void
+    + mostraElencoPromozioni(promozioni : List<Promozione>) : void
+    + mostraModuloCreazioneSconto() : void
+    + mostraModuloCreazionePromozione() : void
+    ' Gestione Notifiche
+    + mostraElencoNotifiche(notifiche : List<Notifica>) : void
+    + mostraDettagliRichiesta(richiesta : Richiesta) : void
+    + mostraDettagliConsegna(consegna : Consegna) : void
+    ' Messaggi comuni
+    + mostraConferma(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
+}
+class Articolo <<entity>> {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+    --
+    + getDettagli() : String
+    + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+    + rimuoviOfferta() : void
+    + setDati(nuoviDati : Map) : void
+}
+class Fornitore <<entity>> {
+    - id : Long
+    - nome : String
+    - contatti : String
+    - tipologiaMerce : String
+    - servizioDomicilio : Boolean
+    --
+    + aggiornaProprietà(nuoviDati : Map) : void
+    + findAll() : List<Fornitore>
+    + find(fornitore : Fornitore) : Fornitore
+}
+class CatalogoFornitori <<repository>> {
+    + cercaFornitori() : List<Fornitore>
+    + caricaListaFornitori() : List<Fornitore>
+    + cercaFornitore(fornitore : Fornitore) : Fornitore
+    + salvaFornitore(dati : Object) : Fornitore
+    + aggiornaFornitore(id : Long, dati : Object) : void
+    + rimuoviFornitore(fornitore : Fornitore) : void
+}
+class GestoreFornitori <<control>> {
+    + aggiungiFornitore(dati : Object) : void
+    + validaDatiFornitore(dati : Object) : Boolean
+    + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void
+    + eliminaFornitore(fornitore : Fornitore) : void
+    + aggiornaListaFornitori() : void
+    + visualizzaListaFornitori() : List<Fornitore>
+    + getFornitore(fornitore : Fornitore) : Fornitore
+}
+
+InterfacciaNegoziante ..> GestoreFornitori
+GestoreFornitori ..> CatalogoFornitori
+CatalogoFornitori ..> Fornitore
+Fornitore "1" --> "0..*" Articolo :possiede
+@enduml

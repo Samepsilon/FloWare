@@ -1,0 +1,102 @@
+@startuml
+title Package di Analisi: Notifiche
+
+interface InterfacciaNegoziante <<boundary>>
+class GestoreNotifiche <<control>>
+class NotificaRepository <<repository>>
+class ArchivioRichieste <<repository>>
+class SlotOrario <<entity>>
+
+interface "InterfacciaNegoziante" <<boundary>> {
+    ' Dashboard
+    + mostraDashboardNegoziante() : void
+    ' Gestione Catalogo
+    + mostraElencoArticoli(articoli : List<Articolo>) : void
+    + mostraModuloInserimentoArticolo() : void
+    + mostraModuloModificaArticolo(dati : Map) : void
+    ' Gestione Fornitori
+    + mostraElencoFornitori(fornitori : List<Fornitore>) : void
+    + mostraModuloInserimentoFornitore() : void
+    + mostraModuloModificaFornitore(dati : Map) : void
+    ' Gestione Orari
+    + mostraTabellaOrariConModifica(orari : List<Orario>) : void
+    + mostraModuloOrario(data : Date) : void
+    ' Gestione Offerte
+    + mostraElencoSconti(sconti : List<Sconto>) : void
+    + mostraElencoPromozioni(promozioni : List<Promozione>) : void
+    + mostraModuloCreazioneSconto() : void
+    + mostraModuloCreazionePromozione() : void
+    ' Gestione Notifiche
+    + mostraElencoNotifiche(notifiche : List<Notifica>) : void
+    + mostraDettagliRichiesta(richiesta : Richiesta) : void
+    + mostraDettagliConsegna(consegna : Consegna) : void
+    ' Messaggi comuni
+    + mostraConferma(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
+}
+class GestoreNotifiche <<control>> {
+    + visualizzaNotifiche() : List<Notifica>
+    + confermaAppuntamento(richiesta : Richiesta) : void
+    + confermaPreventivo(richiesta : Richiesta) : void
+    + inviaNotificaCliente(notifica : Notifica) : void
+    + visualizzaConsegne() : List<Consegna>
+}
+class ArchivioRichieste <<repository>> {
+    + salva(richiesta : Richiesta) : void
+    + trovaPerId(id : Long) : Richiesta
+    + trovaPerCliente(clienteId : Long) : List<Richiesta>
+    + getDettagliConferma(id : Long) : Richiesta
+    + findNotificheNonLette() : List<Notifica>
+    + verificaAnnullamento(richiesta : Richiesta) : Boolean
+    + cercaRichiesta(richiesta : Richiesta) : Richiesta
+    + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+}
+class NotificaRepository <<repository>> {
+    + segnaComeLetta(idNotifica : Long) : void
+    + creaNotifica(cliente : Utente, stato : String) : Notifica
+    + inviaNotifica(destinatario : String, messaggio : String) : void
+    + salvaNotifica(notifica : Notifica) : void
+}
+
+class Richiesta <<entity>> {
+    - id : Long
+    - tipo : String
+    - stato : String
+    - data : Date
+    - ora : String
+    - contatti : String
+    - descrizione : String
+    - clienteId : Long
+     --
+    + setStato(stato : String) : void
+    + getStato() : String
+    + getDataOra() : String
+}
+
+class Notifica <<entity>> {
+    - id : Long
+    - destinatario : String
+    - messaggio : String
+    - letta : Boolean
+    - tipo : String
+    - richiestaId : Long
+}
+
+class SlotOrario <<entity>> {
+    - id : Long
+    - data : Date
+    - fasciaOraria : String
+    --
+    + impostaData() : void
+}
+
+
+InterfacciaNegoziante ..> GestoreNotifiche
+GestoreNotifiche ..> NotificaRepository
+GestoreNotifiche ..> ArchivioRichieste
+NotificaRepository ..> Notifica
+ArchivioRichieste ..> Richiesta
+Richiesta "1" --> "0..*" Notifica :genera
+Richiesta "1" --> "0..1" SlotOrario :occupa
+
+@enduml

@@ -1,0 +1,103 @@
+@startuml
+
+title Diagramma delle Classi di Programmazione Package: Notifiche (Cliente) 
+
+interface "InterfacciaCliente" <<boundary>> {
+    ' Dashboard
+    + mostraDashboardCliente() : void
+    ' Gestione richieste
+    + mostraCampi(tipo : String) : void
+    + mostraElencoRichieste(richieste : List<Richiesta>) : void
+    ' Visualizzazione
+    + mostraCatalogo(articoli : List<Articolo>) : void
+    + mostraDettagliArticolo(dettagli : Map) : void
+    + mostraTabellaOrari(orari : List<Orario>) : void
+    + mostraOfferte(offerte : List<Promozione>) : void
+    + mostraMessaggio(messaggio : String) : void
+    + mostraConferma(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
+}
+class GestoreConsegne <<control>> {
+    + confermaRichiesta(dati : Object) : void
+    + trovaPerId(idConsegna : Long) : Consegna
+    + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
+}
+class UtenteRepository <<repository>> {
+    ' Gestione generica utenti
+    + trovaPerCredenziali(username : String, password : String) : Utente
+    + trovaPerId(id : Long) : Utente
+    + trovaPerUsername(username : String) : Utente
+    + salva(nuovoCliente : Utente) : void
+}
+class NotificaRepository <<repository>> {
+    + segnaComeLetta(idNotifica : Long) : void
+    + creaNotifica(cliente : Utente, stato : String) : Notifica
+    + inviaNotifica(destinatario : String, messaggio : String) : void
+    + salvaNotifica(notifica : Notifica) : void
+}
+
+abstract Utente {
+    - id : Long
+    - username : String
+    - email : String
+    - password : String
+    - ruolo : String
+    --
+    + getRuolo() : String
+}
+
+class Cliente {
+}
+
+class Negoziante {
+}
+class Notifica {
+    - id : Long
+    - destinatario : String
+    - messaggio : String
+    - letta : Boolean
+    - tipo : String
+    - richiestaId : Long
+}
+class Richiesta {
+    - id : Long
+    - tipo : String
+    - stato : String
+    - data : Date
+    - ora : String
+    - contatti : String
+    - descrizione : String
+    - clienteId : Long
+    --
+    + setStato(stato : String) : void
+    + getStato() : String
+    + getDataOra() : String
+}
+
+class Consegna {
+    - id : Long
+    - regione : String
+    - citta : String
+    - via : String
+    - civico : String
+    - stato : String
+    - clienteId : Long
+    --
+    + setStato(nuovoStato : String) : void
+    + getStato() : String
+    + getClienteId() : Long
+}
+
+InterfacciaCliente ..> GestoreConsegne
+GestoreConsegne ..> NotificaRepository
+NotificaRepository ..> Notifica
+
+GestoreConsegne ..> UtenteRepository
+UtenteRepository ..>Utente
+Utente <|-- Cliente
+Utente <|-- Negoziante
+Cliente "1" --> "0.." Consegna :possiede
+Cliente "1" --> "0..*" Richiesta :possiede
+Richiesta "1" --> "0..1" Notifica :genera
+
+@enduml

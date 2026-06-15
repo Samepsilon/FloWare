@@ -4,8 +4,17 @@ title Package di Analisi: Fornitori
 ' Boundary e Control
 interface InterfacciaNegoziante <<boundary>>
 class GestoreFornitori <<control>>
+class CatalogoFornitori <<repository>>
+class Articolo <<entity>>
 
-' Entity
+class Articolo <<entity>> {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+}
 class Fornitore <<entity>> {
     - id : Long
     - nome : String
@@ -14,7 +23,8 @@ class Fornitore <<entity>> {
     - servizioDomicilio : Boolean
 }
 
-' Relazioni
 InterfacciaNegoziante ..> GestoreFornitori
-GestoreFornitori --> Fornitore
+GestoreFornitori ..> CatalogoFornitori
+CatalogoFornitori --> Fornitore
+Fornitore "1" --> "0..*" Articolo 
 @enduml

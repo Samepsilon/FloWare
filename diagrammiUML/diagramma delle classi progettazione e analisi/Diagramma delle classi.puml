@@ -464,8 +464,6 @@ GestoreNotifiche ..> ArchivioRichieste
 ' ─────────────────────────────────────────────
 
 UtenteRepository ..> Utente
-UtenteRepository ..> Cliente
-UtenteRepository ..> Negoziante
 ArchivioRichieste ..> Richiesta
 ConsegnaRepository ..> Consegna
 CatalogoOrari ..> Orario

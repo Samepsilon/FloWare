@@ -7,8 +7,19 @@ interface InterfacciaNegoziante <<boundary>>
 class SistemaRichieste <<control>>
 class GestoreConsegne <<control>>
 class GestoreNotifiche <<control>>
+class NotificaRepository <<repository>>
+class ArchivioRichieste <<repository>>
+class UtenteRepository <<repository>>
+class Cliente <<entity>>
+abstract Utente <<entity>>
+class Negoziante
 
-' Entity
+abstract class Utente <<entity>> {
+    - id : Long
+    - nome : String
+    - email : String
+    - telefono : String
+}
 class Richiesta <<entity>> {
     - id : Long
     - tipo : String
@@ -39,19 +50,29 @@ class Notifica <<entity>> {
     - richiestaId : Long
 }
 
-class SlotOrario <<entity>> {
-    - id : Long
-    - data : Date
-    - fasciaOraria : String
-}
 
-' Relazioni
-InterfacciaCliente ..> SistemaRichieste
-InterfacciaNegoziante ..> GestoreConsegne
 InterfacciaNegoziante ..> GestoreNotifiche
+GestoreNotifiche ..> NotificaRepository
+GestoreNotifiche ..> ArchivioRichieste
+NotificaRepository ..> Notifica
+ArchivioRichieste ..> Richiesta
+Richiesta "1" --> "0..*" Notifica
 
-SistemaRichieste --> Richiesta
-SistemaRichieste --> SlotOrario
-GestoreConsegne --> Consegna
-Richiesta "1" -- "0..*" Notifica
+
+InterfacciaCliente ..> SistemaRichieste
+SistemaRichieste ..> ArchivioRichieste
+
+InterfacciaCliente ..> GestoreConsegne
+GestoreConsegne ..> NotificaRepository
+
+GestoreConsegne ..> UtenteRepository
+UtenteRepository ..> Utente
+Utente <|-- Cliente
+Utente <|-- Negoziante
+Cliente "1" --> "0..*" Richiesta
+Cliente "1" --> "0..*" Consegna
+Consegna "1" --> "0..*" Notifica
+
+
+
 @enduml

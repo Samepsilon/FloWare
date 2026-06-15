@@ -5,6 +5,7 @@ title Package di Analisi: Autenticazione
 interface InterfacciaLogin <<boundary>>
 class SistemaRegistrazione <<control>>
 class SistemaAccesso <<control>>
+class UtenteRepository <<repository>>
 
 ' Entity (Astratte e Concrete)
 abstract class Utente <<entity>> {
@@ -23,6 +24,8 @@ Utente <|-- Cliente
 Utente <|-- Negoziante
 
 InterfacciaLogin ..> SistemaRegistrazione
+SistemaRegistrazione ..> UtenteRepository
+SistemaAccesso ..> UtenteRepository
+UtenteRepository ..> Utente
 InterfacciaLogin ..> SistemaAccesso
-SistemaAccesso --> Utente
 @enduml

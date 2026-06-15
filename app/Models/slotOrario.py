@@ -10,5 +10,4 @@ class slotOrario:
     def impostaData(self, data) -> None:
         self.data = data
     
-    def getData(self):
-        return self.data
+    

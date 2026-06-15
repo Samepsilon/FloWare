@@ -35,12 +35,6 @@ def validaDatiSconto(dati):
     )
 
 
-def creaPromozione(dati):
-    if not validaDatiPromozione(dati):
-        raise ValueError("Dati promozione non validi.")
-    return repo.salvaPromozione(dati)
-
-
 def validaDatiPromozione(dati):
     return (
         dati.get("descrizione")
@@ -48,6 +42,12 @@ def validaDatiPromozione(dati):
         and dati.get("dataFine")
         and dati["dataInizio"] <= dati["dataFine"]
     )
+
+
+def creaPromozione(dati):
+    if not validaDatiPromozione(dati):
+        raise ValueError("Dati promozione non validi.")
+    return repo.salvaPromozione(dati)
 
 
 def eliminaOfferta(id, tipo):

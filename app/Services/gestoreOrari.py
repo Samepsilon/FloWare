@@ -11,7 +11,7 @@ def aggiornaOrarioSettimanale(giorno, nuoviOrari):
     esistente = repo.cercaOrarioPerGiorno(giorno)
     if esistente:
         return repo.aggiornaOrario(esistente.id, nuoviOrari)
-    return repo.salvaOrario(giorno, nuoviOrari, tipo="settimanale")
+    return repo.nuovoOrario(giorno, nuoviOrari, tipo="settimanale")
 
 
 def validaOrario(nuoviOrari):
@@ -20,7 +20,7 @@ def validaOrario(nuoviOrari):
 
 
 def impostaChiusuraStraordinaria(data):
-    return repo.salvaOrario(
+    return repo.nuovoOrario(
         giorno=None,
         nuoviOrari={"apertura": "", "chiusura": "", "dataSpecifica": str(data)},
         tipo="chiusura",
@@ -30,7 +30,7 @@ def impostaChiusuraStraordinaria(data):
 def impostaOrarioTemporaneo(data, orario):
     dati = orario if isinstance(orario, dict) else {}
     dati["dataSpecifica"] = str(data)
-    return repo.salvaOrario(giorno=None, nuoviOrari=dati, tipo="speciale")
+    return repo.nuovoOrario(giorno=None, nuoviOrari=dati, tipo="speciale")
 
 
 def aggiornaVisualizzazioneOrari():

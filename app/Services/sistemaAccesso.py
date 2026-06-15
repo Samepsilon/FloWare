@@ -3,7 +3,7 @@ from app.Repos import utenteRepository as repo
 
 mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-_sessione = {"utente": None, "ruolo": None}
+sessione = {"utente": None, "ruolo": None}
 
 
 def inviaCredenziali(username, password):
@@ -11,12 +11,12 @@ def inviaCredenziali(username, password):
     if utente is None:
         raise ValueError("Credenziali non valide.")
     impostaSessione(utente.getRuolo())
-    _sessione["utente"] = utente
+    sessione["utente"] = utente
     return utente
 
 
 def impostaSessione(ruolo):
-    _sessione["ruolo"] = ruolo
+    sessione["ruolo"] = ruolo
 
 
 def reindirizzaPerRuolo(ruolo):
@@ -28,7 +28,7 @@ def reindirizzaPerRuolo(ruolo):
 
 
 def getSessione():
-    return _sessione.copy()
+    return sessione.copy()
 
 
 def verificaFormatoEmail(email):

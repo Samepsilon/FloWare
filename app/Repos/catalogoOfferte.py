@@ -141,7 +141,8 @@ def recuperaOfferteAttive():
 
 
 # Alias di compatibilità
-salva_offerta = _salva
+"""
+salva_offerta = salva
 trova_offerta = lambda id: next((o for o in leggi() if o.id == id), None)
 trovaPerId = trova_offerta
 promozioni = cercaPromozioni
@@ -149,3 +150,4 @@ sconti = cercaSconti
 elimina_offerta = lambda id: scrivi([o for o in leggi() if o.id != id])
 offerte_attive = _offerte_valide
 tutti_gli_sconti = cercaSconti
+"""

@@ -28,7 +28,7 @@ def validaArticolo(articolo):
 
 
 def aggiungiACatalogo(articolo):
-    return repo.salvaArticolo(articolo)
+    return repo.salva(articolo)
 
 
 def modificaArticolo(id, nuoviDati):
@@ -36,7 +36,7 @@ def modificaArticolo(id, nuoviDati):
     if articolo is None:
         raise ValueError(f"Articolo con id={id} non trovato.")
     articolo.setDati(nuoviDati)
-    return repo.salvaArticolo(articolo)
+    return repo.salva()(articolo)
 
 
 def getArticolo(id):
@@ -51,14 +51,8 @@ def rimuoviArticolo(id):
         raise ValueError(f"Articolo con id={id} non trovato.")
     repo.rimuoviArticolo(id)
 
-
-def aggiornaCatalogo():
-    return repo.aggiornaCatalogo()
-
-
 def annullaCreazione():
     return None
-
 
 def visualizzaCatalogo():
     return repo.mostraCatalogo()

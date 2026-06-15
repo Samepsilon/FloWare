@@ -8,15 +8,7 @@ def visualizzaNotifiche():
     return repoN.notificheNonLette()
 
 
-def confermaAppuntamento(richiesta):
-    return _confermaRichiesta(richiesta, "appuntamento")
-
-
-def confermaPreventivo(richiesta):
-    return _confermaRichiesta(richiesta, "preventivo")
-
-
-def _confermaRichiesta(richiesta, tipo_atteso):
+def confermaRichiesta(richiesta, tipo_atteso):
     if isinstance(richiesta, int):
         richiesta = repoR.trovaPerId(richiesta)
     if richiesta is None:
@@ -33,10 +25,14 @@ def _confermaRichiesta(richiesta, tipo_atteso):
     )
     return inviaNotificaCliente(notifica)
 
+def confermaAppuntamento(richiesta):
+    return confermaRichiesta(richiesta, "appuntamento")
 
-def inviaNotificaCliente(notifica):
-    return repoN.salvaNotifica(notifica)
+def confermaPreventivo(richiesta):
+    return confermaRichiesta(richiesta, "preventivo")
 
+def inviaNotificaCliente(destinatario, messaggio):
+    return repoN.inviaNotifica(destinatario, messaggio)
 
 def visualizzaConsegne():
     return repoC.cercaConsegne()

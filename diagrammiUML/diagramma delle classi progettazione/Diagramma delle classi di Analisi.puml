@@ -1,0 +1,139 @@
+@startuml 
+
+title Diagramma delle classi di Analisi
+
+abstract Utente <<entity>>
+class Negoziante <<entity>>
+class Richiesta <<entity>>
+class Consegna <<entity>>
+class Notifica <<entity>>
+class Cliente <<entity>>
+class Sconto <<entity>>
+class Offerte<<entity>>
+class Fornitore <<entity>>
+class Promozione <<entity>>
+class SlotOrario <<entity>>
+class Orario <<entity>>
+
+
+
+
+
+abstract Utente {
+    - id : Long
+    - username : String
+    - email : String
+    - password : String
+    - ruolo : String
+}
+
+class Cliente {
+}
+
+class Negoziante {
+}
+class Richiesta {
+    - id : Long
+    - tipo : String
+    - stato : String
+    - data : Date
+    - ora : String
+    - contatti : String
+    - descrizione : String
+    - clienteId : Long
+}
+
+class Consegna {
+    - id : Long
+    - regione : String
+    - citta : String
+    - via : String
+    - civico : String
+    - stato : String
+    - clienteId : Long
+}
+
+class SlotOrario {
+    - id : Long
+    - data : Date
+    - fasciaOraria : String
+}
+
+class Orario {
+    - id : Long
+    - giorno : String
+    - apertura : String
+    - chiusura : String
+    - tipo : String
+    - dataSpecifica : Date
+}
+
+class Articolo {
+    - id : Long
+    - nome : String
+    - descrizione : String
+    - prezzo : Double
+    - quantita : int
+    - disponibile : Boolean
+}
+class Offerte {
+    - id : Long
+    - dataInizio : Date
+    - dataFine : Date
+}
+class Sconto {
+    - id : Long
+    - percentuale : Double
+    - evento : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Promozione {
+    - id : Long
+    - descrizione : String
+    - dataInizio : Date
+    - dataFine : Date
+}
+
+class Fornitore {
+    - id : Long
+    - nome : String
+    - contatti : String
+    - tipologiaMerce : String
+    - servizioDomicilio : Boolean
+}
+
+class Notifica {
+    - id : Long
+    - destinatario : String
+    - messaggio : String
+    - letta : Boolean
+    - tipo : String
+    - richiestaId : Long
+}
+
+
+Utente <|-- Cliente
+Utente <|-- Negoziante
+
+
+Offerte <|-- Sconto
+Offerte <|-- Promozione
+
+
+Cliente "1" --> "0..*" Richiesta : effettua 
+Cliente "1" --> "0..*" Consegna : prenota
+
+Richiesta "1" --> "0..1" SlotOrario : occupa 
+Richiesta "1" --> "0..*" Notifica : genera
+Consegna "1" --> "0..*" Notifica : genera 
+
+Articolo "0..*" --> "0..1" Offerte : associato 
+Fornitore "1" --> "0..*" Articolo : fornisce 
+
+Negoziante "1" --> "0..*" Fornitore : gestisce
+Cliente "1" --> "1" Orario : seleziona
+Negoziante "1" --> "1..*" Consegna: effettua
+Negoziante "1" --> "0..*" Articolo :gestisce
+Negoziante "1" --> "0..*" Offerte : assegna

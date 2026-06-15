@@ -2,6 +2,14 @@
 
 title: Diagramma delle classi di Progettazione Package: Locale (Cliente)
 
+class Orario <<entity>>
+class Articolo <<entity>>
+class Sconto <<entity>>
+class Promozione <<entity>>
+class Richiesta <<entity>>
+class SlotOrario <<entity>>
+class Consegna <<entity>>
+abstract Offerte <<entity>>
 
 class "InterfacciaCliente" <<boundary>> {
     ' Dashboard

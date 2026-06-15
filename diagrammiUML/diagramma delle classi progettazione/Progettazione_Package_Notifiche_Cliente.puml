@@ -1,5 +1,11 @@
 @startuml
 
+abstract Utente <<entity>>
+class Negoziante <<entity>>
+class Richiesta <<entity>>
+class Consegna <<entity>>
+class Notifica <<entity>>
+
 title Diagramma delle Classi di Programmazione Package: Notifiche (Cliente) 
 
 interface "InterfacciaCliente" <<boundary>> {

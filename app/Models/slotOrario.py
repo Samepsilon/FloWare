@@ -1,11 +1,11 @@
 
 
-class slotOrario:
+class SlotOrario:
 
-    def __init__(self, id, data, Orario):
+    def __init__(self, id, data, fasciaOraria):
         self.id = id
         self.data = data
-        self.Orario = Orario
+        self.fasciaOraria = fasciaOraria
 
     def impostaData(self, data) -> None:
         self.data = data

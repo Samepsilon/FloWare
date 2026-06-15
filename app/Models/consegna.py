@@ -1,10 +1,10 @@
 
 class Consegna:
 
-    def __init__(self, regione, città, via, civico, stato = None , clienteId = None, id = None):
+    def __init__(self, regione, citta, via, civico, stato = None , clienteId = None, id = None):
         self.id = id
         self.regione = regione
-        self.città = città
+        self.citta = citta
         self.via = via
         self.civico = civico
         self.stato = stato
@@ -12,7 +12,7 @@ class Consegna:
 
     def __repr__(self):
         stato_str = f", stato='{self.stato}'" if self.stato else ""  # ← 4 spazi
-        return f"[{self.id}] {self.via} {self.civico}, {self.città} ({self.regione}){stato_str}"
+        return f"[{self.id}] {self.via} {self.civico}, {self.citta} ({self.regione}){stato_str}"
 
     def getStato(self):
         return self.stato

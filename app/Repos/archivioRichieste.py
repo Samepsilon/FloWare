@@ -54,17 +54,6 @@ def salva_richiesta(richiesta):
     scrivi(tutti)
     return richiesta
 
-def salva_richiesta(richiesta):
-    tutti = leggi()
-    if richiesta.id is None:
-        richiesta.id = max((r.id for r in tutti), default=0) + 1
-        tutti.append(richiesta)
-    else:
-        tutti = [richiesta if r.id == richiesta.id else r for r in tutti]
-    scrivi(tutti)
-    return richiesta
-
-
 def trovaPerId(id):
     for r in leggi():
         if r.id == id:
@@ -73,6 +62,11 @@ def trovaPerId(id):
 
 def trovaPerCliente(clienteId):
     return [r for r in leggi() if r.clienteId == clienteId]
+
+def getDettagliConferma(id: int) -> Optional[Richiesta]:
+    """getDettagliConferma(id: Long): Richiesta - Cerca la richiesta per ID"""
+    return trovaPerId(id)
+
 
 def aggiornaStatoRichiesta(id, nuovo_stato):
     r = trovaPerId(id)

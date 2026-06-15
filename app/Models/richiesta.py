@@ -20,4 +20,20 @@ class Richiesta:
     # +getStato() : String
     def getStato(self):
         return self.stato
+    
+    def getDataOra(self) -> str:
+        """Restituisce data e ora formattate come stringa"""
+        # Se data è un oggetto date
+        if hasattr(self.data, 'strftime'):
+            data_str = self.data.strftime("%d/%m/%Y")
+        else:
+            data_str = str(self.data)
+        
+        # Se ora è un oggetto time
+        if hasattr(self.ora, 'strftime'):
+            ora_str = self.ora.strftime("%H:%M")
+        else:
+            ora_str = str(self.ora)
+        
+        return f"{data_str} {ora_str}"
 

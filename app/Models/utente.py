@@ -16,6 +16,9 @@ class Utente:
 
     def getEmail(self):
         return self.email
+    
+    def getRuolo(self):        
+        return self.ruolo
 
 
 

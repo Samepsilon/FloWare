@@ -20,7 +20,7 @@ class Articolo:
             "prezzo": self.prezzo,
             "quantita": self.quantita,
             "disponibile": self.disponibile,
-            "prezzo_finale": self.prezzo_finale(),
+            "prezzo_finale": self.prezzoFinale(),
         }
 
     def applicaSconto(self, sconto, percentuale=None, dataInizio=None, dataFine=None):

@@ -646,13 +646,14 @@ def mostraErrore(parent, messaggio):
 # =====================================================================
 # AVVIO APPLICAZIONE (esempio)
 # =====================================================================
-if __name__ == "__main__":
+def start(CLIENTE_ID):
     app = QApplication(sys.argv)
-
-    # ID cliente passato manualmente (in un'app reale, deriverebbe dal login)
-    CLIENTE_ID = 1
 
     finestra = InterfacciaCliente(cliente_id=CLIENTE_ID)
     finestra.show()
 
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    start()

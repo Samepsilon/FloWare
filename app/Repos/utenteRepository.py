@@ -3,7 +3,8 @@ import os
 from app.Models.cliente import Cliente
 from app.Models.negoziante import Negoziante
 
-FILE = "data/utenti.csv"
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/utenti.csv"
 COLONNE = ["id", "ruolo", "username", "email", "password"]
 
 

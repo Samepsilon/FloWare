@@ -1,8 +1,9 @@
 import csv
 import os
 from app.Models.notifica import Notifica
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/notifiche.csv"
 
-FILE = "data/notifiche.csv"
 COLONNE = ["id", "destinatario", "messaggio", "letta", "tipo", "richiestaId"]
 
 

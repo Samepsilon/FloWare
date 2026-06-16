@@ -6,7 +6,9 @@ from app.Models.sconto import Sconto
 from app.Models.offerte import Offerte
 from app.Repos import catalogoArticoli as repoArticoli
 
-FILE = "data/offerte.csv"
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/offerte.csv"
+
 COLONNE = ["id", "tipo", "dataInizio", "dataFine", "descrizione", "percentuale", "evento"]
 
 

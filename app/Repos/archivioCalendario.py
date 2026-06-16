@@ -3,7 +3,9 @@ import os
 from datetime import date, timedelta
 from app.Models.slotOrario import SlotOrario
 
-FILE = "data/slot_orari.csv"
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/slot_orari.csv"
+
 COLONNE = ["id", "data", "fasciaOraria", "disponibile"]
 
 

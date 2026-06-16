@@ -37,3 +37,12 @@ def verificaCriteriPassword(password):
 
 def confrontaPassword(password, conferma):
     return password == conferma
+"""
+if __name__ == '__main__':
+    newUserTest = {}
+    newUserTest["username"] = "test"
+    newUserTest["email"] = "test@test.com"
+    newUserTest["password"] = "ghtyNUNG#8521"
+    newUserTest["ruolo"] = "cliente"
+    inviaRegistrazione(newUserTest)
+"""

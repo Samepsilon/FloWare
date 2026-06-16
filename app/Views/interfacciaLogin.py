@@ -24,7 +24,6 @@ se diverso.
 
 import sys
 
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -46,8 +45,7 @@ from PyQt5.QtWidgets import (
 # =====================================================================
 from app.Services import sistemaAccesso, sistemaRegistrazione
 
-from app.Views.Cliente import interfacciaCliente
-from app.Views.Negoziante import interfacciaNegoziante
+from app.Views import interfacciaNegoziante, interfacciaCliente
 
 
 # =====================================================================
@@ -272,10 +270,10 @@ class InterfacciaLogin(QMainWindow):
 
         if destinazione == "InterfacciaCliente":
             cliente_id = getattr(utente, "id", None)
-            self.finestra_successiva = interfacciaCliente(cliente_id=cliente_id)
+            self.finestra_successiva = interfacciaCliente.start(CLIENTE_ID=cliente_id)
         elif destinazione == "InterfacciaNegoziante":
             negoziante_id = getattr(utente, "id", None)
-            self.finestra_successiva = interfacciaNegoziante(negoziante_id=negoziante_id)
+            self.finestra_successiva = interfacciaNegoziante.start()
         else:
             mostraErrore(self, f"Interfaccia non riconosciuta: {destinazione}")
             return

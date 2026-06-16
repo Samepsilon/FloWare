@@ -3,8 +3,9 @@ import os
 from app.Models.richiesta import Richiesta
 from app.Models.notifica import Notifica
 from app.Repos import notificaRepository as repoNotifiche
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/richieste.csv"
 
-FILE = "data/richieste.csv"
 COLONNE = ["id", "tipo", "stato", "data", "ora", "contatti", "descrizione", "clienteId"]
 
 

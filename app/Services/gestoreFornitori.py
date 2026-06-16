@@ -49,9 +49,9 @@ def visualizzaListaFornitori():
 
 def getFornitore(fornitore):
     if isinstance(fornitore, int):
-        risultato = repo.trovaPerId(fornitore)
+        risultato = repo.cercaFornitori(fornitore)
     elif isinstance(fornitore, Fornitore):
-        risultato = repo.cercaFornitore(fornitore)
+        risultato = repo.cercaFornitore(fornitore.id)
     else:
         raise ValueError("Fornitore non valido.")
     if risultato is None:

@@ -2,8 +2,9 @@ import csv
 import os
 from app.Models.articolo import Articolo
 from app.Models.promozione import Promozione
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/articoli.csv"
 
-FILE = "data/articoli.csv"
 COLONNE = ["id", "nome", "descrizione", "prezzo", "quantita", "disponibile", "fornitore_id", "percentuale"]
 
 

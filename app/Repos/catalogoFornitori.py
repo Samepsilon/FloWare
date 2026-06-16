@@ -1,8 +1,9 @@
 import csv
 import os
 from app.Models.fornitore import Fornitore
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/fornitori.csv"
 
-FILE = "data/fornitori.csv"
 COLONNE = ["id", "nome", "contatti", "tipologia", "servizioDomicilio"]
 
 

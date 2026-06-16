@@ -1,8 +1,9 @@
 import csv
 import os
 from app.Models.orario import Orario
+BASE_DIR = os.path.abspath("..")
+FILE = BASE_DIR + "/Data/orari.csv"
 
-FILE = "data/orari.csv"
 COLONNE = ["id", "giorno", "apertura", "chiusura", "tipo", "dataSpecifica"]
 
 

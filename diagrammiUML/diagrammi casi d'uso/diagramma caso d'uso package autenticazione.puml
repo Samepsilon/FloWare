@@ -13,7 +13,8 @@ Utente <|-- Negoziante
 package "Autenticazione" {
   Cliente -- (UC0a: Registrazione Cliente)
   (UC0b: Accesso Utente) -- Utente
-  (UC0b: Accesso Utente) -- Amministratore
-  Amministratore -- (Creazione Account Negoziante)
 }
+
+Amministratore -- (Creazione Account Negoziante)
+(Creazione Account Negoziante) ..> Negoziante : <<creates>>
 @enduml

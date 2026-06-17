@@ -25,10 +25,10 @@ class Fornitore:
         
     """
     def __repr__(self):
-        return {
+        return str({
             "id": self.id,
             "nome": self.nome,
             "contatti": self.contatti,
             "tipologiaMerce": self.tipologiaMerce,
             "servizioDomicilio": self.servizioDomicilio,
-        }
+        })

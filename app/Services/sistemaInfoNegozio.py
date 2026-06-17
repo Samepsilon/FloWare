@@ -1,5 +1,6 @@
-from app.Repos import orarioRepository as repo
+from app.Repos.orarioRepository import OrarioRepository
 
-
-def richiediOrari():
-    return repo.cercaOrari()
+class SistemaInfoNegozio:
+    @classmethod
+    def richiediOrari(cls):
+        return OrarioRepository.cercaOrari()

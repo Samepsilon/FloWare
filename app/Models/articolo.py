@@ -23,7 +23,7 @@ class Articolo:
             "prezzo_finale": self.prezzoFinale(),
         }
 
-    def applicaSconto(self, sconto, percentuale=None, dataInizio=None, dataFine=None):
+    def applicaSconto(self, sconto, percentuale=None):
         if percentuale is not None:
             self.percentuale = percentuale
         elif hasattr(sconto, "getPercentuale"):
@@ -43,5 +43,5 @@ class Articolo:
         return round(self.prezzo * (1 - (self.percentuale / 100)), 2)
 
     def __repr__(self):
-        return self.getDettagli()
+        return str(self.getDettagli())
 

@@ -5,25 +5,20 @@ Implementa le funzioni della classe boundary "InterfacciaLogin":
     - mostraFormLogin
     - mostraFormRegistrazione
     - mostraMessaggio / mostraConferma / mostraErrore (QMessageBox)
-    - reindirizzaPerRuolo -> apre InterfacciaCliente o InterfacciaNegoziante
+    - reindirizzaPerRuolo -> emette segnale loginEffettuato(utente)
 
 Controller utilizzati:
-    - sistemaAccesso (login, sessione, redirect)
+    - sistemaAccesso (login, sessione)
     - sistemaRegistrazione (registrazione nuovo utente)
 
-Compatibile con interfacciaCliente.py e interfacciaNegoziante.py:
-stesse convenzioni (QMessageBox per errori/conferme, helper
-mostraErrore/mostraConferma/mostraMessaggio identici). Dopo il login
-viene aperta automaticamente la finestra corretta passando il cliente_id
-(per InterfacciaCliente) o nessun parametro extra (per InterfacciaNegoziante).
-
-NOTA: adatta gli import dei controller e delle interfacce (sezione
-"IMPORT CONTROLLER" e "IMPORT INTERFACCE") al path reale del tuo progetto
-se diverso.
+Dopo il login riuscito, viene emesso il segnale `loginEffettuato` con
+l'oggetto utente autenticato. Main.py si occupa di aprire l'interfaccia
+corretta (InterfacciaCliente o InterfacciaNegoziante) in base al ruolo.
 """
 
 import sys
 
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -43,14 +38,13 @@ from PyQt5.QtWidgets import (
 # =====================================================================
 # IMPORT CONTROLLER
 # =====================================================================
-from app.Services import sistemaAccesso, sistemaRegistrazione
+from app.Services.sistemaAccesso import SistemaAccesso
+from app.Services.sistemaRegistrazione import SistemaRegistrazione
 
-from app.Views import interfacciaNegoziante, interfacciaCliente
 
 
-# =====================================================================
+
 # WIDGET: FORM LOGIN
-# =====================================================================
 class FormLoginWidget(QWidget):
     """mostraFormLogin()"""
 
@@ -86,7 +80,6 @@ class FormLoginWidget(QWidget):
         # Permetti login premendo Invio nel campo password
         self.edit_password.returnPressed.connect(self.inviaCredenziali)
 
-    # -----------------------------------------------------------
     def inviaCredenziali(self):
         username = self.edit_username.text().strip()
         password = self.edit_password.text()
@@ -96,7 +89,7 @@ class FormLoginWidget(QWidget):
             return
 
         try:
-            utente = sistemaAccesso.inviaCredenziali(username, password)
+            utente = SistemaAccesso.inviaCredenziali(username, password)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -110,9 +103,7 @@ class FormLoginWidget(QWidget):
         self.finestra_login.reindirizzaPerRuolo(utente)
 
 
-# =====================================================================
 # WIDGET: FORM REGISTRAZIONE
-# =====================================================================
 class FormRegistrazioneWidget(QWidget):
     """mostraFormRegistrazione()"""
 
@@ -134,7 +125,7 @@ class FormRegistrazioneWidget(QWidget):
         self.edit_conferma_password.setEchoMode(QLineEdit.Password)
         self.combo_ruolo = QComboBox()
         self.combo_ruolo.addItem("Cliente", "cliente")
-        self.combo_ruolo.addItem("Negoziante", "negoziante")
+        #self.combo_ruolo.addItem("Negoziante", "negoziante")
 
         form_layout.addRow("Username:", self.edit_username)
         form_layout.addRow("Email:", self.edit_email)
@@ -162,7 +153,6 @@ class FormRegistrazioneWidget(QWidget):
         layout.addWidget(box)
         layout.addStretch()
 
-    # -----------------------------------------------------------
     def inviaRegistrazione(self):
         username = self.edit_username.text().strip()
         email = self.edit_email.text().strip()
@@ -174,15 +164,15 @@ class FormRegistrazioneWidget(QWidget):
             mostraErrore(self, "Compila tutti i campi.")
             return
 
-        if not sistemaRegistrazione.verificaFormatoEmail(email):
+        if not SistemaRegistrazione.verificaFormatoEmail(email):
             mostraErrore(self, "Formato email non valido.")
             return
 
-        if not sistemaRegistrazione.confrontaPassword(password, conferma_password):
+        if not SistemaRegistrazione.confrontaPassword(password, conferma_password):
             mostraErrore(self, "Le password non coincidono.")
             return
 
-        if not sistemaRegistrazione.verificaCriteriPassword(password):
+        if not SistemaRegistrazione.verificaCriteriPassword(password):
             mostraErrore(
                 self,
                 "La password non rispetta i criteri richiesti: "
@@ -199,7 +189,7 @@ class FormRegistrazioneWidget(QWidget):
         }
 
         try:
-            sistemaRegistrazione.inviaRegistrazione(dati)
+            SistemaRegistrazione.inviaRegistrazione(dati)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -217,15 +207,16 @@ class FormRegistrazioneWidget(QWidget):
         self.finestra_login.mostraFormLogin()
 
 
-# =====================================================================
 # FINESTRA PRINCIPALE: LOGIN
-# =====================================================================
 class InterfacciaLogin(QMainWindow):
     """
     mostraFormLogin() / mostraFormRegistrazione()
     mostraMessaggio() / mostraConferma() / mostraErrore()
-    reindirizzaPerRuolo(utente) -> apre InterfacciaCliente o InterfacciaNegoziante
+    reindirizzaPerRuolo(utente) -> emette segnale loginEffettuato
     """
+
+    # Segnale emesso dopo login riuscito, porta l'oggetto utente
+    loginEffettuato = pyqtSignal(object)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -243,13 +234,8 @@ class InterfacciaLogin(QMainWindow):
 
         self.setCentralWidget(self.stack)
 
-        # Riferimento alla finestra successiva (Cliente/Negoziante),
-        # mantenuto per evitare che venga distrutta dal garbage collector.
-        self.finestra_successiva = None
-
         self.mostraFormLogin()
 
-    # -----------------------------------------------------------
     def mostraFormLogin(self):
         self.setWindowTitle("Negozio - Accesso")
         self.stack.setCurrentWidget(self.form_login)
@@ -258,35 +244,12 @@ class InterfacciaLogin(QMainWindow):
         self.setWindowTitle("Negozio - Registrazione")
         self.stack.setCurrentWidget(self.form_registrazione)
 
-    # -----------------------------------------------------------
     def reindirizzaPerRuolo(self, utente):
-        ruolo = utente.getRuolo()
-
-        try:
-            destinazione = sistemaAccesso.reindirizzaPerRuolo(ruolo)
-        except ValueError as e:
-            mostraErrore(self, str(e))
-            return
-
-        if destinazione == "InterfacciaCliente":
-            cliente_id = getattr(utente, "id", None)
-            self.finestra_successiva = interfacciaCliente.start(CLIENTE_ID=cliente_id)
-        elif destinazione == "InterfacciaNegoziante":
-            negoziante_id = getattr(utente, "id", None)
-            self.finestra_successiva = interfacciaNegoziante.start()
-        else:
-            mostraErrore(self, f"Interfaccia non riconosciuta: {destinazione}")
-            return
-
-        self.finestra_successiva.show()
-        self.close()
+        """Emette il segnale loginEffettuato con l'utente autenticato."""
+        self.loginEffettuato.emit(utente)
 
 
-# =====================================================================
-# HELPER: mostraMessaggio / mostraConferma / mostraErrore
-# (identici a quelli di interfacciaCliente.py / interfacciaNegoziante.py
-# per compatibilità)
-# =====================================================================
+
 def mostraMessaggio(parent, messaggio):
     QMessageBox.information(parent, "Messaggio", messaggio)
 
@@ -299,9 +262,7 @@ def mostraErrore(parent, messaggio):
     QMessageBox.critical(parent, "Errore", messaggio)
 
 
-# =====================================================================
 # AVVIO APPLICAZIONE
-# =====================================================================
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 

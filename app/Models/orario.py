@@ -10,14 +10,14 @@ class Orario:
         self.dataSpecifica = dataSpecifica
 
     def __repr__(self):
-        return {
+        return str({
             "id": self.id,
             "giorno": self.giorno,
             "apertura": self.apertura,
             "chiusura": self.chiusura,
             "tipo": self.tipo,
             "dataSpecifica": self.dataSpecifica,
-        }
+        })
 
     def getDettagliOrario(self) -> str:
         if not self.apertura or not self.chiusura:

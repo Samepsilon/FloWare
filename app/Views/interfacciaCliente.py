@@ -47,16 +47,15 @@ from PyQt5.QtWidgets import (
 )
 
 
-# =====================================================================
-# IMPORT CONTROLLER
-# =====================================================================
-from app.Services import sistemaRichieste, gestoreConsegne, sistemaInfoNegozio, sistemaCatalogo, sistemaOfferte
+from app.Services.sistemaRichieste import SistemaRichieste
+from app.Services.gestoreConsegne import GestoreConsegne
+from app.Services.sistemaInfoNegozio import SistemaInfoNegozio
+from app.Services.sistemaCatalogo import SistemaCatalogo
+from app.Services.sistemaOfferte import SistemaOfferte
 
 
 
-# =====================================================================
 # TAB: CATALOGO
-# =====================================================================
 class CatalogoTab(QWidget):
     """mostraCatalogo(articoli) / mostraDettagliArticolo(dettagli)"""
 
@@ -101,7 +100,7 @@ class CatalogoTab(QWidget):
 
     def mostraCatalogo(self):
         try:
-            articoli = sistemaCatalogo.visualizzaCatalogo()
+            articoli = SistemaCatalogo.visualizzaCatalogo()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare il catalogo: {e}")
             return
@@ -119,7 +118,7 @@ class CatalogoTab(QWidget):
         if id_articolo is None:
             return
         try:
-            articolo = sistemaCatalogo.richiediDettagli(id_articolo)
+            articolo = SistemaCatalogo.richiediDettagli(id_articolo)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -138,9 +137,8 @@ class CatalogoTab(QWidget):
         self.lbl_disponibile.setText("Sì" if disponibile else "No")
 
 
-# =====================================================================
 # TAB: OFFERTE
-# =====================================================================
+
 class OfferteTab(QWidget):
     """mostraOfferte(offerte)"""
 
@@ -164,7 +162,7 @@ class OfferteTab(QWidget):
 
     def mostraOfferte(self):
         try:
-            offerte = sistemaOfferte.visualizzaOfferteAttive()
+            offerte = SistemaOfferte.visualizzaOfferteAttive()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare le offerte: {e}")
             return
@@ -184,9 +182,7 @@ class OfferteTab(QWidget):
             self.lista_offerte.addItem(testo)
 
 
-# =====================================================================
 # TAB: ORARI
-# =====================================================================
 class OrariTab(QWidget):
     """mostraTabellaOrari(orari)"""
 
@@ -216,7 +212,7 @@ class OrariTab(QWidget):
 
     def mostraTabellaOrari(self):
         try:
-            orari = sistemaInfoNegozio.richiediOrari()
+            orari = SistemaInfoNegozio.richiediOrari()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare gli orari: {e}")
             return
@@ -239,9 +235,7 @@ class OrariTab(QWidget):
             self.tabella.setItem(row, 3, QTableWidgetItem(str(ultima_colonna)))
 
 
-# =====================================================================
-# TAB: RICHIESTE (preventivo / appuntamento)
-# =====================================================================
+# TAB: RICHIESTE
 class RichiesteTab(QWidget):
     """
     mostraCampi(tipo) - form per nuova richiesta
@@ -260,7 +254,7 @@ class RichiesteTab(QWidget):
 
         self.combo_tipo = QComboBox()
         try:
-            for tipo in sistemaRichieste.richiediOpzioni():
+            for tipo in SistemaRichieste.richiediOpzioni():
                 self.combo_tipo.addItem(tipo)
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare i tipi di richiesta: {e}")
@@ -324,7 +318,6 @@ class RichiesteTab(QWidget):
         self.mostraCampi(self.combo_tipo.currentText())
         self.mostraElencoRichieste()
 
-    # -----------------------------------------------------------
     def mostraCampi(self, tipo):
         """Mostra/nasconde i campi calendario in base al tipo selezionato."""
         is_appuntamento = (tipo == "appuntamento")
@@ -336,7 +329,7 @@ class RichiesteTab(QWidget):
 
     def caricaDateDisponibili(self):
         try:
-            date = sistemaRichieste.recuperaDateDisponibili()
+            date = SistemaRichieste.recuperaDateDisponibili()
         except Exception as e:
             mostraErrore(self, f"Impossibile recuperare le date disponibili: {e}")
             return
@@ -350,7 +343,7 @@ class RichiesteTab(QWidget):
             self.combo_fascia.clear()
             return
         try:
-            fasce = sistemaRichieste.recuperaFasceOrarie(data)
+            fasce = SistemaRichieste.recuperaFasceOrarie(data)
         except Exception as e:
             mostraErrore(self, f"Impossibile recuperare le fasce orarie: {e}")
             return
@@ -359,7 +352,6 @@ class RichiesteTab(QWidget):
         for fascia in fasce:
             self.combo_fascia.addItem(str(fascia))
 
-    # -----------------------------------------------------------
     def inviaRichiesta(self):
         tipo = self.combo_tipo.currentText()
         descrizione = self.edit_descrizione.toPlainText().strip()
@@ -383,9 +375,8 @@ class RichiesteTab(QWidget):
         try:
             # Se è un appuntamento e sono stati scelti data/ora, conferma lo slot
             if tipo == "appuntamento" and data and ora:
-                sistemaRichieste.confermaScelta(data, ora)
-
-            richiesta = sistemaRichieste.inviaRichiesta(dati_richiesta)
+                SistemaRichieste.confermaScelta(data, ora)
+            richiesta = SistemaRichieste.inviaRichiesta(dati_richiesta)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -398,10 +389,9 @@ class RichiesteTab(QWidget):
         self.edit_contatti.clear()
         self.mostraElencoRichieste()
 
-    # -----------------------------------------------------------
     def mostraElencoRichieste(self):
         try:
-            richieste = sistemaRichieste.recuperaRichieste(self.cliente_id)
+            richieste = SistemaRichieste.recuperaRichieste(self.cliente_id)
         except Exception as e:
             mostraErrore(self, f"Impossibile recuperare le richieste: {e}")
             return
@@ -450,7 +440,7 @@ class RichiesteTab(QWidget):
             except ValueError:
                 id_richiesta_val = id_richiesta
 
-            sistemaRichieste.annullaRichiesta(id_richiesta_val)
+            SistemaRichieste.annullaRichiesta(id_richiesta_val)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -462,9 +452,8 @@ class RichiesteTab(QWidget):
         self.mostraElencoRichieste()
 
 
-# =====================================================================
 # TAB: CONSEGNE
-# =====================================================================
+
 class ConsegneTab(QWidget):
     """
     Richiesta di consegna a domicilio (gestoreConsegne.confermaRichiesta)
@@ -520,7 +509,6 @@ class ConsegneTab(QWidget):
 
         layout.addStretch()
 
-    # -----------------------------------------------------------
     def richiediConsegna(self):
         dati = {
             "clienteId": self.cliente_id,
@@ -535,7 +523,7 @@ class ConsegneTab(QWidget):
             return
 
         try:
-            consegna = gestoreConsegne.confermaRichiesta(dati)
+            consegna = GestoreConsegne.confermaRichiesta(dati)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -560,7 +548,6 @@ class ConsegneTab(QWidget):
         if id_consegna is not None:
             self.edit_id_consegna.setText(str(id_consegna))
 
-    # -----------------------------------------------------------
     def verificaStatoConsegna(self):
         id_text = self.edit_id_consegna.text().strip()
         if not id_text:
@@ -573,7 +560,7 @@ class ConsegneTab(QWidget):
             id_consegna = id_text
 
         try:
-            consegna = gestoreConsegne.trovaPerId(id_consegna)
+            consegna = GestoreConsegne.trovaPerId(id_consegna)
         except Exception as e:
             mostraErrore(self, f"Errore durante la verifica: {e}")
             return
@@ -599,9 +586,56 @@ class ConsegneTab(QWidget):
         self.lbl_indirizzo_consegna.setText(indirizzo)
 
 
-# =====================================================================
+class SessionControlWidget(QWidget):
+    """
+    A widget containing a Disconnect button (to return to the login screen)
+    and a Quit button (to exit the application).
+    """
+
+    def __init__(self, main_window, parent=None):
+        super().__init__(parent)
+        self.main_window = main_window  # Keep a reference to the active QMainWindow
+
+        # Horizontal layout to align buttons to the right
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(10, 5, 10, 10)
+
+        # Buttons definition
+        self.btn_disconnetti = QPushButton("Disconnetti")
+        self.btn_esci = QPushButton("Esci")
+
+        # Optional: Add clear style differentiation
+        self.btn_disconnetti.setStyleSheet(
+            "background-color: #f0ad4e; color: white; font-weight: bold; padding: 6px 12px;")
+        self.btn_esci.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold; padding: 6px 12px;")
+
+        # Connect actions
+        self.btn_disconnetti.clicked.connect(self.handle_disconnetti)
+        self.btn_esci.clicked.connect(self.handle_esci)
+
+        layout.addStretch()
+        layout.addWidget(self.btn_disconnetti)
+        layout.addWidget(self.btn_esci)
+
+    def handle_disconnetti(self):
+        # 1. Clear session variables
+        from app.Services.sistemaAccesso import SistemaAccesso
+        SistemaAccesso.sessione["utente"] = None
+        SistemaAccesso.sessione["ruolo"] = None
+
+        # 2. Instantiate and show the Login window again
+        from app.Views.interfacciaLogin import InterfacciaLogin
+        self.finestra_login = InterfacciaLogin()
+        self.finestra_login.show()
+
+        # 3. Close the current main window (Negoziante or Cliente)
+        self.main_window.close()
+
+    def handle_esci(self):
+        # Exit the application cleanly
+        QApplication.quit()
+
 # FINESTRA PRINCIPALE
-# =====================================================================
 class InterfacciaCliente(QMainWindow):
     """
     mostraDashboardCliente() / mostraMessaggio() / mostraConferma() / mostraErrore()
@@ -617,20 +651,26 @@ class InterfacciaCliente(QMainWindow):
         self.mostraDashboardCliente()
 
     def mostraDashboardCliente(self):
+        # Main container layout
+        container = QWidget()
+        main_layout = QVBoxLayout(container)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        # Tab widget
         tabs = QTabWidget()
-
         tabs.addTab(CatalogoTab(self), "Catalogo")
         tabs.addTab(OfferteTab(self), "Offerte")
         tabs.addTab(OrariTab(self), "Orari")
         tabs.addTab(RichiesteTab(self.cliente_id, self), "Richieste")
         tabs.addTab(ConsegneTab(self.cliente_id, self), "Consegne")
+        # Session control panel at the bottom
+        self.session_control = SessionControlWidget(self)
 
-        self.setCentralWidget(tabs)
+        main_layout.addWidget(tabs)
+        main_layout.addWidget(self.session_control)
+        self.setCentralWidget(container)
 
 
-# =====================================================================
-# HELPER: mostraMessaggio / mostraConferma / mostraErrore
-# =====================================================================
 def mostraMessaggio(parent, messaggio):
     QMessageBox.information(parent, "Messaggio", messaggio)
 
@@ -643,17 +683,14 @@ def mostraErrore(parent, messaggio):
     QMessageBox.critical(parent, "Errore", messaggio)
 
 
-# =====================================================================
 # AVVIO APPLICAZIONE (esempio)
-# =====================================================================
 def start(CLIENTE_ID):
-    app = QApplication(sys.argv)
-
     finestra = InterfacciaCliente(cliente_id=CLIENTE_ID)
-    finestra.show()
-
-    sys.exit(app.exec_())
+    return finestra
 
 
 if __name__ == "__main__":
-    start()
+    app = QApplication(sys.argv)
+    finestra = start(CLIENTE_ID=1)
+    finestra.show()
+    sys.exit(app.exec_())

@@ -1,39 +1,39 @@
 import re
-from app.Repos import utenteRepository as repo
+from app.Repos.utenteRepository import UtenteRepository
 
-mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+class SistemaAccesso:
+    mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    sessione = {"utente": None, "ruolo": None}
 
-sessione = {"utente": None, "ruolo": None}
+    @classmethod
+    def inviaCredenziali(cls, username, password):
+        utente = UtenteRepository.trovaPerCredenziali(username, password)
+        if utente is None:
+            raise ValueError("Credenziali non valide.")
+        cls.impostaSessione(utente.getRuolo())
+        cls.sessione["utente"] = utente
+        return utente
 
+    @classmethod
+    def impostaSessione(cls, ruolo):
+        cls.sessione["ruolo"] = ruolo
 
-def inviaCredenziali(username, password):
-    utente = repo.trovaPerCredenziali(username, password)
-    if utente is None:
-        raise ValueError("Credenziali non valide.")
-    impostaSessione(utente.getRuolo())
-    sessione["utente"] = utente
-    return utente
+    @classmethod
+    def reindirizzaPerRuolo(cls, ruolo):
+        if ruolo == "cliente":
+            return "InterfacciaCliente"
+        if ruolo == "negoziante":
+            return "InterfacciaNegoziante"
+        raise ValueError(f"Ruolo non riconosciuto: {ruolo}")
 
+    @classmethod
+    def getSessione(cls):
+        return cls.sessione.copy()
 
-def impostaSessione(ruolo):
-    sessione["ruolo"] = ruolo
+    @classmethod
+    def verificaFormatoEmail(cls, email):
+        return bool(re.match(cls.mail_pattern, email))
 
-
-def reindirizzaPerRuolo(ruolo):
-    if ruolo == "cliente":
-        return "InterfacciaCliente"
-    if ruolo == "negoziante":
-        return "InterfacciaNegoziante"
-    raise ValueError(f"Ruolo non riconosciuto: {ruolo}")
-
-
-def getSessione():
-    return sessione.copy()
-
-
-def verificaFormatoEmail(email):
-    return bool(re.match(mail_pattern, email))
-
-
-def confrontaPassword(password, conferma):
-    return password == conferma
+    @classmethod
+    def confrontaPassword(cls, password, conferma):
+        return password == conferma

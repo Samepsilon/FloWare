@@ -57,7 +57,12 @@ from PyQt5.QtWidgets import (
 # =====================================================================
 # IMPORT CONTROLLER
 # =====================================================================
-from app.Services import gestoreCatalogo, gestoreFornitori, gestoreOfferte, gestoreOrari, gestoreNotifiche, gestoreConsegne
+from app.Services.gestoreCatalogo import GestoreCatalogo
+from app.Services.gestoreFornitori import GestoreFornitori
+from app.Services.gestoreOfferte import GestoreOfferte
+from app.Services.gestoreOrari import GestoreOrari
+from app.Services.gestoreNotifiche import GestoreNotifiche
+from app.Services.gestoreConsegne import GestoreConsegne
 
 
 # Stati validi per una consegna (dropdown fisso)
@@ -69,9 +74,7 @@ GIORNI_SETTIMANA = [
 ]
 
 
-# =====================================================================
-# TAB: CATALOGO (negoziante - CRUD articoli)
-# =====================================================================
+# TAB: CATALOGO
 class CatalogoNegozianteTab(QWidget):
     """
     mostraCatalogo(articoli)
@@ -140,10 +143,9 @@ class CatalogoNegozianteTab(QWidget):
 
         self.mostraCatalogo()
 
-    # -----------------------------------------------------------
     def mostraCatalogo(self):
         try:
-            articoli = gestoreCatalogo.visualizzaCatalogo()
+            articoli = GestoreCatalogo.visualizzaCatalogo()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare il catalogo: {e}")
             return
@@ -161,7 +163,7 @@ class CatalogoNegozianteTab(QWidget):
         if id_articolo is None:
             return
         try:
-            articolo = gestoreCatalogo.getArticolo(id_articolo)
+            articolo = GestoreCatalogo.getArticolo(id_articolo)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -191,7 +193,6 @@ class CatalogoNegozianteTab(QWidget):
         except AttributeError:
             self.lbl_prezzo_finale.setText("-")
 
-    # -----------------------------------------------------------
     def mostraFormArticolo(self):
         """Pulisce il form per l'inserimento di un nuovo articolo."""
         self.articolo_selezionato_id = None
@@ -248,10 +249,10 @@ class CatalogoNegozianteTab(QWidget):
 
         try:
             if self.articolo_selezionato_id is None:
-                gestoreCatalogo.aggiungiArticolo(dati)
+                GestoreCatalogo.aggiungiArticolo(dati)
                 mostraConferma(self, "Articolo aggiunto con successo.")
             else:
-                gestoreCatalogo.modificaArticolo(self.articolo_selezionato_id, dati)
+                GestoreCatalogo.modificaArticolo(self.articolo_selezionato_id, dati)
                 mostraConferma(self, "Articolo modificato con successo.")
         except ValueError as e:
             mostraErrore(self, str(e))
@@ -278,7 +279,7 @@ class CatalogoNegozianteTab(QWidget):
             return
 
         try:
-            gestoreCatalogo.rimuoviArticolo(self.articolo_selezionato_id)
+            GestoreCatalogo.rimuoviArticolo(self.articolo_selezionato_id)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -291,9 +292,7 @@ class CatalogoNegozianteTab(QWidget):
         self.mostraCatalogo()
 
 
-# =====================================================================
 # TAB: FORNITORI
-# =====================================================================
 class FornitoriTab(QWidget):
     """
     mostraFornitori(fornitori)
@@ -352,10 +351,9 @@ class FornitoriTab(QWidget):
 
         self.mostraFornitori()
 
-    # -----------------------------------------------------------
     def mostraFornitori(self):
         try:
-            fornitori = gestoreFornitori.visualizzaFornitori()
+            fornitori = GestoreFornitori.visualizzaFornitori()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare i fornitori: {e}")
             return
@@ -372,7 +370,7 @@ class FornitoriTab(QWidget):
         if id_fornitore is None:
             return
         try:
-            fornitore = gestoreFornitori.getFornitore(id_fornitore)
+            fornitore = GestoreFornitori.getFornitore(id_fornitore)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -387,7 +385,6 @@ class FornitoriTab(QWidget):
         self.edit_tipologia.setText(str(tipologia))
         self.check_servizio_domicilio.setChecked(bool(getattr(fornitore, "servizioDomicilio", False)))
 
-    # -----------------------------------------------------------
     def mostraFormFornitore(self):
         """Pulisce il form per l'inserimento di un nuovo fornitore."""
         self.fornitore_selezionato_id = None
@@ -409,10 +406,10 @@ class FornitoriTab(QWidget):
 
         try:
             if self.fornitore_selezionato_id is None:
-                gestoreFornitori.aggiungiFornitore(dati)
+                GestoreFornitori.aggiungiFornitore(dati)
                 mostraConferma(self, "Fornitore aggiunto con successo.")
             else:
-                gestoreFornitori.modificaFornitore(self.fornitore_selezionato_id, dati)
+                GestoreFornitori.modificaFornitore(self.fornitore_selezionato_id, dati)
                 mostraConferma(self, "Fornitore modificato con successo.")
         except ValueError as e:
             mostraErrore(self, str(e))
@@ -440,7 +437,7 @@ class FornitoriTab(QWidget):
             return
 
         try:
-            gestoreFornitori.eliminaFornitore(self.fornitore_selezionato_id)
+            GestoreFornitori.eliminaFornitore(self.fornitore_selezionato_id)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -453,9 +450,7 @@ class FornitoriTab(QWidget):
         self.mostraFornitori()
 
 
-# =====================================================================
-# TAB: OFFERTE (negoziante - CRUD sconti / promozioni)
-# =====================================================================
+# TAB: OFFERTE
 class OfferteNegozianteTab(QWidget):
     """
     mostraOfferte(sconti, promozioni)
@@ -553,17 +548,13 @@ class OfferteNegozianteTab(QWidget):
 
         self.mostraOfferte()
 
-    # -----------------------------------------------------------
     def mostraOfferte(self):
         try:
-            sconti = gestoreOfferte.visualizzaScontiAttivi()
+            sconti = GestoreOfferte.visualizzaScontiAttivi()
+            promozioni = GestoreOfferte.visualizzaOfferteAttive()
         except Exception as e:
-            mostraErrore(self, f"Impossibile caricare gli sconti: {e}")
+            mostraErrore(self, f"Impossibile caricare le offerte: {e}")
             sconti = []
-
-        try:
-            promozioni = gestoreOfferte.visualizzaOfferteAttive()
-        except Exception as e:
             mostraErrore(self, f"Impossibile caricare le promozioni: {e}")
             promozioni = []
 
@@ -585,7 +576,6 @@ class OfferteNegozianteTab(QWidget):
             item.setData(Qt.UserRole, getattr(promo, "id", None))
             self.lista_promozioni.addItem(item)
 
-    # -----------------------------------------------------------
     def mostraFormSconto(self):
         self.edit_sconto_articolo_id.clear()
         self.edit_sconto_percentuale.clear()
@@ -619,7 +609,7 @@ class OfferteNegozianteTab(QWidget):
         }
 
         try:
-            gestoreOfferte.creaSconto(dati)
+            GestoreOfferte.creaSconto(dati)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -648,7 +638,7 @@ class OfferteNegozianteTab(QWidget):
             return
 
         try:
-            gestoreOfferte.eliminaOfferta(id_sconto, "sconto")
+            GestoreOfferte.eliminaOfferta(id_sconto, "sconto")
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -659,7 +649,6 @@ class OfferteNegozianteTab(QWidget):
         mostraConferma(self, "Sconto eliminato.")
         self.mostraOfferte()
 
-    # -----------------------------------------------------------
     def mostraFormPromozione(self):
         self.edit_promo_descrizione.clear()
         self.edit_promo_data_inizio.clear()
@@ -677,7 +666,7 @@ class OfferteNegozianteTab(QWidget):
         }
 
         try:
-            gestoreOfferte.creaPromozione(dati)
+            GestoreOfferte.creaPromozione(dati)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -706,7 +695,7 @@ class OfferteNegozianteTab(QWidget):
             return
 
         try:
-            gestoreOfferte.eliminaOfferta(id_promo, "promozione")
+            GestoreOfferte.eliminaOfferta(id_promo, "promozione")
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -718,9 +707,7 @@ class OfferteNegozianteTab(QWidget):
         self.mostraOfferte()
 
 
-# =====================================================================
-# TAB: ORARI (negoziante)
-# =====================================================================
+# TAB: ORARI
 class OrariNegozianteTab(QWidget):
     """
     mostraOrari(orari)
@@ -802,10 +789,9 @@ class OrariNegozianteTab(QWidget):
 
         self.mostraOrari()
 
-    # -----------------------------------------------------------
     def mostraOrari(self):
         try:
-            orari = gestoreOrari.visualizzaOrari()
+            orari = GestoreOrari.visualizzaOrari()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare gli orari: {e}")
             return
@@ -827,7 +813,6 @@ class OrariNegozianteTab(QWidget):
             self.tabella.setItem(row, 2, QTableWidgetItem(str(chiusura)))
             self.tabella.setItem(row, 3, QTableWidgetItem(str(ultima_colonna)))
 
-    # -----------------------------------------------------------
     def mostraFormOrario(self):
         """Pulisce i campi del form orario."""
         self.edit_apertura.clear()
@@ -844,7 +829,7 @@ class OrariNegozianteTab(QWidget):
         nuovi_orari = {"apertura": apertura, "chiusura": chiusura}
 
         try:
-            gestoreOrari.aggiornaOrarioSettimanale(giorno, nuovi_orari)
+            GestoreOrari.aggiornaOrarioSettimanale(giorno, nuovi_orari)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -862,7 +847,7 @@ class OrariNegozianteTab(QWidget):
             return
 
         try:
-            gestoreOrari.impostaChiusuraStraordinaria(data)
+            GestoreOrari.impostaChiusuraStraordinaria(data)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -886,7 +871,7 @@ class OrariNegozianteTab(QWidget):
         orario = {"apertura": apertura, "chiusura": chiusura}
 
         try:
-            gestoreOrari.impostaOrarioTemporaneo(data, orario)
+            GestoreOrari.impostaOrarioTemporaneo(data, orario)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -899,9 +884,7 @@ class OrariNegozianteTab(QWidget):
         self.mostraOrari()
 
 
-# =====================================================================
 # TAB: NOTIFICHE / RICHIESTE
-# =====================================================================
 class NotificheTab(QWidget):
     """
     mostraNotifiche(notifiche)
@@ -941,10 +924,9 @@ class NotificheTab(QWidget):
 
         self.mostraNotifiche()
 
-    # -----------------------------------------------------------
     def mostraNotifiche(self):
         try:
-            notifiche = gestoreNotifiche.visualizzaNotifiche()
+            notifiche = GestoreNotifiche.visualizzaNotifiche()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare le notifiche: {e}")
             return
@@ -963,7 +945,6 @@ class NotificheTab(QWidget):
             self.tabella.setItem(row, 3, QTableWidgetItem(str(messaggio)))
             self.tabella.setItem(row, 4, QTableWidgetItem(str(richiesta_id)))
 
-    # -----------------------------------------------------------
     def _getRichiestaIdSelezionata(self):
         row = self.tabella.currentRow()
         if row < 0:
@@ -987,7 +968,7 @@ class NotificheTab(QWidget):
             return
 
         try:
-            gestoreNotifiche.confermaPreventivo(richiesta_id)
+            GestoreNotifiche.confermaPreventivo(richiesta_id)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -1004,7 +985,7 @@ class NotificheTab(QWidget):
             return
 
         try:
-            gestoreNotifiche.confermaAppuntamento(richiesta_id)
+            GestoreNotifiche.confermaAppuntamento(richiesta_id)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -1016,9 +997,7 @@ class NotificheTab(QWidget):
         self.mostraNotifiche()
 
 
-# =====================================================================
-# TAB: CONSEGNE (negoziante)
-# =====================================================================
+# TAB: CONSEGNE
 class ConsegneNegozianteTab(QWidget):
     """
     mostraConsegne(consegne)
@@ -1066,10 +1045,9 @@ class ConsegneNegozianteTab(QWidget):
 
         self.mostraConsegne()
 
-    # -----------------------------------------------------------
     def mostraConsegne(self):
         try:
-            consegne = gestoreNotifiche.visualizzaConsegne()
+            consegne = GestoreConsegne.cercaConsegne()
         except Exception as e:
             mostraErrore(self, f"Impossibile caricare le consegne: {e}")
             return
@@ -1099,7 +1077,6 @@ class ConsegneNegozianteTab(QWidget):
             self.tabella.setItem(row, 4, QTableWidgetItem(str(indirizzo)))
             self.tabella.setItem(row, 5, QTableWidgetItem(str(stato)))
 
-    # -----------------------------------------------------------
     def onConsegnaSelezionata(self):
         """mostraFormStatoConsegna: preseleziona lo stato attuale della consegna."""
         row = self.tabella.currentRow()
@@ -1131,7 +1108,7 @@ class ConsegneNegozianteTab(QWidget):
         nuovo_stato = self.combo_stato.currentText()
 
         try:
-            gestoreConsegne.aggiornaStatoConsegna(id_consegna, nuovo_stato)
+            GestoreConsegne.aggiornaStatoConsegna(id_consegna, nuovo_stato)
         except ValueError as e:
             mostraErrore(self, str(e))
             return
@@ -1142,10 +1119,56 @@ class ConsegneNegozianteTab(QWidget):
         mostraConferma(self, f"Stato della consegna #{id_consegna} aggiornato a '{nuovo_stato}'.")
         self.mostraConsegne()
 
+class SessionControlWidget(QWidget):
+    """
+    A widget containing a Disconnect button (to return to the login screen)
+    and a Quit button (to exit the application).
+    """
 
-# =====================================================================
+    def __init__(self, main_window, parent=None):
+        super().__init__(parent)
+        self.main_window = main_window  # Keep a reference to the active QMainWindow
+
+        # Horizontal layout to align buttons to the right
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(10, 5, 10, 10)
+
+        # Buttons definition
+        self.btn_disconnetti = QPushButton("Disconnetti")
+        self.btn_esci = QPushButton("Esci")
+
+        # Optional: Add clear style differentiation
+        self.btn_disconnetti.setStyleSheet(
+            "background-color: #f0ad4e; color: white; font-weight: bold; padding: 6px 12px;")
+        self.btn_esci.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold; padding: 6px 12px;")
+
+        # Connect actions
+        self.btn_disconnetti.clicked.connect(self.handle_disconnetti)
+        self.btn_esci.clicked.connect(self.handle_esci)
+
+        layout.addStretch()
+        layout.addWidget(self.btn_disconnetti)
+        layout.addWidget(self.btn_esci)
+
+    def handle_disconnetti(self):
+        # 1. Clear session variables
+        from app.Services.sistemaAccesso import SistemaAccesso
+        SistemaAccesso.sessione["utente"] = None
+        SistemaAccesso.sessione["ruolo"] = None
+
+        # 2. Instantiate and show the Login window again
+        from app.Views.interfacciaLogin import InterfacciaLogin
+        self.finestra_login = InterfacciaLogin()
+        self.finestra_login.show()
+
+        # 3. Close the current main window (Negoziante or Cliente)
+        self.main_window.close()
+
+    def handle_esci(self):
+        # Exit the application cleanly
+        QApplication.quit()
+
 # FINESTRA PRINCIPALE
-# =====================================================================
 class InterfacciaNegoziante(QMainWindow):
     """
     mostraDashboardNegoziante() / mostraMessaggio() / mostraConferma() / mostraErrore()
@@ -1161,8 +1184,14 @@ class InterfacciaNegoziante(QMainWindow):
         self.mostraDashboardNegoziante()
 
     def mostraDashboardNegoziante(self):
-        tabs = QTabWidget()
+        # Main container layout
+        container = QWidget()
+        main_layout = QVBoxLayout(container)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
 
+        # Tab widget
+        tabs = QTabWidget()
         tabs.addTab(CatalogoNegozianteTab(self), "Catalogo")
         tabs.addTab(FornitoriTab(self), "Fornitori")
         tabs.addTab(OfferteNegozianteTab(self), "Offerte")
@@ -1170,13 +1199,16 @@ class InterfacciaNegoziante(QMainWindow):
         tabs.addTab(NotificheTab(self), "Notifiche")
         tabs.addTab(ConsegneNegozianteTab(self), "Consegne")
 
-        self.setCentralWidget(tabs)
+        # Session control panel at the bottom
+        self.session_control = SessionControlWidget(self)
+
+        main_layout.addWidget(tabs)
+        main_layout.addWidget(self.session_control)
+
+        self.setCentralWidget(container)
 
 
-# =====================================================================
-# HELPER: mostraMessaggio / mostraConferma / mostraErrore
-# (identici a quelli di interfacciaCliente.py per compatibilità)
-# =====================================================================
+
 def mostraMessaggio(parent, messaggio):
     QMessageBox.information(parent, "Messaggio", messaggio)
 
@@ -1189,18 +1221,13 @@ def mostraErrore(parent, messaggio):
     QMessageBox.critical(parent, "Errore", messaggio)
 
 
-# =====================================================================
-# AVVIO APPLICAZIONE (esempio)
-# =====================================================================
-
-def start():
-    app = QApplication(sys.argv)
-
-    finestra = InterfacciaNegoziante()
-    finestra.show()
-
-    sys.exit(app.exec_())
+def start(negoziante_id=None):
+    finestra = InterfacciaNegoziante(negoziante_id=negoziante_id)
+    return finestra
 
 
 if __name__ == "__main__":
-    start()
+    app = QApplication(sys.argv)
+    finestra = start()
+    finestra.show()
+    sys.exit(app.exec_())

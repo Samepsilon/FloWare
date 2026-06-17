@@ -11,15 +11,15 @@ class Consegna:
         self.clienteId = clienteId
 
     def __repr__(self):
-        return {
+        return str({
             "id": self.id,
             "regione": self.regione,
             "citta": self.citta,
             "via": self.via,
             "civico": self.civico,
             "stato": self.stato,
-            "clienteId": self.clienteId(),
-        }
+            "clienteId": self.clienteId,
+        })
 
     def getStato(self):
         return self.stato

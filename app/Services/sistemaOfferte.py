@@ -1,9 +1,10 @@
-from app.Repos import catalogoOfferte as repo
+from app.Repos.catalogoOfferte import CatalogoOfferte
 
+class SistemaOfferte:
+    @classmethod
+    def recuperaOfferteAttive(cls):
+        return CatalogoOfferte.recuperaOfferteAttive()
 
-def recuperaOfferteAttive():
-    return repo.recuperaOfferteAttive()
-
-
-def visualizzaOfferteAttive():
-    return recuperaOfferteAttive()
+    @classmethod
+    def visualizzaOfferteAttive(cls):
+        return cls.recuperaOfferteAttive()

@@ -1,37 +1,38 @@
-from app.Repos import orarioRepository as repo
+from app.Repos.orarioRepository import OrarioRepository
 
+class GestoreOrari:
+    @classmethod
+    def visualizzaOrari(cls):
+        return OrarioRepository.cercaOrari()
 
-def visualizzaOrari():
-    return repo.cercaOrari()
+    @classmethod
+    def aggiornaOrarioSettimanale(cls, giorno, nuoviOrari):
+        if not cls.validaOrario(nuoviOrari):
+            raise ValueError("Orario non valido.")
+        esistente = OrarioRepository.cercaOrarioPerGiorno(giorno)
+        if esistente:
+            return OrarioRepository.aggiornaOrario(esistente.id, nuoviOrari)
+        return OrarioRepository.nuovoOrario(giorno, nuoviOrari, tipo="settimanale")
 
+    @classmethod
+    def validaOrario(cls, nuoviOrari):
+        dati = nuoviOrari if isinstance(nuoviOrari, dict) else {}
+        return bool(dati.get("apertura") and dati.get("chiusura"))
 
-def aggiornaOrarioSettimanale(giorno, nuoviOrari):
-    if not validaOrario(nuoviOrari):
-        raise ValueError("Orario non valido.")
-    esistente = repo.cercaOrarioPerGiorno(giorno)
-    if esistente:
-        return repo.aggiornaOrario(esistente.id, nuoviOrari)
-    return repo.nuovoOrario(giorno, nuoviOrari, tipo="settimanale")
+    @classmethod
+    def impostaChiusuraStraordinaria(cls, data):
+        return OrarioRepository.nuovoOrario(
+            giorno=None,
+            nuoviOrari={"apertura": "", "chiusura": "", "dataSpecifica": str(data)},
+            tipo="chiusura",
+        )
 
+    @classmethod
+    def impostaOrarioTemporaneo(cls, data, orario):
+        dati = orario if isinstance(orario, dict) else {}
+        dati["dataSpecifica"] = str(data)
+        return OrarioRepository.nuovoOrario(giorno=None, nuoviOrari=dati, tipo="speciale")
 
-def validaOrario(nuoviOrari):
-    dati = nuoviOrari if isinstance(nuoviOrari, dict) else {}
-    return bool(dati.get("apertura") and dati.get("chiusura"))
-
-
-def impostaChiusuraStraordinaria(data):
-    return repo.nuovoOrario(
-        giorno=None,
-        nuoviOrari={"apertura": "", "chiusura": "", "dataSpecifica": str(data)},
-        tipo="chiusura",
-    )
-
-
-def impostaOrarioTemporaneo(data, orario):
-    dati = orario if isinstance(orario, dict) else {}
-    dati["dataSpecifica"] = str(data)
-    return repo.nuovoOrario(giorno=None, nuoviOrari=dati, tipo="speciale")
-
-
-def aggiornaVisualizzazioneOrari():
-    return visualizzaOrari()
+    @classmethod
+    def aggiornaVisualizzazioneOrari(cls):
+        return cls.visualizzaOrari()

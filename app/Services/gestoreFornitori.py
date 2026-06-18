@@ -1,3 +1,8 @@
+"""
+Questo modulo si occupa della gestione dei fornitori associati al negozio,
+consentendo la visualizzazione, l'inserimento, la modifica e la rimozione dei fornitori.
+"""
+
 from app.Models.fornitore import Fornitore
 from app.Repos.catalogoFornitori import CatalogoFornitori
 from app.Repos.catalogoArticoli import CatalogoArticoli

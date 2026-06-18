@@ -1,3 +1,8 @@
+"""
+Questo modulo si occupa della gestione delle consegne, inclusa la creazione
+delle richieste di consegna, l'aggiornamento dello stato e l'invio di notifiche ai clienti.
+"""
+
 from app.Models.consegna import Consegna
 from app.Models.notifica import Notifica
 from app.Repos.consegnaRepository import ConsegnaRepository

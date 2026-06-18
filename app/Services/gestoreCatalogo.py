@@ -1,3 +1,8 @@
+"""
+Questo modulo si occupa della gestione del catalogo articoli (inserimento,
+modifica, rimozione, validazione e visualizzazione di prodotti/articoli).
+"""
+
 from app.Models.articolo import Articolo
 from app.Repos.catalogoArticoli import CatalogoArticoli
 from app.Repos.catalogoFornitori import CatalogoFornitori

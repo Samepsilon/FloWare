@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce la configurazione degli orari del negozio, compresi gli
+orari settimanali, orari straordinari/temporanei e le chiusure straordinarie.
+"""
+
 from app.Repos.orarioRepository import OrarioRepository
 
 class GestoreOrari:

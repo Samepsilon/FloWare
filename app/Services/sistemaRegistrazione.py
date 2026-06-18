@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce il sistema di registrazione dei nuovi utenti del negozio,
+validando i requisiti di email e password e salvando i dati degli utenti.
+"""
+
 import re
 from app.Models.negoziante import Negoziante
 from app.Models.cliente import Cliente

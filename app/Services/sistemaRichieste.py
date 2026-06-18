@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce l'invio e il ciclo di vita delle richieste dei clienti (es. preventivi,
+appuntamenti), inclusa la ricerca di date libere nel calendario e la selezione delle fasce orarie.
+"""
+
 from app.Models.richiesta import Richiesta, TIPI_VALIDI
 from app.Models.notifica import Notifica
 from app.Repos.archivioRichieste import ArchivioRichieste

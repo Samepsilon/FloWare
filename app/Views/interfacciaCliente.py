@@ -1,23 +1,6 @@
 """
 InterfacciaCliente - GUI PyQt5 per il sistema negozio (lato cliente)
 
-Implementa le funzioni della classe boundary "InterfacciaCliente":
-    - mostraDashboardCliente
-    - mostraCampi (form richiesta preventivo/appuntamento)
-    - mostraElencoRichieste
-    - mostraCatalogo
-    - mostraDettagliArticolo
-    - mostraTabellaOrari
-    - mostraOfferte
-    - mostraMessaggio / mostraConferma / mostraErrore (QMessageBox)
-
-Controller utilizzati (lato cliente):
-    - sistemaRichieste
-    - gestoreConsegne
-    - sistemaInfoNegozio
-    - sistemaCatalogo
-    - sistemaOfferte
-
 """
 
 import sys
@@ -57,7 +40,6 @@ from app.Services.sistemaOfferte import SistemaOfferte
 
 # TAB: CATALOGO
 class CatalogoTab(QWidget):
-    """mostraCatalogo(articoli) / mostraDettagliArticolo(dettagli)"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -143,7 +125,6 @@ class CatalogoTab(QWidget):
 # TAB: OFFERTE
 
 class OfferteTab(QWidget):
-    """mostraOfferte(offerte)"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -187,7 +168,6 @@ class OfferteTab(QWidget):
 
 # TAB: ORARI
 class OrariTab(QWidget):
-    """mostraTabellaOrari(orari)"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -240,10 +220,6 @@ class OrariTab(QWidget):
 
 # TAB: RICHIESTE
 class RichiesteTab(QWidget):
-    """
-    mostraCampi(tipo) - form per nuova richiesta
-    mostraElencoRichieste(richieste) - elenco richieste del cliente
-    """
 
     def __init__(self, cliente_id, parent=None):
         super().__init__(parent)
@@ -458,10 +434,6 @@ class RichiesteTab(QWidget):
 # TAB: CONSEGNE
 
 class ConsegneTab(QWidget):
-    """
-    Richiesta di consegna a domicilio (gestoreConsegne.confermaRichiesta)
-    e visualizzazione stato consegna (gestoreConsegne.trovaPerId)
-    """
 
     def __init__(self, cliente_id, parent=None):
         super().__init__(parent)
@@ -640,9 +612,7 @@ class SessionControlWidget(QWidget):
 
 # FINESTRA PRINCIPALE
 class InterfacciaCliente(QMainWindow):
-    """
-    mostraDashboardCliente() / mostraMessaggio() / mostraConferma() / mostraErrore()
-    """
+
 
     def __init__(self, cliente_id, parent=None):
         super().__init__(parent)

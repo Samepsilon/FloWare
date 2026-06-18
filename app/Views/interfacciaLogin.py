@@ -1,16 +1,6 @@
 """
 InterfacciaLogin - GUI PyQt5 per login e registrazione
 
-Implementa le funzioni della classe boundary "InterfacciaLogin":
-    - mostraFormLogin
-    - mostraFormRegistrazione
-    - mostraMessaggio / mostraConferma / mostraErrore (QMessageBox)
-    - reindirizzaPerRuolo -> emette segnale loginEffettuato(utente)
-
-Controller utilizzati:
-    - sistemaAccesso (login, sessione)
-    - sistemaRegistrazione (registrazione nuovo utente)
-
 Dopo il login riuscito, viene emesso il segnale `loginEffettuato` con
 l'oggetto utente autenticato. Main.py si occupa di aprire l'interfaccia
 corretta (InterfacciaCliente o InterfacciaNegoziante) in base al ruolo.
@@ -46,7 +36,6 @@ from app.Services.sistemaRegistrazione import SistemaRegistrazione
 
 # WIDGET: FORM LOGIN
 class FormLoginWidget(QWidget):
-    """mostraFormLogin()"""
 
     def __init__(self, finestra_login, parent=None):
         super().__init__(parent)
@@ -105,7 +94,6 @@ class FormLoginWidget(QWidget):
 
 # WIDGET: FORM REGISTRAZIONE
 class FormRegistrazioneWidget(QWidget):
-    """mostraFormRegistrazione()"""
 
     def __init__(self, finestra_login, parent=None):
         super().__init__(parent)
@@ -209,11 +197,6 @@ class FormRegistrazioneWidget(QWidget):
 
 # FINESTRA PRINCIPALE: LOGIN
 class InterfacciaLogin(QMainWindow):
-    """
-    mostraFormLogin() / mostraFormRegistrazione()
-    mostraMessaggio() / mostraConferma() / mostraErrore()
-    reindirizzaPerRuolo(utente) -> emette segnale loginEffettuato
-    """
 
     # Segnale emesso dopo login riuscito, porta l'oggetto utente
     loginEffettuato = pyqtSignal(object)

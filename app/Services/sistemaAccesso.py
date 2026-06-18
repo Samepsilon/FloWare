@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce il sistema di autenticazione e accesso dell'applicazione,
+incluso il controllo delle credenziali, la gestione della sessione e la validazione dei campi.
+"""
+
 import re
 from app.Repos.utenteRepository import UtenteRepository
 

@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce l'invio e la visualizzazione delle notifiche destinate ai clienti
+e ai negozianti, incluse le conferme delle richieste (appuntamenti, preventivi, ecc.).
+"""
+
 from app.Models.notifica import Notifica
 from app.Repos.notificaRepository import NotificaRepository
 from app.Repos.archivioRichieste import ArchivioRichieste

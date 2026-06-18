@@ -1,3 +1,8 @@
+"""
+Questo modulo gestisce la creazione, validazione ed eliminazione delle offerte
+(sconti e promozioni) applicate agli articoli nel catalogo del negozio.
+"""
+
 from app.Repos.catalogoOfferte import CatalogoOfferte
 from app.Repos.catalogoArticoli import CatalogoArticoli
 

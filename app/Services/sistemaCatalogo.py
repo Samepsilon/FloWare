@@ -1,3 +1,8 @@
+"""
+Questo modulo rappresenta il sotto-sistema client per la consultazione del catalogo,
+permettendo di visualizzare gli articoli, richiederne i dettagli e calcolare il prezzo finale.
+"""
+
 from app.Repos.catalogoArticoli import CatalogoArticoli
 
 class SistemaCatalogo:

@@ -1,23 +1,5 @@
 """
-InterfacciaNegoziante - GUI PyQt5 per il sistema negozio (lato negoziante)
-
-Implementa le funzioni della classe boundary "InterfacciaNegoziante":
-    - mostraDashboardNegoziante
-    - mostraCatalogo / mostraFormArticolo / mostraDettagliArticolo
-    - mostraFornitori / mostraFormFornitore
-    - mostraOfferte / mostraFormSconto / mostraFormPromozione
-    - mostraOrari / mostraFormOrario
-    - mostraNotifiche
-    - mostraConsegne / mostraFormStatoConsegna
-    - mostraMessaggio / mostraConferma / mostraErrore (QMessageBox)
-
-Controller utilizzati (lato negoziante):
-    - gestoreCatalogo
-    - gestoreFornitori
-    - gestoreOfferte
-    - gestoreOrari
-    - gestoreNotifiche
-    - gestoreConsegne
+InterfacciaNegoziante - GUI PyQt5 per il sistema negozio
 
 Compatibile con interfacciaCliente.py: stesse convenzioni (file unico,
 QMessageBox per errori/conferme, helper mostraErrore/mostraConferma/
@@ -76,11 +58,6 @@ GIORNI_SETTIMANA = [
 
 # TAB: CATALOGO
 class CatalogoNegozianteTab(QWidget):
-    """
-    mostraCatalogo(articoli)
-    mostraFormArticolo(articolo=None) -> aggiungi / modifica
-    mostraDettagliArticolo(dettagli)
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -294,10 +271,6 @@ class CatalogoNegozianteTab(QWidget):
 
 # TAB: FORNITORI
 class FornitoriTab(QWidget):
-    """
-    mostraFornitori(fornitori)
-    mostraFormFornitore(fornitore=None) -> aggiungi / modifica
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -452,11 +425,6 @@ class FornitoriTab(QWidget):
 
 # TAB: OFFERTE
 class OfferteNegozianteTab(QWidget):
-    """
-    mostraOfferte(sconti, promozioni)
-    mostraFormSconto()
-    mostraFormPromozione()
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -720,11 +688,6 @@ class OfferteNegozianteTab(QWidget):
 
 # TAB: ORARI
 class OrariNegozianteTab(QWidget):
-    """
-    mostraOrari(orari)
-    mostraFormOrario() -> aggiorna orario settimanale / chiusura
-                           straordinaria / orario temporaneo
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -897,10 +860,6 @@ class OrariNegozianteTab(QWidget):
 
 # TAB: NOTIFICHE / RICHIESTE
 class NotificheTab(QWidget):
-    """
-    mostraNotifiche(notifiche)
-    Permette di confermare richieste di tipo preventivo/appuntamento.
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1010,10 +969,6 @@ class NotificheTab(QWidget):
 
 # TAB: CONSEGNE
 class ConsegneNegozianteTab(QWidget):
-    """
-    mostraConsegne(consegne)
-    mostraFormStatoConsegna(consegna) -> aggiornaStatoConsegna
-    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1131,10 +1086,6 @@ class ConsegneNegozianteTab(QWidget):
         self.mostraConsegne()
 
 class SessionControlWidget(QWidget):
-    """
-    A widget containing a Disconnect button (to return to the login screen)
-    and a Quit button (to exit the application).
-    """
 
     def __init__(self, main_window, parent=None):
         super().__init__(parent)
@@ -1181,9 +1132,6 @@ class SessionControlWidget(QWidget):
 
 # FINESTRA PRINCIPALE
 class InterfacciaNegoziante(QMainWindow):
-    """
-    mostraDashboardNegoziante() / mostraMessaggio() / mostraConferma() / mostraErrore()
-    """
 
     def __init__(self, negoziante_id=None, parent=None):
         super().__init__(parent)

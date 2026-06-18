@@ -68,6 +68,9 @@ class CatalogoArticoli:
     @classmethod
     def mostraCatalogo(cls):
         return cls.leggi()
+    @classmethod
+    def getPrezzoFinale(cls, articoli):
+        return articoli.prezzoFinale()
 
     @classmethod
     def trovaPerId(cls, id):

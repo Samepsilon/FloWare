@@ -474,14 +474,14 @@ class OfferteNegozianteTab(QWidget):
         sconti_layout.addWidget(self.lista_sconti)
 
         form_sconto = QFormLayout()
-        self.edit_sconto_articolo_id = QLineEdit()
+        self.combo_sconto_articolo = QComboBox()
         self.edit_sconto_percentuale = QLineEdit()
         self.edit_sconto_data_inizio = QLineEdit()
         self.edit_sconto_data_inizio.setPlaceholderText("YYYY-MM-DD")
         self.edit_sconto_data_fine = QLineEdit()
         self.edit_sconto_data_fine.setPlaceholderText("YYYY-MM-DD")
 
-        form_sconto.addRow("Articolo ID:", self.edit_sconto_articolo_id)
+        form_sconto.addRow("Articolo:", self.combo_sconto_articolo)
         form_sconto.addRow("Percentuale (%):", self.edit_sconto_percentuale)
         form_sconto.addRow("Data inizio:", self.edit_sconto_data_inizio)
         form_sconto.addRow("Data fine:", self.edit_sconto_data_fine)
@@ -576,30 +576,41 @@ class OfferteNegozianteTab(QWidget):
             item.setData(Qt.UserRole, getattr(promo, "id", None))
             self.lista_promozioni.addItem(item)
 
+        # Popola la lista a discesa degli articoli
+        try:
+            articoli = GestoreCatalogo.visualizzaCatalogo()
+        except Exception as e:
+            articoli = []
+            mostraErrore(self, f"Impossibile caricare gli articoli nel menu: {e}")
+
+        self.combo_sconto_articolo.clear()
+        self.combo_sconto_articolo.addItem("Seleziona un articolo...", None)
+        for art in articoli:
+            nome = getattr(art, "nome", "Senza nome")
+            art_id = getattr(art, "id", None)
+            self.combo_sconto_articolo.addItem(f"{nome} (ID: {art_id})", art_id)
+
     def mostraFormSconto(self):
-        self.edit_sconto_articolo_id.clear()
+        self.combo_sconto_articolo.setCurrentIndex(0)
         self.edit_sconto_percentuale.clear()
         self.edit_sconto_data_inizio.clear()
         self.edit_sconto_data_fine.clear()
 
     def creaSconto(self):
-        articolo_text = self.edit_sconto_articolo_id.text().strip()
+        articolo_id = self.combo_sconto_articolo.currentData()
         percentuale_text = self.edit_sconto_percentuale.text().strip()
         data_inizio = self.edit_sconto_data_inizio.text().strip()
         data_fine = self.edit_sconto_data_fine.text().strip()
+
+        if articolo_id is None:
+            mostraErrore(self, "Seleziona un articolo valido per lo sconto.")
+            return
 
         try:
             percentuale = float(percentuale_text)
         except ValueError:
             mostraErrore(self, "La percentuale deve essere un numero.")
             return
-
-        articolo_id = None
-        if articolo_text:
-            try:
-                articolo_id = int(articolo_text)
-            except ValueError:
-                articolo_id = articolo_text
 
         dati = {
             "articolo_id": articolo_id,
@@ -1139,8 +1150,8 @@ class SessionControlWidget(QWidget):
 
         # Optional: Add clear style differentiation
         self.btn_disconnetti.setStyleSheet(
-            "background-color: #f0ad4e; color: white; font-weight: bold; padding: 6px 12px;")
-        self.btn_esci.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold; padding: 6px 12px;")
+            "background-color: #D78521; color: white; font-weight: bold; padding: 6px 12px;")
+        self.btn_esci.setStyleSheet("background-color: #DE1A1A; color: white; font-weight: bold; padding: 6px 12px;")
 
         # Connect actions
         self.btn_disconnetti.clicked.connect(self.handle_disconnetti)

@@ -83,12 +83,14 @@ class CatalogoTab(QWidget):
         self.lbl_nome = QLabel("-")
         self.lbl_descrizione = QLabel("-")
         self.lbl_descrizione.setWordWrap(True)
+        self.lbl_prezzo_originale = QLabel("-")
         self.lbl_prezzo = QLabel("-")
         self.lbl_quantita = QLabel("-")
         self.lbl_disponibile = QLabel("-")
         dettagli_layout.addRow("Nome:", self.lbl_nome)
         dettagli_layout.addRow("Descrizione:", self.lbl_descrizione)
-        dettagli_layout.addRow("Prezzo:", self.lbl_prezzo)
+        dettagli_layout.addRow("Prezzo Originale:", self.lbl_prezzo)
+        dettagli_layout.addRow("Prezzo:", self.lbl_prezzo_originale)
         dettagli_layout.addRow("Quantità:", self.lbl_quantita)
         dettagli_layout.addRow("Disponibile:", self.lbl_disponibile)
         self.dettagli_box.setLayout(dettagli_layout)
@@ -108,7 +110,7 @@ class CatalogoTab(QWidget):
         self.lista_articoli.clear()
         for articolo in articoli:
             nome = getattr(articolo, "nome", str(articolo))
-            prezzo = getattr(articolo, "prezzo", "")
+            prezzo = str(SistemaCatalogo.PrezzoF(getattr(articolo, "id", "-")))
             item = QListWidgetItem(f"{nome} - {prezzo} €")
             item.setData(Qt.UserRole, getattr(articolo, "id", None))
             self.lista_articoli.addItem(item)
@@ -131,7 +133,8 @@ class CatalogoTab(QWidget):
     def mostraDettagliArticolo(self, articolo):
         self.lbl_nome.setText(str(getattr(articolo, "nome", "-")))
         self.lbl_descrizione.setText(str(getattr(articolo, "descrizione", "-")))
-        self.lbl_prezzo.setText(str(getattr(articolo, "prezzo", "-")))
+        self.lbl_prezzo.setText(str(SistemaCatalogo.PrezzoF(getattr(articolo, "id", "-"))))
+        self.lbl_prezzo_originale.setText(str(getattr(articolo, "prezzo", "-")))
         self.lbl_quantita.setText(str(getattr(articolo, "quantita", "-")))
         disponibile = getattr(articolo, "disponibile", None)
         self.lbl_disponibile.setText("Sì" if disponibile else "No")
@@ -606,8 +609,8 @@ class SessionControlWidget(QWidget):
 
         # Optional: Add clear style differentiation
         self.btn_disconnetti.setStyleSheet(
-            "background-color: #f0ad4e; color: white; font-weight: bold; padding: 6px 12px;")
-        self.btn_esci.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold; padding: 6px 12px;")
+            "background-color: #D78521; color: white; font-weight: bold; padding: 6px 12px;")
+        self.btn_esci.setStyleSheet("background-color: #DE1A1A; color: white; font-weight: bold; padding: 6px 12px;")
 
         # Connect actions
         self.btn_disconnetti.clicked.connect(self.handle_disconnetti)

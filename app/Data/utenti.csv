@@ -2,3 +2,5 @@ id,ruolo,username,email,password
 1,cliente,test,test@test.com,ghtyNUNG#8521
 2,negoziante,Paolo,paolo@gmail.com,Neg@c1ant3
 3,cliente,Samuel,samuel@samuel.com,Samuel@1234
+4,cliente,C,C@mail.com,1234
+5,negoziante,N,N@mail.com,1234

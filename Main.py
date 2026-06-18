@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import QApplication
 from app.Services.sistemaAccesso import SistemaAccesso
 from app.Views.interfacciaLogin import InterfacciaLogin, mostraErrore
 from app.Views import interfacciaCliente, interfacciaNegoziante
+from app.Views.configStile import carica_stile, applica_stile_globale
+
 
 
 class Applicazione:
@@ -27,6 +29,8 @@ class Applicazione:
 
     def avvia(self):
         """Mostra la finestra di login e avvia il loop degli eventi."""
+        carica_stile()
+        applica_stile_globale()
         self.finestra_login = InterfacciaLogin()
         self.finestra_login.loginEffettuato.connect(self._dopo_login)
         self.finestra_login.show()

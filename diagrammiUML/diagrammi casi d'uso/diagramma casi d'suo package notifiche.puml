@@ -1,0 +1,25 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor Cliente
+actor Negoziante
+
+package "Notifiche" {
+  
+  (UC1a: Inviare richiesta preventivo o appunt.) -- Cliente
+  (UC1a: Inviare richiesta preventivo o appunt.) ..> (UC3) : <<include>>
+  Cliente -- (UC1b: Ricevere conferma richieste)
+  Cliente -- (UC1c: Annullare richiesta)
+  (UC2a: Inviare richiesta consegna) -- Cliente
+  (UC2a: Inviare richiesta consegna) ..> (UC3) : <<include>>
+  Cliente -- (UC2b: Ricevere stato della consegna)
+  Cliente -- (UC3: Scegliere data e fascia oraria)
+
+  Negoziante -- (UC7: Modificare notifiche richieste)
+  (UC8: Aggiornare notifica stato consegna) -- Negoziante
+  (UC8: Aggiornare notifica stato consegna) ..> (UC7) : <<extend>>       
+}
+@enduml
+
+

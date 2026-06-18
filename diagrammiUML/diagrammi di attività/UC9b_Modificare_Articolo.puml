@@ -1,0 +1,37 @@
+@startuml
+title UC9b - Modificare articolo
+start
+
+:Il Negoziante accede a "Gestione Catalogo";
+:Il sistema visualizza l'elenco degli articoli;
+:Il Negoziante seleziona un articolo dall'elenco;
+:Il Negoziante clicca su "Modifica";
+:Il sistema mostra i dati correnti dell'articolo;
+
+repeat
+  :Modifica uno o più campi:
+  - Nome
+  - Tipologia
+  - Prezzo
+  - Quantità
+  - Descrizione;
+  
+  if (Clicca "Annulla"?) then (Sì)
+    :Interrompi operazione;
+    :Messaggio "Operazione annullata";
+    stop
+  endif
+  
+  :Validazione dati inseriti;
+
+  if (Dati validi?) then (Sì)
+    :Il sistema salva i nuovi dati;
+    :Aggiorna il catalogo;
+    :Messaggio "Articolo modificato con successo";
+    :Aggiorna visualizzazione elenco;
+    stop
+  else (No)
+      :Messaggio "Dati inseriti non validi";
+      :Rimani nel modulo;
+  endif
+@enduml

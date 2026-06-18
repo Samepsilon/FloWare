@@ -1,0 +1,63 @@
+@startuml
+title UC10c - Eliminazione di un offerta
+skinparam actorStyle awesome
+
+actor Negoziante as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreOfferte" as G <<control>>
+participant "CatalogoOfferte" as CO <<repository>>
+participant "CatalogoArticoli" as CA <<repository>>
+participant "Offerta" as O <<entity>>
+participant "Articolo" as Articolo <<entity>>
+
+N -> IN: Accede a "Gestione Promozioni"
+IN -> G: visualizzaOfferteAttive()
+G -> CO: cercaOfferteValide()
+CO --> G: elenco offerte (sconti e promozioni)
+G --> IN: elenco offerte
+IN --> N: Mostra elenco offerte
+
+N -> IN: Seleziona offerta da eliminare (sconto o promozione)
+N -> IN: Clicca "Elimina"
+
+IN --> N: Mostra "Sei sicuro? [Conferma/Annulla]"
+
+break Annullamento
+    N -> IN: Clicca "Annulla"
+    IN --> N: Mostra "Operazione annullata"
+end
+
+N -> IN: Clicca "Conferma"
+IN -> G: eliminaOfferta()
+
+alt Offerta non trovata
+    G -> CO: cercaOfferta()
+    CO --> G: Nessuna offerta presente
+    G --> IN: errore "Offerta non trovata"
+    IN --> N: Mostra errore
+    
+else Offerta trovata
+    G -> CO: getArticoliAssociati()
+    CO --> G: listaArticoli
+    
+        loop Per ogni Articolo selezionato in CatalogoArticoli
+            G -> CA: rimuoviRiferimentoOfferta(Articolo, Offerta)
+            CA -> Articolo: rimuoviOfferta()
+            Articolo --> CA: conferma
+        end
+        CA --> G: articoliAggiornati
+    
+    G -> CO: rimuoviOfferta()
+    CO -> O: <<destroy>> Offerta
+    CO --> G: messaggio "Offerta rimossa con successo"
+    
+    G --> IN: conferma rimozione
+    IN --> N: Mostra "Offerta eliminata con successo"
+    
+    IN -> G: aggiornaListaOfferte()
+    G -> CO: cercaOfferte()
+    CO --> G: elenco aggiornato
+    G --> IN: elenco aggiornato
+    IN --> N: Mostra elenco aggiornato
+end
+@enduml

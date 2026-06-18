@@ -1,0 +1,104 @@
+@startuml
+title UC11 - Aggiornare Orari
+skinparam actorStyle awesome
+
+actor "Negoziante" as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreOrari" as G <<control>>
+participant "CatalogoOrari" as CO <<repository>>
+participant "Orario" as O <<entity>>
+
+N -> IN: Accede a "Gestione Orari"
+IN -> G: visualizzaOrari()
+G -> CO: cercaOrari()
+CO --> G: listaOrari (settimanali + speciali)
+G --> IN: Mostra orari
+IN --> N: Mostra tabella orari
+
+N -> IN: Seleziona giorno della settimana (es. Lunedì)
+N -> IN: Modifica orari (apertura, chiusura, pausa_inizio, pausa_fine)
+IN -> IN: Mostra modulo modifica
+
+break Annullamento
+    N -> IN: Clicca "Annulla"
+    IN --> N: Mostra "Operazione annullata"
+end
+
+N -> IN: Clicca "Conferma modifiche"
+IN -> G: aggiornaOrarioSettimanale(giorno, nuoviOrari)
+
+G -> G: validaOrario(nuoviOrari)
+
+alt apertura >= chiusura
+    G --> IN: errore "L'orario di apertura deve essere precedente alla chiusura"
+    IN --> N: Mostra errore   
+else Orari validi
+    G -> CO: cercaOrarioPerGiorno(giorno, "settimanale")
+    CO --> G: orario già esistente o non esistente   
+    alt orario già esistente
+        G -> CO: aggiornaOrario(orarioEsistente.id, nuoviOrari)
+        CO -> O: AggiornaOrario()
+    else orario non esistente
+        G -> CO: salvaOrario(giorno, nuoviOrari, "settimanale")
+        CO -> O: <<create>> nuovoOrario
+    end
+    O --> CO: Orario Salvato
+    CO --> G: Orario modificato
+    G --> IN: conferma "Orario settimanale aggiornato"
+    IN --> N: Mostra conferma
+end
+opt Chiusura straordinaria
+    N -> IN: Seleziona "Chiuso" per data specifica
+    IN -> G: impostaChiusuraStraordinaria(data)
+    
+    G -> CO: cercaOrarioPerData(data)
+    CO --> G: orario già esistente o orario non esistente
+    
+    alt orario già esistente
+        G -> CO: aggiornaOrario(orarioEsistente.id, tipo="chiusura")
+        CO -> O: AggiornaOrario()
+    else
+        G -> CO: salvaOrario()
+        CO -> O: <<create>> ChiusuraStraordinaria
+    end
+    
+    O --> CO: Salva ChiusuraStraordinaria
+    CO --> G: Chiusura straordinaria Impostata
+    G --> IN: messaggio "Chiusura straordinaria impostata"
+    IN --> N: Mostra messaggio
+end
+opt Orario temporaneo
+    N -> IN: Seleziona data specifica
+    N -> IN: Imposta orario speciale (apertura, chiusura)
+    IN -> G: impostaOrarioTemporaneo(data, orario)
+    
+    G -> G: validaOrario(orario)
+    
+    alt orario non valido
+        G --> IN: errore "Orario non valido"
+        IN --> N: Mostra errore
+        
+    else orario valido
+        G -> CO: cercaOrarioPerData(data)
+        CO --> G: Orario già esistente o orario non esistente
+        
+        alt orario già esistente
+            G -> CO: aggiornaOrario(orarioEsistente.id, orario, "temporaneo")
+            CO -> O: AggiornaOrario()
+        else
+            G -> CO: salvaOrario()
+            CO -> O: <<create>> OrarioTemporaneo
+        end
+        
+        O --> CO: salva Orario Temporaneo
+        CO --> G: Orario temporaneo impostato
+        G --> IN: messaggio "Orario temporaneo impostato"
+        IN --> N: Mostra messaggio
+    end
+end
+IN -> G: aggiornaVisualizzazioneOrari()
+G -> CO: cercaOrari()
+CO --> G: listaOrariAggiornata
+G --> IN: orariAggiornati
+IN --> N: Mostra tabella aggiornata
+@enduml

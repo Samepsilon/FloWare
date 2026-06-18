@@ -1,0 +1,83 @@
+﻿@startuml
+title UC0a - Registra Cliente
+skinparam actorStyle awesome
+actor Cliente
+
+participant "Interfaccia_Login" <<boundary>>
+participant "Sistema di registrazione" as Sistema <<control>>
+participant "UtenteRepository" as Repo <<repository>>
+
+
+Cliente -> Interfaccia_Login : Accede alla pagina di registrazione
+activate Interfaccia_Login
+Interfaccia_Login -> Cliente : Mostra form registrazione
+deactivate Interfaccia_Login
+
+Cliente -> Interfaccia_Login : Inserisce username, e-mail, password, conferma password
+activate Interfaccia_Login
+Interfaccia_Login -> Sistema : inviaRegistrazione(dati)
+activate Sistema
+deactivate Interfaccia_Login
+
+
+Sistema -> Repo : trovaPerUsername(username)
+activate Repo
+Repo --> Sistema : cliente (o null)
+deactivate Repo
+
+opt Username non univoco
+    Sistema -> Interfaccia_Login : Errore "Username già in uso. Scegline un altro"
+    activate Interfaccia_Login
+    Interfaccia_Login -> Cliente : Mostra errore
+    deactivate Interfaccia_Login
+end  
+
+
+Sistema -> Sistema : Verifica formato e-mail
+opt E-mail non valida
+    Sistema -> Interfaccia_Login : Errore "Inserire un indirizzo email valido"
+    activate Interfaccia_Login
+    Interfaccia_Login -> Cliente : Mostra errore   
+    deactivate Interfaccia_Login
+end
+
+
+Sistema -> Sistema : Verifica criteri (min 8 car., 1 num, 1 spec)
+opt Password non valida
+    Sistema -> Interfaccia_Login : Mostra criteri richiesti
+    activate Interfaccia_Login
+    Interfaccia_Login -> Cliente : Mostra errore
+    deactivate Interfaccia_Login
+end    
+
+
+Sistema -> Sistema : Confronta password e conferma password
+opt Le password non coincidono
+    Sistema -> Interfaccia_Login : Errore "Le password non corrispondono"
+    activate Interfaccia_Login
+    Interfaccia_Login -> Cliente : Mostra errore
+    deactivate Interfaccia_Login
+end
+
+
+create nuovoCliente
+Sistema -> nuovoCliente : <<create>> Cliente(username, email, password)
+
+Sistema -> Repo : salva(nuovoCliente)
+activate Repo
+Repo --> Sistema : conferma salvataggio
+deactivate Repo
+
+
+Sistema -> Interfaccia_Login : Mostra "Account Cliente creato con successo"
+activate Interfaccia_Login
+Sistema -> Interfaccia_Login : Reindirizza a login
+Interfaccia_Login -> Cliente : Mostra conferma e pagina login
+deactivate Interfaccia_Login
+
+deactivate Sistema
+
+@enduml
+
+
+

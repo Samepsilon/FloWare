@@ -1,0 +1,15 @@
+@startuml
+skinparam actorStyle awesome
+title Diagramma di Casi d'Uso - Gerarchia degli Attori
+
+actor Utente
+actor Cliente
+actor Negoziante
+actor Amministratore
+
+
+Utente <|-- Cliente
+Utente <|-- Negoziante
+
+@enduml
+

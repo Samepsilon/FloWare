@@ -1,0 +1,22 @@
+@startuml
+
+title UC2b - Ricevere conferma e stato consegna 
+
+start
+
+:Il sistema riceve un aggiornamento di stato dal negoziante;
+
+
+:Recupero dei dati della consegna dall'archivio;
+:Aggiornamento dello stato dell'oggetto Consegna;
+:Salvataggio dello stato aggiornato nell'archivio;
+
+:Individuazione dei dati di contatto del cliente;
+:Creazione della notifica di aggiornamento nel sistema;
+
+:Invio notifica al dispositivo del cliente;
+:Visualizzazione nuovo stato (Presa in carico / In consegna / Eseguita);
+
+stop
+@enduml
+

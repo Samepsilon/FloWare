@@ -1,0 +1,53 @@
+@startuml
+title UC12c - Eliminare Fornitore
+skinparam actorStyle awesome
+
+actor "Negoziante" as N
+participant "InterfacciaNegoziante" as IN <<boundary>>
+participant "GestoreFornitori" as G <<control>>
+participant "CatalogoFornitori" as CF <<repository>>
+participant "Fornitore" as F <<entity>>
+
+N -> IN: Accede a "Gestione Fornitori"
+IN -> G: visualizzaFornitori()
+G -> CF: cercaFornitori()
+CF -> F: findAll()
+F --> CF: listaFornitori
+CF --> G: elencoFornitori
+G --> IN: elencoFornitori
+IN --> N: Mostra elenco fornitori
+N -> IN: Seleziona fornitore dalla lista
+N -> IN: Clicca "Elimina fornitore"
+    N -> IN: Clicca "Rimuovi"
+    IN -> IN: Mostra conferma "Sei sicuro?"
+    
+    break Annullamento Rimozione
+        N -> IN: Clicca "Annulla"
+        IN -> IN: Chiudi conferma
+        IN --> N: Mostra "Operazione annullata"
+    end
+    
+    N -> IN: Conferma
+    IN -> G: eliminaFornitore(Fornitore)
+    
+    alt Fornitore non trovato
+        G -> CF: cercaFornitore(Fornitore)
+        CF --> G: Nessun fornitore presente con tali dati
+        G --> IN: errore "Fornitore non trovato"
+        IN --> N: Mostra errore
+        
+    else Fornitore trovato
+        G -> CF: rimuoviFornitore(Fornitore)
+        CF -> F: <<destroy>> Fornitore
+        CF --> G: messaggio "Fornitore rimosso con successo"
+        G --> IN: conferma rimozione
+        IN --> N: Mostra "Fornitore rimosso con successo"
+    end
+IN -> G: aggiornaListaFornitori()
+G -> CF: cercaFornitori()
+CF -> F: findAll()
+F --> CF: listaFornitoriAggiornata
+CF --> G: elencoAggiornato
+G --> IN: elencoAggiornato
+IN --> N: Mostra elenco aggiornato
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+title UC10a - Creare sconto
+start
+
+:Il Negoziante accede a "Gestione Promozioni";
+:Il sistema visualizza l'elenco sconti esistenti;
+:Il Negoziante clicca su "Crea sconto percentuale";
+:Il sistema mostra il modulo per l'inserimento;
+
+repeat
+  :Inserimento dati:
+  - Percentuale (1-100)
+  - Evento associato
+  - Date inizio/fine
+  - Prodotti selezionati;
+  
+  if (Clicca "Annulla"?) then (Sì)
+    :Interrompi operazione;
+    :Messaggio "Operazione annullata";
+    stop
+  endif
+  
+  :Validazione dati;
+  
+  if (Dati non validi?) then (Sì)
+    :Mostra errore specifico;
+    :Messaggio "Dati non validi. Vuoi riprovare?";
+    
+    if (Vuole riprovare con dati corretti?) then (Sì)
+      ->Rimani nel modulo;
+    else (No)
+      :Interrompi operazione;
+      :Messaggio "Operazione annullata";
+      stop
+    endif
+    
+  else (No)
+    :Salva sconto nel sistema;
+    :Messaggio "Sconto creato con successo";
+    :Aggiorna visualizzazione elenco;
+    stop
+  endif
+@enduml

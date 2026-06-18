@@ -1,0 +1,15 @@
+@startuml
+title UC13 - Visualizzare lista fornitori
+start
+:Negoziante accede alla sezione 'Fornitori';
+if (Esistono fornitori?) then (sì)
+  :Sistema recupera dati fornitori;
+  :Visualizza lista fornitori
+  (nome, contatti, tipologia, servizio a domicilio);
+  :Negoziante consulta/scorre l'elenco;
+  :Termine visualizzazione;
+else (no)
+  :Mostra messaggio "Nessun fornitore presente";
+endif
+stop
+@enduml

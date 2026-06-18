@@ -1,0 +1,37 @@
+@startuml
+title UC7 - Gestione Notifiche Richieste
+start
+
+:Il Negoziante apre schermata login;
+:Il Negoziante inserisce username e password;
+:Il Negoziante accede a "Notifiche";
+
+:Sistema mostra notifiche non lette 
+(Appuntamenti, Preventivi, Consegne);
+
+if (Ci sono notifiche?) then (Sì)
+  :Il negoziante seleziona una notifica
+  di tipo Appuntamento o Preventivo;
+  
+  if (La notifica è stata annullata dal cliente?) then (Sì)
+    :Sistema mostra messaggio
+    "Notifica Annullata";
+  else (No)
+    if (Tipo notifica?) then (Appuntamento)
+      :Mostra data e fascia oraria;
+      :Conferma appuntamento;
+    else (Preventivo)
+      :Mostra nome, telefono, descrizione evento;
+      :Conferma richiesta preventivo;
+    endif
+    
+    :Sistema invia notifica di conferma al cliente;
+    :Sistema aggiorna stato richiesta a "Confermata";
+  endif
+else (No)
+  :Sistema mostra messaggio
+  "Nessuna nuova notifica";
+endif
+
+stop
+@enduml

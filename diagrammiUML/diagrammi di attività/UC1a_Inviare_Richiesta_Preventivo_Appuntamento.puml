@@ -1,0 +1,28 @@
+@startuml
+
+title UC1a - Inviare richiesta preventivo o appuntamento
+
+start
+
+:Selezione "Richiedi appuntamento/preventivo";
+
+:Visualizzazione opzioni (Appuntamento o Preventivo);
+
+if (Seleziona uno dei due) then ([Appuntamento])
+    :Mostra campi per data e fascia oraria;
+    :Inserimento data e orario preferito (UC3);
+else ([Preventivo])
+    :Mostra campi per contatti e descrizione;
+    :Inserimento dati contatto e dettagli evento;
+endif
+
+:Conferma della richiesta;
+
+:Creazione dell'istanza della Richiesta;
+:Salvataggio della richiesta nell'archivio;
+
+:Visualizzazione feedback: "In attesa di visualizzazione";
+
+stop
+@enduml
+

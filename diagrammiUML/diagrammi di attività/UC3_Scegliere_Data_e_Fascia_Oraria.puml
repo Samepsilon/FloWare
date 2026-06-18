@@ -1,0 +1,25 @@
+@startuml
+
+title UC3 - Scegliere data e fascia oraria 
+
+start
+
+:Richiesta inserimento data e ora;
+
+:Il sistema recupera le date libere dal calendario;
+:Visualizzazione calendario date disponibili;
+
+:Selezione di una data da parte del cliente;
+
+:Il sistema recupera le fasce orarie per la data scelta;
+:Visualizzazione orari disponibili;
+
+:Selezione della fascia oraria;
+
+:Impostazione dei dati della Data;
+:Salvataggio della scelta nell'archivio;
+
+:Visualizzazione messaggio "Scelta effettuata con successo";
+
+stop
+@enduml

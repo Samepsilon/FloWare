@@ -1,0 +1,56 @@
+@startuml
+
+skinparam actorStyle awesome 
+
+title UC1b - Ricevere conferma richiesta preventivo o appuntamento
+
+actor Cliente
+participant "InterfacciaCliente" as BoundaryCli <<boundary>>
+participant "SistemaRichieste" as Control <<control>> 
+participant "ArchivioRichieste" as RepoRichiesta <<repository>>
+participant "ArchivioNotifiche" as RepoNotifica <<repository>>
+participant "Richiesta" as Richiesta <<entity>>
+
+note over Cliente : UC1b inizia a seguito della conferma del Negoziante (UC7)
+
+activate Control
+Control -> BoundaryCli : inviaNotifica("Hai ricevuto una conferma!")
+activate BoundaryCli
+BoundaryCli --> Cliente : visualizza notifica sul dispositivo
+deactivate BoundaryCli
+deactivate Control
+
+Cliente -> BoundaryCli : apre notifica
+activate BoundaryCli
+BoundaryCli -> Control : getDettagliRichiesta(idRichiesta)
+activate Control
+
+Control -> RepoRichiesta : getDettagliConferma(idRichiesta)
+activate RepoRichiesta
+
+RepoRichiesta -> Richiesta : trovaPerId(idRichiesta)
+activate Richiesta
+Richiesta --> RepoRichiesta : richiesta
+deactivate Richiesta
+
+RepoRichiesta -> Richiesta : getDataOra()
+activate Richiesta
+Richiesta --> RepoRichiesta : data, ora
+deactivate Richiesta
+
+RepoRichiesta --> Control : dettagliConferma(data, ora)
+deactivate RepoRichiesta
+
+Control --> BoundaryCli : mostraDettagli(data, ora)
+deactivate Control
+BoundaryCli --> Cliente : visualizza dettagli conferma
+deactivate BoundaryCli
+
+activate Control
+Control -> RepoNotifica : segnaComeLetta(idNotifica)
+activate RepoNotifica
+RepoNotifica --> Control : conferma aggiornamento
+deactivate RepoNotifica
+deactivate Control
+
+@enduml

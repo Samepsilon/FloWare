@@ -14,6 +14,7 @@ class SistemaRichieste:
     def inviaRichiesta(cls, richiesta):
         if isinstance(richiesta, dict):
             richiesta = Richiesta(**richiesta)
+        #All type of value error to be raise by the program
         if richiesta.tipo not in TIPI_VALIDI:
             raise ValueError(f"Tipo non valido. Scegli tra: {TIPI_VALIDI}")
         if not richiesta.descrizione or not richiesta.descrizione.strip():

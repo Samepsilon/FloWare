@@ -48,6 +48,9 @@ class UtenteRepository:
 
     @classmethod
     def salva(cls, nuovoCliente):
+        """
+        save the object Cliente (Utente)(only cliente can be created this way) inside the csv file
+        """
         tutti = cls.leggi()
         if nuovoCliente.id is None:
             nuovoCliente.id = max((u.id for u in tutti), default=0) + 1

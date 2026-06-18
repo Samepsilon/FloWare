@@ -3,6 +3,7 @@ from app.Repos.catalogoArticoli import CatalogoArticoli
 from app.Repos.catalogoFornitori import CatalogoFornitori
 
 class GestoreCatalogo:
+
     @classmethod
     def aggiungiArticolo(cls, dati):
         if isinstance(dati, Articolo):

@@ -5,7 +5,7 @@ skinparam actorStyle awesome
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
 participant "GestoreOrari" as G <<control>>
-participant "CatalogoOrari" as CO <<repository>>
+participant "OrarioRepository" as CO <<repository>>
 participant "Orario" as O <<entity>>
 
 N -> IN: Accede a "Gestione Orari"

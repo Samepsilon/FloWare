@@ -223,7 +223,7 @@ class ConsegnaRepository <<repository>> {
     + trovaPerId(id : Long) : Consegna
 }
 
-class CatalogoOrari <<repository>> {
+class OrarioRepository <<repository>> {
     + getOrariSettimanali() : List<Orario>
     + cercaOrari() : List<Orario>
     + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
@@ -443,7 +443,7 @@ SistemaRichieste ..> ArchivioCalendario
 GestoreConsegne ..> ConsegnaRepository
 GestoreConsegne ..> NotificaRepository
 GestoreConsegne ..> UtenteRepository
-SistemaInfoNegozio ..> CatalogoOrari
+SistemaInfoNegozio ..> OrarioRepository
 
 ' Controller di lettura (cliente) -> Repository
 SistemaCatalogo ..> CatalogoArticoli
@@ -453,7 +453,7 @@ SistemaOfferte ..> CatalogoOfferte
 GestoreCatalogo ..> CatalogoArticoli
 GestoreOfferte ..> CatalogoOfferte
 GestoreOfferte ..> CatalogoArticoli
-GestoreOrari ..> CatalogoOrari
+GestoreOrari ..> OrarioRepository
 GestoreFornitori ..> CatalogoFornitori
 GestoreNotifiche ..> NotificaRepository
 GestoreNotifiche ..> ArchivioRichieste
@@ -465,7 +465,7 @@ GestoreNotifiche ..> ArchivioRichieste
 UtenteRepository ..> Utente
 ArchivioRichieste ..> Richiesta
 ConsegnaRepository ..> Consegna
-CatalogoOrari ..> Orario
+OrarioRepository ..> Orario
 CatalogoArticoli ..> Articolo
 CatalogoOfferte ..> Offerte
 CatalogoFornitori ..> Fornitore

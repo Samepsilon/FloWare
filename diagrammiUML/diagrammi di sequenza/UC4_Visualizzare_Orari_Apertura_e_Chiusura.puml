@@ -5,7 +5,7 @@ skinparam actorStyle awesome
 actor Cliente
 participant "InterfacciaCliente" <<boundary>>
 participant "SistemaInfoNegozio" <<control>>
-participant "CatalogoOrari" as Repo <<repository>>
+participant "OrarioRepository" as Repo <<repository>>
 participant "Orario" as ORA <<entity>> 
 
 Cliente -> InterfacciaCliente : Accede alla sezione "Orari del negozio"

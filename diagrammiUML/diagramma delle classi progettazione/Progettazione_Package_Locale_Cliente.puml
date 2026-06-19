@@ -38,6 +38,7 @@ class SistemaCatalogo <<control>> {
 
 class SistemaOfferte <<control>> {
     + recuperaOfferteAttive() : List<Promozione>
+    + visualizzaOfferteAttive() : List
 }
 class SistemaRichieste <<control>> {
     + richiediOpzioni() : List<String>

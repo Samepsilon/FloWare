@@ -25,6 +25,7 @@ alt nessuna offerta attiva
     Boundary --> Cliente : "Nessuna promozione attiva al momento"
 else sono presenti offerte attive
     Cliente -> Boundary : seleziona una offerta
+    Boundary -> Control: visualizzaOfferteAttive()
     Boundary--> Cliente : il sistema mostra i dati dell'offerta
 end
 

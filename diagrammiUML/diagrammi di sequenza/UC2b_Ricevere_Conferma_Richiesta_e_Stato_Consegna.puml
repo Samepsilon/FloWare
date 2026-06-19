@@ -12,9 +12,12 @@ participant "NotificaRepository" as RepoNotifica <<Repository>>
 participant "Consegna" as Consegna <<entity>>
 
 loop (per ogni cambio di stato: Presa in carico, In consegna, Eseguita)
-    
-    Control -> RepoConsegna : trovaPerId(idConsegna)
+    Cliente --> BoundaryCli : clicca per ricerca di consegna
+    activate BoundaryCli
+    BoundaryCli -> Control : cercaConsegne()
+    deactivate BoundaryCli
     activate Control
+    Control -> RepoConsegna : trovaPerId(idConsegna)
     activate RepoConsegna
     RepoConsegna --> Control : consegna
     deactivate RepoConsegna

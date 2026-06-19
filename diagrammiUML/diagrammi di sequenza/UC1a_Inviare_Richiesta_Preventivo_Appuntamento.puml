@@ -17,11 +17,11 @@ deactivate S
 Cliente -> UI : seleziona tipo richiesta
 
 alt opzione = Appuntamento
-    UI -> Cliente : mostra Campi1 (data, fascia oraria)
-    Cliente -> UI : inserisce Campi1
+    UI -> Cliente : mostraCampi (data, fascia oraria)
+    Cliente -> UI : inserisce Campi
 else opzione = Preventivo
-    UI -> Cliente : mostra Campi2 (contatti, descrizione evento)
-    Cliente -> UI : inserisce Campi2
+    UI -> Cliente : mostraCampi (contatti, descrizione evento)
+    Cliente -> UI : inserisce Campi
 end
 
 Cliente -> UI : clicca "Conferma"

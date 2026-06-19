@@ -9,7 +9,7 @@ participant "SistemaRichieste" as S <<control>>
 participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
 
-Cliente -> UI : accede alla sezione "Le mie richieste"
+Cliente -> UI : mostraElencoRichieste(richieste)
 UI -> S : recuperaRichieste(clienteId)
 activate S
 

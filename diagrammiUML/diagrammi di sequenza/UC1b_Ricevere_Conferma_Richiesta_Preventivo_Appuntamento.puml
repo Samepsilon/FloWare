@@ -13,12 +13,6 @@ participant "Richiesta" as Richiesta <<entity>>
 
 note over Cliente : UC1b inizia a seguito della conferma del Negoziante (UC7)
 
-activate Control
-Control -> BoundaryCli : inviaNotifica("Hai ricevuto una conferma!")
-activate BoundaryCli
-BoundaryCli --> Cliente : visualizza notifica sul dispositivo
-deactivate BoundaryCli
-deactivate Control
 
 Cliente -> BoundaryCli : apre notifica
 activate BoundaryCli

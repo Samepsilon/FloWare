@@ -72,7 +72,7 @@ else dati validi
             activate CA
             CA -> Articolo: applicaSconto(Sconto, percentuale, dataInizio, dataFine)
             activate Articolo
-            Articolo -> Articolo: prezzoFinale()
+            Articolo -> Articolo: getPrezzoFinale()
             Articolo --> CA: conferma
             deactivate Articolo
             deactivate CA

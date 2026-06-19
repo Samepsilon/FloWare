@@ -125,7 +125,7 @@ class Articolo {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
-    + prezzoFinale(): Double 
+    + getPrezzoFinale(): Double 
 }
 abstract class Offerte {
     - id : Long

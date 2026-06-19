@@ -57,7 +57,7 @@ class GestoreConsegne <<control>> {
     + confermaRichiesta(dati : Object) : void
     + trovaPerId(idConsegna : Long) : Consegna
     + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
-    + visualizzaConsegne() : List<Consegna>
+    + cercaConsegne() : List<Consegna>
 }
 class ConsegnaRepository <<repository>> {
     + salva(consegna : Consegna) : void

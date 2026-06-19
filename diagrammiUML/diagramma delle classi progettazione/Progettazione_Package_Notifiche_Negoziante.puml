@@ -39,7 +39,6 @@ class GestoreNotifiche <<control>> {
     + confermaAppuntamento(richiesta : Richiesta) : void
     + confermaPreventivo(richiesta : Richiesta) : void
     + inviaNotificaCliente(notifica : Notifica) : void
-    + visualizzaConsegne() : List<Consegna>
 }
 class ArchivioRichieste <<repository>> {
     + salva(richiesta : Richiesta) : void
@@ -56,6 +55,7 @@ class NotificaRepository <<repository>> {
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
+    + findNotificheNonLette() : List<Notifica>
 }
 
 class Richiesta <<entity>> {

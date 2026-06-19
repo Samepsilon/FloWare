@@ -27,6 +27,7 @@ class GestoreConsegne <<control>> {
     + confermaRichiesta(dati : Object) : void
     + trovaPerId(idConsegna : Long) : Consegna
     + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
+    + visualizzaConsegne() : List<Consegna>
 }
 class UtenteRepository <<repository>> {
     ' Gestione generica utenti
@@ -40,6 +41,7 @@ class NotificaRepository <<repository>> {
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
+    + findNotificheNonLette() : List<Notifica>
 }
 
 abstract Utente {

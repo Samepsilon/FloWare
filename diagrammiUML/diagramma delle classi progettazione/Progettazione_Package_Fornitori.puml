@@ -46,6 +46,7 @@ class Articolo <<entity>> {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
+    + prezzoFinale(): Double 
 }
 class Fornitore <<entity>> {
     - id : Long
@@ -56,7 +57,6 @@ class Fornitore <<entity>> {
     --
     + aggiornaProprietà(nuoviDati : Map) : void
     + findAll() : List<Fornitore>
-    + find(fornitore : Fornitore) : Fornitore
 }
 class CatalogoFornitori <<repository>> {
     + cercaFornitori() : List<Fornitore>
@@ -71,8 +71,6 @@ class GestoreFornitori <<control>> {
     + validaDatiFornitore(dati : Object) : Boolean
     + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void
     + eliminaFornitore(fornitore : Fornitore) : void
-    + aggiornaListaFornitori() : void
-    + visualizzaListaFornitori() : List<Fornitore>
     + getFornitore(fornitore : Fornitore) : Fornitore
 }
 

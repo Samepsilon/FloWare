@@ -84,13 +84,13 @@ class CatalogoArticoli <<repository>> {
     + getArticoliDisponibili() : List<Articolo>
     + mostraCatalogo() : List<Articolo>
     + trovaPerId(id : Long) : Articolo
-    + aggiornaCatalogo() : void
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
+    + rimuoviOfferta() : void
 }
 
 class CatalogoOfferte <<repository>> {
@@ -117,6 +117,8 @@ class Articolo <<entity>> {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
+    + prezzoFinale(): Double 
+
 }
 
 
@@ -132,6 +134,8 @@ class Sconto <<entity>> {
     - evento : String
     - dataInizio : Date
     - dataFine : Date
+    --
+    +getPercentuale() : Double
 }
 
 class Promozione <<entity>> {
@@ -150,7 +154,7 @@ class Orario <<entity>> {
     - dataSpecifica : Date
     --
     + getDettagliOrario() : String
-    + aggiornaOrario() : void
+    + aggiornaOrario(nuovaApertura, nuovaChiusura) : void
 }
 
 Offerte <|-- Sconto

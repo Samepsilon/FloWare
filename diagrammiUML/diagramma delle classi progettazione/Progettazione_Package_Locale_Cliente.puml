@@ -57,10 +57,15 @@ class GestoreConsegne <<control>> {
     + confermaRichiesta(dati : Object) : void
     + trovaPerId(idConsegna : Long) : Consegna
     + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
+    + visualizzaConsegne() : List<Consegna>
 }
 class ConsegnaRepository <<repository>> {
     + salva(consegna : Consegna) : void
     + trovaPerId(id : Long) : Consegna
+    + cercaConsegna() : List<Consegna>
+    + consegnadelCliente(id) : List<Consegna>
+    + consegnaperStato(stato, cliente.id) :  List<Consegna> 
+    + eliminaConsegna(id)
 }
 class OrarioRepository <<repository>> {
     + getOrariSettimanali() : List<Orario>
@@ -75,13 +80,13 @@ class CatalogoArticoli <<repository>> {
     + getArticoliDisponibili() : List<Articolo>
     + mostraCatalogo() : List<Articolo>
     + trovaPerId(id : Long) : Articolo
-    + aggiornaCatalogo() : void
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
+    + rimuoviOfferta() : void
 }
 
 class CatalogoOfferte <<repository>> {
@@ -105,7 +110,7 @@ class Orario {
     - dataSpecifica : Date
     --
     + getDettagliOrario() : String
-    + aggiornaOrario() : void
+    + aggiornaOrario(nuovaApertura, nuovaChiusura) : void
 }
 
 class Articolo {
@@ -120,6 +125,7 @@ class Articolo {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
+    + prezzoFinale(): Double 
 }
 abstract class Offerte {
     - id : Long
@@ -132,6 +138,8 @@ class Sconto {
     - evento : String
     - dataInizio : Date
     - dataFine : Date
+    --
+    +getPercentuale() : Double
 }
 
 class Promozione {
@@ -165,7 +173,6 @@ class ArchivioRichieste <<repository>> {
     + trovaPerId(id : Long) : Richiesta
     + trovaPerCliente(clienteId : Long) : List<Richiesta>
     + getDettagliConferma(id : Long) : Richiesta
-    + findNotificheNonLette() : List<Notifica>
     + verificaAnnullamento(richiesta : Richiesta) : Boolean
     + cercaRichiesta(richiesta : Richiesta) : Richiesta
     + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void

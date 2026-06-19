@@ -26,6 +26,9 @@ abstract class Utente <<entity>> {
     - ruolo : String
     --
     + getRuolo() : String
+    + getUsername() : String
+    + getPassword() : String
+    + getEmail() : String 
 }
 class UtenteRepository <<repository>> {
     ' Gestione generica utenti

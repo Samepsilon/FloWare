@@ -9,7 +9,7 @@ participant "Utente" <<entity>>
 
 Utenti -> InterfacciaLogin : Accede alla pagina di login
 activate InterfacciaLogin
-InterfacciaLogin -> Utenti : Richiede username/e-mail e password
+InterfacciaLogin -> Utenti : richiediCredenziali()
 deactivate InterfacciaLogin
 
 Utenti -> InterfacciaLogin : Inserisce credenziali
@@ -27,7 +27,7 @@ deactivate Repo
 alt Credenziali errate (utilizzatore== null)
     Sistema -> InterfacciaLogin : Messaggio "Username o password non validi"
     activate InterfacciaLogin
-    InterfacciaLogin -> Utenti : Mostra errore
+    InterfacciaLogin -> Utenti : mostraErroreLogin()
     deactivate InterfacciaLogin
 else Credenziali corrette (utilizzatore != null)
     
@@ -40,13 +40,13 @@ else Credenziali corrette (utilizzatore != null)
         Sistema -> Sistema : impostaSessione("Cliente")
         Sistema -> InterfacciaLogin : Reindirizza a Dashboard Cliente
         activate InterfacciaLogin
-        InterfacciaLogin -> Utenti : Mostra Dashboard Cliente
+        InterfacciaLogin -> Utenti : mostraDashboardCliente()
         deactivate InterfacciaLogin
     else ruolo == "Negoziante"
         Sistema -> Sistema : impostaSessione("Negoziante")
         Sistema -> InterfacciaLogin : Reindirizza a Dashboard Negoziante
         activate InterfacciaLogin
-        InterfacciaLogin -> Utenti : Mostra Dashboard Negoziante
+        InterfacciaLogin -> Utenti : mostraDashboardNegoziante()
         deactivate InterfacciaLogin
     end
 end

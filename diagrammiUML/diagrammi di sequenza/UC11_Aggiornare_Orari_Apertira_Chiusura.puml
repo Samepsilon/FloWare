@@ -22,12 +22,13 @@ deactivate G
 deactivate IN
 
 N -> IN: Seleziona giorno della settimana (es. Lunedì)
+activate IN
 IN -> G: visualizzaOrari()
+activate G
 G -> CO: trovaperId(Id)
 CO --> G: orario individuato
 G --> IN: mostra orario
-IN --> N: mostra form modifica orario
-activate IN
+deactivate G
 N -> IN: Modifica orari (apertura, chiusura)
 IN -> IN: Mostra modulo modifica
 deactivate IN

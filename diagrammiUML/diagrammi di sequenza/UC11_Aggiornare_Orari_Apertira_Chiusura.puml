@@ -53,7 +53,7 @@ else Orari validi
     alt orario già esistente
         G -> CO: aggiornaOrario(orarioEsistente.id, nuoviOrari)
         activate CO
-        CO -> O: AggiornaOrario()
+        CO -> O: AggiornaOrario(nuovaApertura/nuovaChiusura)
         activate O
         deactivate O
         deactivate CO
@@ -81,7 +81,7 @@ opt Chiusura straordinaria
     alt orario già esistente
         G -> CO: aggiornaOrario(orarioEsistente.id, tipo="chiusura")
         activate CO
-        CO -> O: AggiornaOrario()
+        CO -> O: AggiornaOrario(nuovaChiusura)
         activate O
         deactivate O
         deactivate CO
@@ -118,7 +118,7 @@ opt Orario temporaneo
         alt orario già esistente
             G -> CO: aggiornaOrario(orarioEsistente.id, orario, "temporaneo")
             activate CO
-            CO -> O: AggiornaOrario()
+            CO -> O: AggiornaOrario(nuovaApertura/nuovaChiusura)
             activate O
             deactivate O
             deactivate CO

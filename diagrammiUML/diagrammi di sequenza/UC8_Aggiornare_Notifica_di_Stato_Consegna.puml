@@ -42,7 +42,7 @@ alt Consegna in sospeso
     CON --> GN: stato aggiornato
     deactivate CON
     
-    GN -> CR: salva(consegnaAggiornata)
+    GN -> CR: salva(consegna)
     activate CR
     CR --> GN: conferma salvataggio
     deactivate CR

@@ -12,11 +12,10 @@ class Negoziante <<entity>>
 class "InterfacciaLogin" <<boundary>> {
     ' Autenticazione
     + richiediCredenziali() : void
-    + mostraErroreLogin(messaggio : String) : void
+    + mostraErrore(messaggio : String) : void
     ' Registrazione (PRE-login)
     + mostraFormRegistrazione() : void
     + mostraConfermaRegistrazione(messaggio : String) : void
-    + mostraErroreRegistrazione(messaggio : String) : void
     + reindirizzaLogin() : void
 }
 abstract class Utente <<entity>> {

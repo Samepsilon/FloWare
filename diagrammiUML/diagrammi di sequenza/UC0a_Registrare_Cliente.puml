@@ -1,18 +1,18 @@
 ﻿@startuml
 title UC0a - Registra Cliente
 skinparam actorStyle awesome
-actor Cliente
+actor Utente
 
 participant "InterfacciaLogin" <<boundary>>
 participant "SistemaRegistrazione" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
 
-Cliente -> InterfacciaLogin : Accede alla pagina di registrazione
+Utente -> InterfacciaLogin : Accede alla pagina di registrazione
 activate InterfacciaLogin
-InterfacciaLogin -> Cliente : mostraFormRegistrazione()
+InterfacciaLogin -> Utente : mostraFormRegistrazione()
 deactivate InterfacciaLogin
 
-Cliente -> InterfacciaLogin : Inserisce username, e-mail, password, conferma password
+Utente -> InterfacciaLogin : Inserisce username, e-mail, password, conferma password
 activate InterfacciaLogin
 InterfacciaLogin -> Sistema : inviaRegistrazione(dati)
 activate Sistema
@@ -26,7 +26,7 @@ deactivate Repo
 opt Username non univoco
     Sistema -> InterfacciaLogin : Errore "Username già in uso. Scegline un altro"
     activate InterfacciaLogin
-    InterfacciaLogin -> Cliente : mostraErrore()
+    InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
 end  
 
@@ -34,7 +34,7 @@ Sistema -> Sistema : verificaFormatoEmail(email)
 opt E-mail non valida
     Sistema -> InterfacciaLogin : Errore "Inserire un indirizzo email valido"
     activate InterfacciaLogin
-    InterfacciaLogin -> Cliente : mostraErrore()   
+    InterfacciaLogin -> Utente : mostraErrore()   
     deactivate InterfacciaLogin
 end
 
@@ -42,7 +42,7 @@ Sistema -> Sistema : VerificaCriteriPassword(min 8 car., 1 num, 1 spec)
 opt Password non valida
     Sistema -> InterfacciaLogin : Mostra criteri richiesti
     activate InterfacciaLogin
-    InterfacciaLogin -> Cliente : mostraErrore()
+    InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
 end    
 
@@ -51,14 +51,14 @@ Sistema -> Sistema : ConfrontaPassword(password, conferma)
 opt Le password non coincidono
     Sistema -> InterfacciaLogin : Errore "Le password non corrispondono"
     activate InterfacciaLogin
-    InterfacciaLogin -> Cliente : mostraErrore()
+    InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
 end
 
-create nuovoCliente
-Sistema -> nuovoCliente : <<create>> Cliente(username, email, password)
+create Cliente
+Sistema -> Cliente : <<create>> Cliente(username, email, password)
 
-Sistema -> Repo : salva(nuovoCliente)
+Sistema -> Repo : salva(Cliente)
 activate Repo
 Repo --> Sistema : conferma salvataggio
 deactivate Repo
@@ -67,7 +67,7 @@ deactivate Repo
 Sistema -> InterfacciaLogin : Mostra "Account Cliente creato con successo"
 activate InterfacciaLogin
 Sistema -> InterfacciaLogin : reindirizzaLogin()
-InterfacciaLogin -> Cliente : Mostra conferma e pagina login
+InterfacciaLogin --> Utente : Mostra conferma e pagina login
 deactivate InterfacciaLogin
 
 deactivate Sistema

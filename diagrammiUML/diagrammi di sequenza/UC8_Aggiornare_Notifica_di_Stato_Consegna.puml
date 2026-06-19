@@ -8,7 +8,7 @@ actor "Negoziante" as N
 actor "Cliente" as C
 participant "InterfacciaNegoziante" as IN <<boundary>>
 participant "GestoreNotifiche" as GN <<control>>
-participant "CatalogoConsegne" as CR <<repository>>
+participant "ConsegnaRepository" as CR <<repository>>
 participant "NotificaRepository" as NR <<repository>>
 participant "InterfacciaCliente" as IC <<boundary>>
 participant "Consegna" as CON <<entity>>

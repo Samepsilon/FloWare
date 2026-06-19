@@ -61,9 +61,11 @@ else dati validi
         activate CS
         CS -> Sconto: <<create>> Sconto
         activate Sconto
-        deactivate Sconto
+        Sconto -> Sconto : getPercentuale() 
         CS --> G: idSconto
+        deactivate Sconto
         deactivate CS
+        
         
         loop Per ogni articolo in listaProdottiSelezionati
             G -> CA: associaScontoAdArticolo(Articolo, Sconto, percentuale, dataInizio, dataFine)

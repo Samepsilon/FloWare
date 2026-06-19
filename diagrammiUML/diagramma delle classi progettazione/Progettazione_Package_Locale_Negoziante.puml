@@ -8,7 +8,7 @@ class GestoreOfferte <<control>>
 class GestoreOrari <<control>>
 class Offerte <<entity>>
 class CatalogoArticoli <<entity>>
-class CatalogoOrari <<repository>>
+class OrarioRepository <<repository>>
 class CatalogoOfferte <<repository>>
 
 

@@ -71,7 +71,7 @@ class GestoreOrari <<control>> {
     + impostaOrarioTemporaneo(data : Date, orario : Object) : void
     + aggiornaVisualizzazioneOrari() : List<Orario>
 }
-class CatalogoOrari <<repository>> {
+class OrarioRepository <<repository>> {
     + getOrariSettimanali() : List<Orario>
     + cercaOrari() : List<Orario>
     + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
@@ -160,13 +160,13 @@ CatalogoArticoli ..> Articolo
 Articolo "1" --> "0..*" Offerte
 
 InterfacciaNegoziante ..> GestoreOrari
-GestoreOrari ..> CatalogoOrari
+GestoreOrari ..> OrarioRepository
 InterfacciaNegoziante ..> GestoreOfferte
 GestoreOfferte ..> CatalogoOfferte
 GestoreOfferte ..> CatalogoArticoli
 InterfacciaNegoziante ..> GestoreCatalogo
 GestoreCatalogo ..> CatalogoArticoli
-CatalogoOrari ..> Orario
+OrarioRepository ..> Orario
 CatalogoOfferte ..> Offerte
 
 

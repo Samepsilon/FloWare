@@ -62,7 +62,7 @@ class ConsegnaRepository <<repository>> {
     + salva(consegna : Consegna) : void
     + trovaPerId(id : Long) : Consegna
 }
-class CatalogoOrari <<repository>> {
+class OrarioRepository <<repository>> {
     + getOrariSettimanali() : List<Orario>
     + cercaOrari() : List<Orario>
     + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
@@ -197,8 +197,8 @@ SistemaOfferte ..> CatalogoOfferte
 CatalogoOfferte ..> Offerte
 
 InterfacciaCliente ..> SistemaInfoNegozio
-SistemaInfoNegozio ..> CatalogoOrari
-CatalogoOrari..> Orario
+SistemaInfoNegozio ..> OrarioRepository
+OrarioRepository..> Orario
 
 GestoreConsegne ..> ConsegnaRepository
 ConsegnaRepository ..> Consegna

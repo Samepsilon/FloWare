@@ -6,11 +6,13 @@ from PyQt5.QtWidgets import QApplication
 IMPOSTAZIONI_STILE = {
     "background_color": "#fbfbfb",      # Sfondo principale
     "text_color": "#2c3e50",            # Testo principale (grigio scuro/blu cobalto)
-    "primary_color": "#09BC8A",         # Colore primario per bottoni
+    "primary_color": "#F08080",         # Colore primario per bottoni
+    "primary_hover" : "#EC5F5F",        # Colore primario per bottoni hover
+    "primary_press" : "#E84141",        # Colore primario per bottoni hover
     "primary_text": "#ffffff",          # Colore del testo sui bottoni primari
     "secondary_color": "#ecf0f1",       # Sfondi alternativi o bordi chiari
     "border_color": "#8A7E72",          # Colore dei bordi
-    "font_family": "Segoe UI",          # Carattere predefinito
+    "font_family": "Segoe UI",         # Carattere predefinito
     "font_size": 10                     # Dimensione base del font (in punti)
 }
 
@@ -76,10 +78,10 @@ def ottieni_stylesheet():
             font-weight: bold;
         }}
         QPushButton:hover {{
-            background-color: rgba(52, 152, 219, 0.85); /* Leggera trasparenza all'hover */
+            background-color: {IMPOSTAZIONI_STILE["primary_hover"]}; /* Leggera trasparenza all'hover */
         }}
         QPushButton:pressed {{
-            background-color: rgba(52, 152, 219, 0.7);
+            background-color: {IMPOSTAZIONI_STILE["primary_hover"]};
         }}
         
         /* Campi di input */

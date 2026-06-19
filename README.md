@@ -1,6 +1,6 @@
-# FioraioSoftware
+# FloWare
 
-### Samuel Pasquier / 
+### Samuel Pasquier / Raffaele Presutto / Federica Mozzorecchia / Valentino Tiberio
 Il software gestisce la prenotazione di appuntamenti/preventivi e 
 consegne per un fioraio, con visualizzazione di catalogo, promozioni e orari da 
 parte del cliente. Gestione di notifiche, fornitori e configurazioni da parte del negoziante. 
@@ -16,20 +16,22 @@ Per eseguire il programma, avvia main.py oppure esegui questo comando
 ```
 fioraioSoftware/
 │
-├── 📂 app/                          # LE MOTEUR (Code source modulaire)
-│   ├── data_prep.py                # Pipeline de transformation des données brutes
-│   ├── model_utils.py              # Logique d'entraînement, Cross-Val et Optuna
-│   ├── metrics.py                  # Définition mathématique du coût métier
-│   └── explainability.py           # Moteur d'interprétabilité (SHAP)
+├── 📂 app/                         # IL MOTORE (Codice sorgente modulare)
+│   ├── 📂 Data/                    # Persistenza dati (File CSV per la simulazione del database)
+│   ├── 📂 Models/                  # Classi di dominio / Modelli (Articolo, Cliente, Utente, ecc.)
+│   ├── 📂 Repos/                   # Repository per il caricamento/salvataggio dei dati CSV
+│   ├── 📂 Services/                # Logica applicativa / Servizi (Gestori e sistemi)
+│   ├── 📂 Tests/                   # Unit test per la verifica dei componenti
+│   └── 📂 Views/                   # Interfacce grafiche utente (PyQt5) e stile globale
 │
-├── 📂 diagrammiUML/                    # LES EXPÉRIENCES (Notebooks)
-│   ├── 01_data_preparation.ipynb   # Exécution du pipeline de nettoyage
-│   ├── 02_model_training.ipynb     # Orchestration des entraînements et MLflow
-│   ├── 03_explainability.ipynb     # Analyse des décisions du modèle
-│   └── 04_mlflow_serving_test.ipynb # Simulation client / test API
+├── 📂 diagrammiUML/                # PROGETTAZIONE (Modelli e analisi visiva)
+│   ├── 📂 diagramma delle classi progettazione e analisi/ # Diagrammi delle classi UML
+│   ├── 📂 diagrammi casi d'uso/    # Diagrammi dei casi d'uso (.puml)
+│   ├── 📂 diagrammi di attività/   # Flussi di attività UML
+│   └── 📂 diagrammi di sequenza/   # Interazioni dinamiche tra componenti
 │
-├── 📂 model/                        # Artefact final
-├── 📂 mlruns/                       # Base de données de tracking (Logs)
-├── Dockerfile                      # Fichier de mise en place Docker
-└── requirements.txt                # Liste des dépendances (pip) 
+├── Main.py                      # Punto di ingresso dell'applicazione (avvio GUI PyQt5)
+├── README.md                    # Documentazione del progetto
+└── requirements.txt             # Elenco delle dipendenze Python (pip)
 ```
+

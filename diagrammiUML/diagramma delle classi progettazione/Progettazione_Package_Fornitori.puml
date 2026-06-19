@@ -72,6 +72,8 @@ class GestoreFornitori <<control>> {
     + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void
     + eliminaFornitore(fornitore : Fornitore) : void
     + getFornitore(fornitore : Fornitore) : Fornitore
+    + aggiornaListaFornitori() :void
+    + visualizzaListaFornitori() :  void
 }
 
 InterfacciaNegoziante ..> GestoreFornitori

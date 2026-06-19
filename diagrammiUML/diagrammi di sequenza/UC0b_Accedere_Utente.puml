@@ -14,13 +14,17 @@ deactivate InterfacciaLogin
 
 Utenti -> InterfacciaLogin : Inserisce credenziali
 activate InterfacciaLogin
-InterfacciaLogin -> Sistema : InviaCredenziali(username/email, password)
+InterfacciaLogin -> Sistema : InviaCredenziali(username/email, password, Email)
 activate Sistema
 deactivate InterfacciaLogin
 
 
-Sistema -> Repo : trovaPerCredenziali(username, password)
+Sistema -> Repo : trovaPerCredenziali(username, password, Email)
 activate Repo
+Repo -> Utente : getUsername()
+Repo -> Utente: getPassword()
+Repo -> Utente: getEmail()
+Utente --> Repo : Restituisci dati
 Repo --> Sistema : utilizzatore (Utenti o null)
 deactivate Repo
 

@@ -1,5 +1,5 @@
 @startuml
-title Diagramma delle Classi - Sistema Negozio (con UtenteRepository unificato)
+title Diagramma delle Classi - Sistema Negozio Unificato Completo
 
 skinparam classAttributeIconSize 0
 skinparam classFontSize 12
@@ -11,7 +11,7 @@ skinparam arrowColor #333
 ' ATTORI / UTENTI (ENTITY)
 ' ─────────────────────────────────────────────
 
-class Utente {
+abstract class Utente <<entity>> {
     - id : Long
     - username : String
     - email : String
@@ -19,12 +19,15 @@ class Utente {
     - ruolo : String
     --
     + getRuolo() : String
+    + getUsername() : String
+    + getPassword() : String
+    + getEmail() : String 
 }
 
-class Cliente {
+class Cliente <<entity>> {
 }
 
-class Negoziante {
+class Negoziante <<entity>> {
 }
 
 Utente <|-- Cliente
@@ -92,7 +95,7 @@ class "InterfacciaNegoziante" <<boundary>> {
 ' ENTITÀ PRINCIPALI
 ' ─────────────────────────────────────────────
 
-class Richiesta {
+class Richiesta <<entity>> {
     - id : Long
     - tipo : String
     - stato : String
@@ -107,7 +110,7 @@ class Richiesta {
     + getDataOra() : String
 }
 
-class Consegna {
+class Consegna <<entity>> {
     - id : Long
     - regione : String
     - citta : String
@@ -121,7 +124,7 @@ class Consegna {
     + getClienteId() : Long
 }
 
-class SlotOrario {
+class SlotOrario <<entity>> {
     - id : Long
     - data : Date
     - fasciaOraria : String
@@ -129,7 +132,7 @@ class SlotOrario {
     + impostaData() : void
 }
 
-class Orario {
+class Orario <<entity>> {
     - id : Long
     - giorno : String
     - apertura : String
@@ -138,10 +141,10 @@ class Orario {
     - dataSpecifica : Date
     --
     + getDettagliOrario() : String
-    + aggiornaOrario() : void
+    + aggiornaOrario(nuovaApertura : String, nuovaChiusura : String) : void
 }
 
-class Articolo {
+class Articolo <<entity>> {
     - id : Long
     - nome : String
     - descrizione : String
@@ -153,28 +156,28 @@ class Articolo {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
+    + getPrezzoFinale() : Double
+    + prezzoFinale() : Double
 }
-class Offerte {
+
+abstract class Offerte <<entity>> {
     - id : Long
     - dataInizio : Date
     - dataFine : Date
 }
-class Sconto {
-    - id : Long
+
+class Sconto <<entity>> {
     - percentuale : Double
     - evento : String
-    - dataInizio : Date
-    - dataFine : Date
+    --
+    + getPercentuale() : Double
 }
 
-class Promozione {
-    - id : Long
+class Promozione <<entity>> {
     - descrizione : String
-    - dataInizio : Date
-    - dataFine : Date
 }
 
-class Fornitore {
+class Fornitore <<entity>> {
     - id : Long
     - nome : String
     - contatti : String
@@ -183,10 +186,9 @@ class Fornitore {
     --
     + aggiornaProprietà(nuoviDati : Map) : void
     + findAll() : List<Fornitore>
-    + find(fornitore : Fornitore) : Fornitore
 }
 
-class Notifica {
+class Notifica <<entity>> {
     - id : Long
     - destinatario : String
     - messaggio : String
@@ -196,11 +198,10 @@ class Notifica {
 }
 
 ' ─────────────────────────────────────────────
-' REPOSITORY (UNIFICATO)
+' REPOSITORY
 ' ─────────────────────────────────────────────
 
 class UtenteRepository <<repository>> {
-    ' Gestione generica utenti
     + trovaPerCredenziali(username : String, password : String) : Utente
     + trovaPerId(id : Long) : Utente
     + trovaPerUsername(username : String) : Utente
@@ -212,7 +213,6 @@ class ArchivioRichieste <<repository>> {
     + trovaPerId(id : Long) : Richiesta
     + trovaPerCliente(clienteId : Long) : List<Richiesta>
     + getDettagliConferma(id : Long) : Richiesta
-    + findNotificheNonLette() : List<Notifica>
     + verificaAnnullamento(richiesta : Richiesta) : Boolean
     + cercaRichiesta(richiesta : Richiesta) : Richiesta
     + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
@@ -221,6 +221,10 @@ class ArchivioRichieste <<repository>> {
 class ConsegnaRepository <<repository>> {
     + salva(consegna : Consegna) : void
     + trovaPerId(id : Long) : Consegna
+    + cercaConsegna() : List<Consegna>
+    + consegnadelCliente(id : Long) : List<Consegna>
+    + consegnaperStato(stato : String, clienteId : Long) : List<Consegna>
+    + eliminaConsegna(id : Long) : void
 }
 
 class OrarioRepository <<repository>> {
@@ -240,9 +244,10 @@ class CatalogoArticoli <<repository>> {
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
-    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
+    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione) : void
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
+    + rimuoviOfferta() : void
 }
 
 class CatalogoOfferte <<repository>> {
@@ -250,7 +255,7 @@ class CatalogoOfferte <<repository>> {
     + salvaSconto(dati : Object) : Long
     + rimuoviSconto(id : Long) : void
     + cercaPromozioni() : List<Promozione>
-    + cercaOfferta(id : Long) : fferta
+    + cercaOfferta(id : Long) : Offerte
     + salvaPromozione(dati : Object) : Long
     + rimuoviOfferta(id : Long) : void
     + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
@@ -272,6 +277,7 @@ class NotificaRepository <<repository>> {
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
+    + findNotificheNonLette() : List<Notifica>
 }
 
 class ArchivioCalendario <<repository>> {
@@ -312,6 +318,7 @@ class GestoreConsegne <<control>> {
     + confermaRichiesta(dati : Object) : void
     + trovaPerId(idConsegna : Long) : Consegna
     + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
+    + visualizzaConsegne() : List<Consegna>
 }
 
 class SistemaInfoNegozio <<control>> {
@@ -375,63 +382,49 @@ class GestoreNotifiche <<control>> {
     + confermaAppuntamento(richiesta : Richiesta) : void
     + confermaPreventivo(richiesta : Richiesta) : void
     + inviaNotificaCliente(notifica : Notifica) : void
-    + visualizzaConsegne() : List<Consegna>
 }
 
 ' ─────────────────────────────────────────────
 ' RELAZIONI STRUCTURALI
 ' ─────────────────────────────────────────────
 
-' Associazioni Utente -> Richieste (possesso)
 Cliente "1" --> "0..*" Richiesta : possiede
 Cliente "1" --> "0..*" Consegna : possiede
-
-' Richiesta e SlotOrario
 Richiesta "1" --> "0..1" SlotOrario : occupa
-
-' Notifiche generate da Richieste/Consegne
 Richiesta "1" --> "0..*" Notifica : genera
 Consegna "1" --> "0..*" Notifica : genera
-
-' Articolo e promozioni
-Articolo "0..*" --> "0..*" Offerte : associato
-
-
-' Fornitore e Articolo
-Fornitore "1" --> "0..*" Articolo : fornisce
+Fornitore "1" --> "0..*" Articolo : possiede
+Articolo "1" --> "0..*" Offerte : associato
 
 ' ─────────────────────────────────────────────
 ' FLUSSO DI AUTENTICAZIONE E REGISTRAZIONE
 ' ─────────────────────────────────────────────
 
-' Registrazione (PRE-login)
-"InterfacciaLogin" ..> SistemaRegistrazione : registrazione
-
-' Login
-"InterfacciaLogin" ..> SistemaAccesso : login
+InterfacciaLogin ..> SistemaRegistrazione : registrazione
+InterfacciaLogin ..> SistemaAccesso : login
 SistemaAccesso ..> UtenteRepository  
-SistemaAccesso ..> "InterfacciaCliente" 
-SistemaAccesso ..> "InterfacciaNegoziante" 
+SistemaAccesso ..> InterfacciaCliente 
+SistemaAccesso ..> InterfacciaNegoziante 
 
 ' ─────────────────────────────────────────────
 ' DIPENDENZE Boundary -> Control (CLIENTE - POST LOGIN)
 ' ─────────────────────────────────────────────
 
-"InterfacciaCliente" ..> SistemaRichieste
-"InterfacciaCliente" ..> GestoreConsegne
-"InterfacciaCliente" ..> SistemaInfoNegozio
-"InterfacciaCliente" ..> SistemaCatalogo
-"InterfacciaCliente" ..> SistemaOfferte
+InterfacciaCliente ..> SistemaRichieste
+InterfacciaCliente ..> GestoreConsegne
+InterfacciaCliente ..> SistemaInfoNegozio
+InterfacciaCliente ..> SistemaCatalogo
+InterfacciaCliente ..> SistemaOfferte
 
 ' ─────────────────────────────────────────────
 ' DIPENDENZE Boundary -> Control (NEGOZIANTE - POST LOGIN)
 ' ─────────────────────────────────────────────
 
-"InterfacciaNegoziante" ..> GestoreCatalogo
-"InterfacciaNegoziante" ..> GestoreFornitori
-"InterfacciaNegoziante" ..> GestoreOrari
-"InterfacciaNegoziante" ..> GestoreOfferte
-"InterfacciaNegoziante" ..> GestoreNotifiche
+InterfacciaNegoziante ..> GestoreCatalogo
+InterfacciaNegoziante ..> GestoreFornitori
+InterfacciaNegoziante ..> GestoreOrari
+InterfacciaNegoziante ..> GestoreOfferte
+InterfacciaNegoziante ..> GestoreNotifiche
 
 ' ─────────────────────────────────────────────
 ' Control -> Repository
@@ -444,12 +437,8 @@ GestoreConsegne ..> ConsegnaRepository
 GestoreConsegne ..> NotificaRepository
 GestoreConsegne ..> UtenteRepository
 SistemaInfoNegozio ..> OrarioRepository
-
-' Controller di lettura (cliente) -> Repository
 SistemaCatalogo ..> CatalogoArticoli
 SistemaOfferte ..> CatalogoOfferte
-
-' Controller di scrittura (negoziante) -> Repository
 GestoreCatalogo ..> CatalogoArticoli
 GestoreOfferte ..> CatalogoOfferte
 GestoreOfferte ..> CatalogoArticoli

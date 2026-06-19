@@ -33,7 +33,7 @@ IN -> G: getFornitore(Fornitore)
 activate G
 G -> CF: cercaFornitore(Fornitore)
 activate CF
-CF -> F: find(Fornitore)
+CF -> F: findAll(Fornitore)
 activate F
 F --> CF: datiFornitore
 deactivate F

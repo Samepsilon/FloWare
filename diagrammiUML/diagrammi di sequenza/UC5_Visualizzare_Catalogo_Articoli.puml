@@ -13,7 +13,6 @@ Cliente -> "InterfacciaCliente" : accede alla sezione catalogo
 
 activate "SistemaCatalogo"
 
-
 "SistemaCatalogo" -> "CatalogoArticoli" : getArticoliDisponibili()
 "CatalogoArticoli" --> "SistemaCatalogo" : listaArticoli
 
@@ -29,7 +28,11 @@ else listaArticoli non vuota
     "SistemaCatalogo" -> "CatalogoArticoli" : trovaPerId(idArticolo)
     "CatalogoArticoli" --> "SistemaCatalogo" : articolo
     
-    "SistemaCatalogo" -> "Articolo" : getDettagli(Nome, Descrizione, Prezzo)
+    
+    "SistemaCatalogo" -> "SistemaCatalogo" : prezzoF(idArticolo)
+    
+    
+    "SistemaCatalogo" -> "Articolo" : getDettagli()
     "Articolo" --> "SistemaCatalogo" : dettagli
     
     "SistemaCatalogo" --> "InterfacciaCliente" : dettagli

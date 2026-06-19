@@ -20,16 +20,25 @@ Repo --> Control : elenco delle offerte valide
 deactivate Repo
 
 alt nessuna offerta attiva
-    
     Control --> Boundary : lista offerte (null)
     Boundary --> Cliente : "Nessuna promozione attiva al momento"
 else sono presenti offerte attive
-    Cliente -> Boundary : seleziona una offerta
-    Boundary -> Control: visualizzaOfferteAttive()
-    Boundary--> Cliente : il sistema mostra i dati dell'offerta
+    Control --> Boundary : elenco delle offerte valide
+    Boundary --> Cliente : mostra elenco offerte disponibili
+    
+    Cliente -> Boundary : seleziona una specifica offerta(idOfferta)
+    Boundary -> Control: visualizzaDettagliOfferta(idOfferta)
+    
+    Control -> Repo : trovaPerId(idOfferta)
+    activate Repo
+    Repo --> Control : offerta
+    deactivate Repo
+    
+    Control --> Boundary : dettagli offerta
+    Boundary --> Cliente : mostra dettagli dell'offerta
 end
 
 deactivate Control
 deactivate Boundary
 
-@enduml
+@endluml

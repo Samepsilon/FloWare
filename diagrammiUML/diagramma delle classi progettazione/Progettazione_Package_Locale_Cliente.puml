@@ -33,6 +33,7 @@ class SistemaInfoNegozio <<control>> {
 class SistemaCatalogo <<control>> {
     + visualizzaCatalogo() : List<Articolo>
     + richiediDettagli(idArticolo : Long) : Articolo
+    + PrezzoF(idArticolo): Articolo
 }
 
 class SistemaOfferte <<control>> {

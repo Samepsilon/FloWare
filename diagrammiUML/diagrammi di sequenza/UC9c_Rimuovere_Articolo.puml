@@ -61,7 +61,7 @@ alt Negoziante conferma
         G --> IN: conferma rimozione
         IN --> N: Mostra "Articolo rimosso"
         
-        IN -> G: aggiornaCatalogo()
+        IN -> G: visualizzaCatalogo()
         G -> CA: mostraCatalogo()
         activate CA
         CA --> G: elenco articoli aggiornato 

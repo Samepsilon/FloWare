@@ -328,6 +328,7 @@ class SistemaInfoNegozio <<control>> {
 class SistemaCatalogo <<control>> {
     + visualizzaCatalogo() : List<Articolo>
     + richiediDettagli(idArticolo : Long) : Articolo
+    + PrezzoF(idArticolo): Articolo
 }
 
 class SistemaOfferte <<control>> {
@@ -341,7 +342,6 @@ class GestoreCatalogo <<control>> {
     + modificaArticolo(id : Long, nuoviDati : Object) : void
     + getArticolo(id : Long) : Articolo
     + rimuoviArticolo(id : Long) : void
-    + aggiornaCatalogo() : void
     + annullaCreazione() : void
     + visualizzaCatalogo() : List<Articolo>
 }

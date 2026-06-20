@@ -248,6 +248,7 @@ class RichiesteTab(QWidget):
         self.combo_fascia = QComboBox()
         self.combo_data.currentTextChanged.connect(self.aggiornaFasceOrarie)
         self.btn_carica_date = QPushButton("Carica date disponibili")
+        self.caricaDateDisponibili()
         self.btn_carica_date.clicked.connect(self.caricaDateDisponibili)
 
         self.label_data = QLabel("Data:")

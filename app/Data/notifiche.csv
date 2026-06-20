@@ -1,2 +1,4 @@
 id,destinatario,messaggio,letta,tipo,richiestaId
-
+1,negoziante,Nuova richiesta preventivo da cliente id=1,False,preventivo,1
+2,negoziante,Nuova richiesta consegna da cliente id=3,False,consegna,
+3,vale,Stato aggiornato: in consegna,False,stato,

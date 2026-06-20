@@ -383,6 +383,8 @@ class GestoreNotifiche <<control>> {
     + confermaAppuntamento(richiesta : Richiesta) : void
     + confermaPreventivo(richiesta : Richiesta) : void
     + inviaNotificaCliente(notifica : Notifica) : void
+    + confermaRichiesta(richiesta, tipo_atteso)
+    + visualizzaConsegne(): void
 }
 
 ' ─────────────────────────────────────────────

@@ -1,3 +1,10 @@
 id,tipo,stato,data,ora,contatti,descrizione,clienteId
 1,preventivo,confermata,,,gfdgdfgdfg,svfvdfvgfdgdf,1
 2,appuntamento,confermata,2026-06-17,,Samuel,rgijjgi,3
+3,appuntamento,annullata,2026-06-20,,fefefe,fefefefe,4
+4,appuntamento,in attesa,2026-06-23,13:00,zdzd,zddzdzdz,4
+5,appuntamento,in attesa,2026-06-23,13:00,zdzd,zddzdzdz,4
+6,appuntamento,in attesa,2026-06-23,16:00,zdzd,zddzdzdz,4
+7,appuntamento,in attesa,2026-06-23,16:00,zdzd,zddzdzdz,4
+8,appuntamento,in attesa,2026-06-20,08:00,dsf,zdqsafg,4
+9,appuntamento,in attesa,2026-06-26,14:00,ddfgdfgfdgfdgfdgdf,gdgfdgfdgdf,4

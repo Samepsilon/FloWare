@@ -57,8 +57,25 @@ class Applicazione:
             mostraErrore(self.finestra_login, f"Interfaccia non riconosciuta: {destinazione}")
             return
 
+        self.finestra_principale.disconnessione.connect(self._dopo_disconnessione)
         self.finestra_principale.show()
         self.finestra_login.close()
+
+    def _dopo_disconnessione(self):
+        """Slot chiamato al logout per ripristinare la schermata di login."""
+        # 1. Pulisce la sessione
+        SistemaAccesso.sessione["utente"] = None
+        SistemaAccesso.sessione["ruolo"] = None
+
+        # 2. Chiude la finestra principale
+        if self.finestra_principale:
+            self.finestra_principale.close()
+            self.finestra_principale = None
+
+        # 3. Ripristina la finestra di login
+        self.finestra_login = InterfacciaLogin()
+        self.finestra_login.loginEffettuato.connect(self._dopo_login)
+        self.finestra_login.show()
 
 
 if __name__ == "__main__":

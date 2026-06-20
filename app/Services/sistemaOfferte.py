@@ -8,7 +8,7 @@ from app.Repos.catalogoOfferte import CatalogoOfferte
 class SistemaOfferte:
     @classmethod
     def recuperaOfferteAttive(cls):
-        return CatalogoOfferte.recuperaOfferteAttive()
+        return CatalogoOfferte.cercaPromozioni()
 
     @classmethod
     def visualizzaOfferteAttive(cls):

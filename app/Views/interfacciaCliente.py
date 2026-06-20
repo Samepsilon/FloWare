@@ -5,7 +5,7 @@ InterfacciaCliente - GUI PyQt5 per il sistema negozio (lato cliente)
 
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -593,18 +593,7 @@ class SessionControlWidget(QWidget):
         layout.addWidget(self.btn_esci)
 
     def handle_disconnetti(self):
-        # 1. Clear session variables
-        from app.Services.sistemaAccesso import SistemaAccesso
-        SistemaAccesso.sessione["utente"] = None
-        SistemaAccesso.sessione["ruolo"] = None
-
-        # 2. Instantiate and show the Login window again
-        from app.Views.interfacciaLogin import InterfacciaLogin
-        self.finestra_login = InterfacciaLogin()
-        self.finestra_login.show()
-
-        # 3. Close the current main window (Negoziante or Cliente)
-        self.main_window.close()
+        self.main_window.disconnessione.emit()
 
     def handle_esci(self):
         # Exit the application cleanly
@@ -612,7 +601,7 @@ class SessionControlWidget(QWidget):
 
 # FINESTRA PRINCIPALE
 class InterfacciaCliente(QMainWindow):
-
+    disconnessione = pyqtSignal()
 
     def __init__(self, cliente_id, parent=None):
         super().__init__(parent)

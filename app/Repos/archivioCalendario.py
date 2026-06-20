@@ -1,6 +1,6 @@
 import csv
 import os
-from datetime import date, timedelta
+from datetime import date, timedelta, time
 from app.Models.slotOrario import SlotOrario
 
 class ArchivioCalendario:
@@ -54,16 +54,94 @@ class ArchivioCalendario:
         date_libere = []
         for i in range(giorni):
             giorno = oggi + timedelta(days=i)
-            data_str = giorno.isoformat()
-            slot_giorno = [s for s in cls.leggi() if s.data == data_str]
-            if not slot_giorno or any(s.disponibile for s in slot_giorno):
-                date_libere.append(data_str)
+            if cls.trovaFascePerData(giorno):
+                date_libere.append(giorno.isoformat())
         return date_libere
 
     @classmethod
     def trovaFascePerData(cls, data):
         data_str = data.isoformat() if isinstance(data, date) else str(data)
-        return [s.fasciaOraria for s in cls.leggi() if s.data == data_str and s.disponibile]
+        
+        data_obj = None
+        if isinstance(data, date):
+            data_obj = data
+        elif isinstance(data, str):
+            try:
+                data_obj = date.fromisoformat(data)
+            except Exception:
+                pass
+                
+        # Orari di apertura/chiusura
+        apertura = None
+        chiusura = None
+        if data_obj:
+            from app.Repos.orarioRepository import OrarioRepository
+            
+            def weekday_it(d):
+                mapping = {
+                    0: "Lunedì",
+                    1: "Martedì",
+                    2: "Mercoledì",
+                    3: "Giovedì",
+                    4: "Venerdì",
+                    5: "Sabato",
+                    6: "Domenica"
+                }
+                return mapping[d.weekday()]
+                
+            o_spec = OrarioRepository.cercaOrarioPerData(data_obj)
+            if o_spec:
+                apertura = o_spec.apertura
+                chiusura = o_spec.chiusura
+            else:
+                giorno_sett = weekday_it(data_obj)
+                o_sett = OrarioRepository.cercaOrarioPerGiorno(giorno_sett)
+                if o_sett:
+                    apertura = o_sett.apertura
+                    chiusura = o_sett.chiusura
+
+        def parse_time(t_str):
+            if not t_str:
+                return None
+            try:
+                parts = t_str.split(":")
+                h = int(parts[0])
+                m = int(parts[1]) if len(parts) > 1 else 0
+                return time(h, m)
+            except Exception:
+                return None
+
+        t_apertura = parse_time(apertura)
+        t_chiusura = parse_time(chiusura)
+
+        # Genera fasce disponibili di default basate sull'orario del negozio
+        if not t_apertura or not t_chiusura:
+            fasce_disponibili = [
+                "09:00", "10:00", "11:00", "12:00",
+                "15:00", "16:00", "17:00", "18:00", "19:00"
+            ]
+        else:
+            fasce_disponibili = []
+            for h in range(24):
+                slot_t = time(h, 0)
+                if t_apertura <= slot_t <= t_chiusura:
+                    fasce_disponibili.append(f"{h:02d}:00")
+
+        # Legge gli slot salvati nel file CSV per questa data
+        slot_salvati = [s for s in cls.leggi() if s.data == data_str]
+        ore_non_disponibili = {s.fasciaOraria for s in slot_salvati if not s.disponibile}
+        ore_disponibili_salvate = {s.fasciaOraria for s in slot_salvati if s.disponibile}
+
+        # Combina le fasce disponibili
+        fasce_totali = []
+        for f in fasce_disponibili:
+            if f not in ore_non_disponibili:
+                fasce_totali.append(f)
+        for f in ore_disponibili_salvate:
+            if f not in fasce_totali:
+                fasce_totali.append(f)
+
+        return sorted(list(set(fasce_totali)))
 
     @classmethod
     def salvaScelta(cls, data, ora):

@@ -104,7 +104,8 @@ class CatalogoOfferte:
 
     @classmethod
     def cercaPromozioni(cls):
-        return [o for o in cls.leggi() if isinstance(o, Promozione)]
+        oggi = date.today().isoformat()
+        return [o for o in cls.leggi() if isinstance(o, Promozione) and o.dataFine >= oggi]
 
     @classmethod
     def cercaPromozione(cls, id):

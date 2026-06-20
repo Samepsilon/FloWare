@@ -23,7 +23,7 @@ class Articolo:
             "prezzo_finale": self.prezzoFinale(),
         }
 
-    def applicaSconto(self, sconto, percentuale=None):
+    def applicaSconto(self, sconto, percentuale=None, dataInizio=None, dataFine=None):
         if percentuale is not None:
             self.percentuale = percentuale
         elif hasattr(sconto, "getPercentuale"):

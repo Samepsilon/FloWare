@@ -1101,7 +1101,7 @@ class SessionControlWidget(QWidget):
 
         # Optional: Add clear style differentiation
         self.btn_disconnetti.setStyleSheet(
-            "background-color: #FDB833; color: white; font-weight: bold; padding: 6px 12px;")
+            "background-color: #FDB833 ; color: white; font-weight: bold; padding: 6px 12px;")
         self.btn_esci.setStyleSheet("background-color: #9C0D38; color: white; font-weight: bold; padding: 6px 12px;")
 
         # Connect actions

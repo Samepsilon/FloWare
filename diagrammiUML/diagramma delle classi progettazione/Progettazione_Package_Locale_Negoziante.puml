@@ -77,6 +77,9 @@ class OrarioRepository <<repository>> {
     + cercaOrarioPerData(data : Date) : Orario
     + salvaOrario(giorno : String, nuoviOrari : Object, tipo : String) : void
     + aggiornaOrario(id : Long, nuoviOrari : Object) : void
+    + nuovoOrario (giorno: String, nuovoOrari: Dict, tipo: String = "settimanale") : Orario
+    + trovaPerId(id) : Orario
+    + eliminaOrario() : void
 }
 
 class CatalogoArticoli <<repository>> {
@@ -86,10 +89,11 @@ class CatalogoArticoli <<repository>> {
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
-    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
     + rimuoviOfferta() : void
+    + salvaArticolo(articolo)
+    + articoliDelFornitore(fornitore_id) Fornitore
 }
 
 class CatalogoOfferte <<repository>> {
@@ -97,12 +101,20 @@ class CatalogoOfferte <<repository>> {
     + salvaSconto(dati : Object) : Long
     + rimuoviSconto(id : Long) : void
     + cercaPromozioni() : List<Promozione>
-    + cercaOfferta(id : Long) : fferta
+    + cercaOfferta(id : Long) : Offerte
     + salvaPromozione(dati : Object) : Long
     + rimuoviOfferta(id : Long) : void
     + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
     + cercaOfferteValide() : List<Promozione>
     + recuperaOfferteAttive() : List<Promozione>
+    + salva_offerta(offerta : Offerta) : Boolean
+    + trova_offerta(id : Int) : Offerta
+    + trovaPerId(id : Int) : Offerta
+    + promozioni() : Promozione
+    + sconti() : Sconto
+    + elimina_offerta(id : Int) 
+    + offerte_attive(data_riferimento : Date = null) : Offerta
+    + tutti_gli_sconti() : Sconto
 }
 class Articolo <<entity>> {
     - id : Long

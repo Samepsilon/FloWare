@@ -165,15 +165,21 @@ abstract class Offerte <<entity>> {
     - dataFine : Date
 }
 
-class Sconto <<entity>> {
+class Sconto {
+    - id : Long
     - percentuale : Double
     - evento : String
+    - dataInizio : Date
+    - dataFine : Date
     --
-    + getPercentuale() : Double
+    +getPercentuale() : Double
 }
 
-class Promozione <<entity>> {
+class Promozione {
+    - id : Long
     - descrizione : String
+    - dataInizio : Date
+    - dataFine : Date
 }
 
 class Fornitore <<entity>> {
@@ -184,7 +190,6 @@ class Fornitore <<entity>> {
     - servizioDomicilio : Boolean
     --
     + aggiornaProprietà(nuoviDati : Map) : void
-    + findAll() : List<Fornitore>
 }
 
 class Notifica <<entity>> {
@@ -205,6 +210,10 @@ class UtenteRepository <<repository>> {
     + trovaPerId(id : Long) : Utente
     + trovaPerUsername(username : String) : Utente
     + salva(nuovoCliente : Utente) : void
+    + trovaPerEmail(email):Utente
+    + tuttiClienti()
+    + tuttiNegozianti()
+    + eliminaUtente(id)
 }
 
 class ArchivioRichieste <<repository>> {
@@ -215,6 +224,9 @@ class ArchivioRichieste <<repository>> {
     + verificaAnnullamento(richiesta : Richiesta) : Boolean
     + cercaRichiesta(richiesta : Richiesta) : Richiesta
     + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+    + findNotificheNonLette() : List<Notifica>
+    + richiesteInAttesa(): List<Richieste>
+    + eliminaRichiesta(): richiesta
 }
 
 class ConsegnaRepository <<repository>> {
@@ -233,20 +245,23 @@ class OrarioRepository <<repository>> {
     + cercaOrarioPerData(data : Date) : Orario
     + salvaOrario(giorno : String, nuoviOrari : Object, tipo : String) : void
     + aggiornaOrario(id : Long, nuoviOrari : Object) : void
+    + nuovoOrario (giorno: String, nuovoOrari: Dict, tipo: String = "settimanale") : Orario
+    + trovaPerId(id) : Orario
+    + eliminaOrario() : void
 }
 
 class CatalogoArticoli <<repository>> {
     + getArticoliDisponibili() : List<Articolo>
     + mostraCatalogo() : List<Articolo>
     + trovaPerId(id : Long) : Articolo
-    + aggiornaCatalogo() : void
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
-    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione) : void
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
     + rimuoviOfferta() : void
+    + salvaArticolo(articolo)
+    + articoliDelFornitore(fornitore_id) Fornitore
 }
 
 class CatalogoOfferte <<repository>> {
@@ -260,6 +275,14 @@ class CatalogoOfferte <<repository>> {
     + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
     + cercaOfferteValide() : List<Promozione>
     + recuperaOfferteAttive() : List<Promozione>
+    + salva_offerta(offerta : Offerta) : Boolean
+    + trova_offerta(id : Int) : Offerta
+    + trovaPerId(id : Int) : Offerta
+    + promozioni() : Promozione
+    + sconti() : Sconto
+    + elimina_offerta(id : Int) 
+    + offerte_attive(data_riferimento : Date = null) : Offerta
+    + tutti_gli_sconti() : Sconto
 }
 
 class CatalogoFornitori <<repository>> {
@@ -269,6 +292,7 @@ class CatalogoFornitori <<repository>> {
     + salvaFornitore(dati : Object) : Fornitore
     + aggiornaFornitore(id : Long, dati : Object) : void
     + rimuoviFornitore(fornitore : Fornitore) : void
+    + trovaPerId(id.Fornitore): Fornitore
 }
 
 class NotificaRepository <<repository>> {
@@ -276,13 +300,19 @@ class NotificaRepository <<repository>> {
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
-    + findNotificheNonLette() : List<Notifica>
+    + trovaNotifica(id) : Notifica
+    + notificheNonLette() : Notifica
+    + notificheDelDestinatario(destinatario: String) : Notifica
+    + notifichePerTipo(tipo) : Notifica
+    + notifichePerRichiesta(id) : Notifica
+    + eliminaNotifica(id) : void
 }
 
 class ArchivioCalendario <<repository>> {
     + trovaDateLibere() : List<Date>
     + trovaFascePerData(data : Date) : List<String>
     + salvaScelta(data : Date, ora : String) : void
+    + trovaPerId(id) : slotOrario
 }
 
 ' ─────────────────────────────────────────────

@@ -47,17 +47,24 @@ class ArchivioRichieste <<repository>> {
     + trovaPerId(id : Long) : Richiesta
     + trovaPerCliente(clienteId : Long) : List<Richiesta>
     + getDettagliConferma(id : Long) : Richiesta
-    + findNotificheNonLette() : List<Notifica>
     + verificaAnnullamento(richiesta : Richiesta) : Boolean
     + cercaRichiesta(richiesta : Richiesta) : Richiesta
     + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+    + findNotificheNonLette() : List<Notifica>
+    + richiesteInAttesa(): List<Richieste>
+    + eliminaRichiesta(): richiesta
 }
 class NotificaRepository <<repository>> {
     + segnaComeLetta(idNotifica : Long) : void
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
-    + findNotificheNonLette() : List<Notifica>
+    + trovaNotifica(id) : Notifica
+    + notificheNonLette() : Notifica
+    + notificheDelDestinatario(destinatario: String) : Notifica
+    + notifichePerTipo(tipo) : Notifica
+    + notifichePerRichiesta(id) : Notifica
+    + eliminaNotifica(id) : void
 }
 
 class Richiesta <<entity>> {

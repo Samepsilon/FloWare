@@ -30,21 +30,29 @@ class GestoreConsegne <<control>> {
     + cercaConsegne() : List<Consegna>
 }
 class UtenteRepository <<repository>> {
-    ' Gestione generica utenti
     + trovaPerCredenziali(username : String, password : String) : Utente
     + trovaPerId(id : Long) : Utente
     + trovaPerUsername(username : String) : Utente
     + salva(nuovoCliente : Utente) : void
+    + trovaPerEmail(email):Utente
+    + tuttiClienti()
+    + tuttiNegozianti()
+    + eliminaUtente(id)
 }
 class NotificaRepository <<repository>> {
     + segnaComeLetta(idNotifica : Long) : void
     + creaNotifica(cliente : Utente, stato : String) : Notifica
     + inviaNotifica(destinatario : String, messaggio : String) : void
     + salvaNotifica(notifica : Notifica) : void
-    + findNotificheNonLette() : List<Notifica>
+    + trovaNotifica(id) : Notifica
+    + notificheNonLette() : Notifica
+    + notificheDelDestinatario(destinatario: String) : Notifica
+    + notifichePerTipo(tipo) : Notifica
+    + notifichePerRichiesta(id) : Notifica
+    + eliminaNotifica(id) : void
 }
 
-abstract Utente {
+abstract class Utente <<entity>> {
     - id : Long
     - username : String
     - email : String
@@ -52,6 +60,9 @@ abstract Utente {
     - ruolo : String
     --
     + getRuolo() : String
+    + getUsername() : String
+    + getPassword() : String
+    + getEmail() : String 
 }
 
 class Cliente {

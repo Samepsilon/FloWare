@@ -31,11 +31,14 @@ abstract class Utente <<entity>> {
     + getEmail() : String 
 }
 class UtenteRepository <<repository>> {
-    ' Gestione generica utenti
     + trovaPerCredenziali(username : String, password : String) : Utente
     + trovaPerId(id : Long) : Utente
     + trovaPerUsername(username : String) : Utente
     + salva(nuovoCliente : Utente) : void
+    + trovaPerEmail(email):Utente
+    + tuttiClienti()
+    + tuttiNegozianti()
+    + eliminaUtente(id)
 }
 class SistemaRegistrazione <<control>> {
     + inviaRegistrazione(dati : Object) : void

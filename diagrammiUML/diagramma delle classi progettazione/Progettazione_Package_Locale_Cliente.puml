@@ -54,6 +54,7 @@ class ArchivioCalendario <<repository>> {
     + trovaDateLibere() : List<Date>
     + trovaFascePerData(data : Date) : List<String>
     + salvaScelta(data : Date, ora : String) : void
+    + trovaPerId(id) : slotOrario
 }
 class GestoreConsegne <<control>> {
     + confermaRichiesta(dati : Object) : void
@@ -65,9 +66,9 @@ class ConsegnaRepository <<repository>> {
     + salva(consegna : Consegna) : void
     + trovaPerId(id : Long) : Consegna
     + cercaConsegna() : List<Consegna>
-    + consegnadelCliente(id) : List<Consegna>
-    + consegnaperStato(stato, cliente.id) :  List<Consegna> 
-    + eliminaConsegna(id)
+    + consegnadelCliente(id : Long) : List<Consegna>
+    + consegnaperStato(stato : String, clienteId : Long) : List<Consegna>
+    + eliminaConsegna(id : Long) : void
 }
 class OrarioRepository <<repository>> {
     + getOrariSettimanali() : List<Orario>
@@ -76,6 +77,9 @@ class OrarioRepository <<repository>> {
     + cercaOrarioPerData(data : Date) : Orario
     + salvaOrario(giorno : String, nuoviOrari : Object, tipo : String) : void
     + aggiornaOrario(id : Long, nuoviOrari : Object) : void
+    + nuovoOrario (giorno: String, nuovoOrari: Dict, tipo: String = "settimanale") : Orario
+    + trovaPerId(id) : Orario
+    + eliminaOrario() : void
 }
 
 class CatalogoArticoli <<repository>> {
@@ -85,10 +89,11 @@ class CatalogoArticoli <<repository>> {
     + rimuoviArticolo() : void
     + verificaArticolo() : Boolean
     + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
-    + associaPromozioneAdArticolo(articolo : Articolo, promozione : Promozione)
     + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
     + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
     + rimuoviOfferta() : void
+    + salvaArticolo(articolo)
+    + articoliDelFornitore(fornitore_id) Fornitore
 }
 
 class CatalogoOfferte <<repository>> {
@@ -96,14 +101,22 @@ class CatalogoOfferte <<repository>> {
     + salvaSconto(dati : Object) : Long
     + rimuoviSconto(id : Long) : void
     + cercaPromozioni() : List<Promozione>
-    + cercaOfferta(id : Long) : fferta
+    + cercaOfferta(id : Long) : Offerte
     + salvaPromozione(dati : Object) : Long
     + rimuoviOfferta(id : Long) : void
     + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
     + cercaOfferteValide() : List<Promozione>
     + recuperaOfferteAttive() : List<Promozione>
+    + salva_offerta(offerta : Offerta) : Boolean
+    + trova_offerta(id : Int) : Offerta
+    + trovaPerId(id : Int) : Offerta
+    + promozioni() : Promozione
+    + sconti() : Sconto
+    + elimina_offerta(id : Int) 
+    + offerte_attive(data_riferimento : Date = null) : Offerta
+    + tutti_gli_sconti() : Sconto
 }
-class Orario {
+class Orario <<entity>> {
     - id : Long
     - giorno : String
     - apertura : String
@@ -112,10 +125,10 @@ class Orario {
     - dataSpecifica : Date
     --
     + getDettagliOrario() : String
-    + aggiornaOrario(nuovaApertura, nuovaChiusura) : void
+    + aggiornaOrario(nuovaApertura : String, nuovaChiusura : String) : void
 }
 
-class Articolo {
+class Articolo <<entity>> {
     - id : Long
     - nome : String
     - descrizione : String
@@ -127,7 +140,7 @@ class Articolo {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
-    + prezzoFinale(): Double 
+    + prezzoFinale() : Double
 }
 abstract class Offerte {
     - id : Long
@@ -178,6 +191,9 @@ class ArchivioRichieste <<repository>> {
     + verificaAnnullamento(richiesta : Richiesta) : Boolean
     + cercaRichiesta(richiesta : Richiesta) : Richiesta
     + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+    + findNotificheNonLette() : List<Notifica>
+    + richiesteInAttesa(): List<Richieste>
+    + eliminaRichiesta(): richiesta
 }
 class Richiesta {
     - id : Long

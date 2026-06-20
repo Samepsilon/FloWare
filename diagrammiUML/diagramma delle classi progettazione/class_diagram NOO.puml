@@ -21,28 +21,30 @@ package "Package Autenticazione" <<Folder>> {
         - ruolo : String
         --
         + getRuolo() : String
+        + getUsername() : String
+        + getPassword() : String
+        + getEmail() : String
     }
     class Cliente {
     }
     class Negoziante {
     }
-    
+
     Utente <|-- Cliente
     Utente <|-- Negoziante
 
     class "InterfacciaLogin" <<boundary>> {
         + richiediCredenziali() : void
-        + mostraErroreLogin(messaggio : String) : void
+        + mostraErrore(messaggio : String) : void
         + mostraFormRegistrazione() : void
         + mostraConfermaRegistrazione(messaggio : String) : void
-        + mostraErroreRegistrazione(messaggio : String) : void
-        + reindirizzaLogin() : void
+        + reindirizzaPerRuolo(ruolo : String) : void
     }
 
     class SistemaRegistrazione <<control>> {
-        + inviaRegistrazione(dati : Object) : void
-        + verificaFormatoEmail(email : String) : Boolean
-        + verificaCriteriPassword(password : String) : Boolean
+        + inviaRegistrazione(username : String, email : String, password : String, ruolo : String) : Utente
+        + verificatoFormatoEmail(mail : String) : Boolean
+        + verificatoCriteriPassword(password : String) : Boolean
         + confrontaPassword(password : String, conferma : String) : Boolean
     }
 
@@ -50,16 +52,21 @@ package "Package Autenticazione" <<Folder>> {
         + inviaCredenziali(username : String, password : String) : void
         + impostaSessione(ruolo : String) : void
         + reindirizzaPerRuolo(ruolo : String) : void
+        + getSessione() : void
+        + confrontaPassword(password : String, conferma : String) : Boolean
+        + verificatoFormatoEmail(mail : String) : Boolean
     }
 
     class UtenteRepository <<repository>> {
-        + trovaPerCredenziali(username : String, password : String) : Utente
-        + trovaPerId(id : Long) : Utente
-        + trovaPerUsername(username : String) : Utente
-        + salva(nuovoCliente : Utente) : void
+        + salva_utente(utente : Utente) : Utente
+        + trova_utente(id : Long) : Utente
+        + trova_per_username(username : String) : Utente
+        + trova_per_email(email : String) : Utente
+        + elimina_utente(id : Long) : void
+        + tutti_i_clienti() : List<Cliente>
+        + tutti_i_negozianti() : List<Negoziante>
     }
 
-    ' Relazioni interne al package
     "InterfacciaLogin" ..> SistemaRegistrazione : registrazione
     "InterfacciaLogin" ..> SistemaAccesso : login
     SistemaRegistrazione ..> UtenteRepository
@@ -107,7 +114,7 @@ package "Package Notifiche" <<Folder>> {
         - data : Date
         - fasciaOraria : String
         --
-        + impostaData() : void
+        + impostaData(data : Date) : void
     }
 
     class Notifica {
@@ -132,7 +139,7 @@ package "Package Notifiche" <<Folder>> {
 
     class GestoreConsegne <<control>> {
         + confermaRichiesta(dati : Object) : void
-        + trovaPerId(idConsegna : Long) : Consegna
+        + cercaConsegne() : List<Consegna>
         + aggiornaStatoConsegna(idConsegna : Long, nuovoStato : String) : void
     }
 
@@ -141,30 +148,37 @@ package "Package Notifiche" <<Folder>> {
         + confermaAppuntamento(richiesta : Richiesta) : void
         + confermaPreventivo(richiesta : Richiesta) : void
         + inviaNotificaCliente(notifica : Notifica) : void
-        + visualizzaConsegne() : List<Consegna>
+        + confermaRichiesta(richiesta : Richiesta, tipo_atteso : String) : void
+        + visualizzaConsegne() : void
     }
 
     class ArchivioRichieste <<repository>> {
-        + salva(richiesta : Richiesta) : void
+        + salva_richiesta(richiesta : Richiesta) : Richiesta
         + trovaPerId(id : Long) : Richiesta
         + trovaPerCliente(clienteId : Long) : List<Richiesta>
         + getDettagliConferma(id : Long) : Richiesta
-        + findNotificheNonLette() : List<Notifica>
         + verificaAnnullamento(richiesta : Richiesta) : Boolean
-        + cercaRichiesta(richiesta : Richiesta) : Richiesta
-        + aggiornaStatoRichiesta(richiesta : Richiesta, stato : String) : void
+        + aggiornaStatoRichiesta(id : Long, nuovo_stato : String) : Richiesta
+        + richiesteInAttesa() : List<Richiesta>
     }
 
     class ConsegnaRepository <<repository>> {
-        + salva(consegna : Consegna) : void
-        + trovaPerId(id : Long) : Consegna
+        + salva_consegna(consegna : Consegna) : Consegna
+        + trova_consegna(id : Long) : Consegna
+        + consegne_del_cliente(clienteId : Long) : List<Consegna>
+        + consegne_per_stato(stato : String) : List<Consegna>
+        + elimina_consegna(id : Long) : void
     }
 
     class NotificaRepository <<repository>> {
-        + segnaComeLetta(idNotifica : Long) : void
-        + creaNotifica(cliente : Utente, stato : String) : Notifica
-        + inviaNotifica(destinatario : String, messaggio : String) : void
-        + salvaNotifica(notifica : Notifica) : void
+        + segna_come_letta(idNotifica : Long) : Boolean
+        + salvaNotifica(notifica : Notifica) : Notifica
+        + trovaNotifica(id : Long) : Notifica
+        + notificheDelDestinatario(destinatario : String) : List<Notifica>
+        + notificheNonLette() : List<Notifica>
+        + notifichePerTipo(tipo : String) : List<Notifica>
+        + notifichePerRichiesta(richiestaId : Long) : List<Notifica>
+        + eliminaNotifica(id : Long) : void
     }
 
     class ArchivioCalendario <<repository>> {
@@ -173,7 +187,6 @@ package "Package Notifiche" <<Folder>> {
         + salvaScelta(data : Date, ora : String) : void
     }
 
-    ' Relazioni interne al package
     Richiesta "1" --> "0..1" SlotOrario : occupa
     Richiesta "1" --> "0..*" Notifica : genera
     Consegna "1" --> "0..*" Notifica : genera
@@ -182,6 +195,7 @@ package "Package Notifiche" <<Folder>> {
     SistemaRichieste ..> ArchivioCalendario
     GestoreConsegne ..> ConsegnaRepository
     GestoreConsegne ..> NotificaRepository
+    GestoreConsegne ..> UtenteRepository
     GestoreNotifiche ..> NotificaRepository
     GestoreNotifiche ..> ArchivioRichieste
 
@@ -204,7 +218,7 @@ package "Package Locale" <<Folder>> {
         - dataSpecifica : Date
         --
         + getDettagliOrario() : String
-        + aggiornaOrario() : void
+        + aggiornaOrario(apertura : String, chiusura : String) : void
     }
 
     class Articolo {
@@ -214,61 +228,111 @@ package "Package Locale" <<Folder>> {
         - prezzo : Double
         - quantita : int
         - disponibile : Boolean
+        - fornitore_id : Long
+        - percentuale : Double
         --
         + getDettagli() : String
-        + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
+        + applicaSconto(sconto : Sconto) : void
         + rimuoviOfferta() : void
-        + setDati(nuoviDati : Map) : void
+        + getPrezzo() : Double
     }
 
-    class Offerte {
+    abstract class Offerte {
         - id : Long
         - dataInizio : Date
         - dataFine : Date
+        - ruolo : String
     }
 
     class Sconto {
-        - id : Long
-        - percentuale : Double
         - evento : String
-        - dataInizio : Date
-        - dataFine : Date
+        - percentuale : Double
+        --
+        + getPercentuale() : Double
     }
 
     class Promozione {
-        - id : Long
         - descrizione : String
-        - dataInizio : Date
-        - dataFine : Date
     }
 
-    ' Controller Cliente per il Locale
+    class Fornitore {
+        - id : Long
+        - nome : String
+        - contatti : String
+        - tipologia : String
+        - servizioDomicilio : Boolean
+    }
+
+    class OrarioRepository <<repository>> {
+        + orari_settimanali() : List<Orario>
+        + orari_speciali() : List<Orario>
+        + orari_per_giorno(giorno : String) : List<Orario>
+        + orari_per_data(dataSpecifica : Date) : List<Orario>
+        + salva_orario(orario : Orario) : Orario
+        + trova_orario(id : Long) : Orario
+        + elimina_orario(id : Long) : void
+        + elimina_orari_per_giorno(giorno : String) : void
+    }
+
+    class CatalogoArticoli <<repository>> {
+        + salvaArticolo(articolo : Articolo) : Articolo
+        + trovaPerId(id : Long) : Articolo
+        + rimuoviArticolo(id : Long) : void
+        + getArticoliDisponibili() : List<Articolo>
+        + articoliDelFornitore(fornitore_id : Long) : List<Articolo>
+    }
+
+    class CatalogoOfferte <<repository>> {
+        + salva_offerta(offerta : Offerte) : Offerte
+        + trova_offerta(id : Long) : Offerte
+        + elimina_offerta(id : Long) : void
+        + offre_attive(data_riferimento : Date) : List<Offerte>
+        + offre_per_tipo(tipo : String) : List<Offerte>
+        + promozioni() : List<Promozione>
+        + sconti() : List<Sconto>
+    }
+
+    class CatalogoFornitori <<repository>> {
+        + caricaListaForniori() : List<Fornitore>
+        + trova_fornitore(id : Long) : Fornitore
+        + salva_fornitore(fornitore : Fornitore) : Fornitore
+        + rimuoviFornitore(id : Long) : void
+    }
+
     class SistemaInfoNegozio <<control>> {
         + richiediOrari() : List<Orario>
     }
+
     class SistemaCatalogo <<control>> {
         + visualizzaCatalogo() : List<Articolo>
         + richiediDettagli(idArticolo : Long) : Articolo
     }
+
     class SistemaOfferte <<control>> {
         + recuperaOfferteAttive() : List<Promozione>
-        + visualizzaOfferteAttive() : List<Promozione>
+        + visualizzaOfferteAttive() : List
     }
 
-    ' Controller Negoziante per il Locale
     class GestoreCatalogo <<control>> {
-        + aggiungiArticolo(dati : Object) : void
-        + validaArticolo(articolo : Articolo) : Boolean
-        + aggiungiACatalogo(articolo : Articolo) : void
-        + modificaArticolo(id : Long, nuoviDati : Object) : void
-        + getArticolo(id : Long) : Articolo
-        + rimuoviArticolo(id : Long) : void
-        + aggiornaCatalogo() : void
-        + annullaCreazione() : void
-        + visualizzaCatalogo() : List<Articolo>
+        + aggiungi_articolo(nome : String, descrizione : String, prezzo : Double, fornitore_id : Long, disponibile : Boolean) : Articolo
+        + aggiorna_articolo(id : Long, nome : String, descrizione : String, prezzo : Double, disponibile : Boolean, fornitore_id : Long) : Articolo
+        + rimuovi_articolo(id : Long) : void
+        + get_catalogo() : List<Articolo>
+        + get_catalogo_disponibile() : List<Articolo>
+        + get_articoli_in_sconto() : List<Articolo>
+        + cerca_per_nome(nome : String) : List<Articolo>
+        + cerca_per_fascia_prezzo(minimo : Double, massimo : Double) : List<Articolo>
+        + applica_sconto(id : Long, percentuale : Double) : Articolo
+        + rimuovi_sconto(id : Long) : Articolo
+        + segna_disponibile(id : Long, disponibile : Boolean) : Articolo
     }
+
+    class GestorePromozioni <<control>> {
+        + valida_date(data_inizio : Date, data_fine : Date) : void
+        + visualizza_sconti() : List<Sconto>
+    }
+
     class GestoreOfferte <<control>> {
-        + visualizzaScontiAttivi() : List<Sconto>
         + creaSconto(dati : Object) : void
         + validaDatiSconto(dati : Object) : Boolean
         + creaPromozione(dati : Object) : void
@@ -277,7 +341,9 @@ package "Package Locale" <<Folder>> {
         + aggiornaListaSconti() : void
         + aggiornaListaOfferte() : void
         + visualizzaOfferteAttive() : List<Promozione>
+        + visualizzaScontiAttivi() : List<Sconto>
     }
+
     class GestoreOrari <<control>> {
         + visualizzaOrari() : List<Orario>
         + aggiornaOrarioSettimanale(giorno : String, nuoviOrari : Object) : void
@@ -287,161 +353,109 @@ package "Package Locale" <<Folder>> {
         + aggiornaVisualizzazioneOrari() : List<Orario>
     }
 
-    ' Repository del Locale
-    class CatalogoOrari <<repository>> {
-        + getOrariSettimanali() : List<Orario>
-        + cercaOrari() : List<Orario>
-        + cercaOrarioPerGiorno(giorno : String, tipo : String) : Orario
-        + cercaOrarioPerData(data : Date) : Orario
-        + salvaOrario(giorno : String, nuovi Orari : Object, tipo : String) : void
-        + aggiornaOrario(id : Long, nuoviOrari : Object) : void
-    }
-    class CatalogoArticoli <<repository>> {
-        + getArticoliDisponibili() : List<Articolo>
-        + mostraCatalogo() : List<Articolo>
-        + trovaPerId(id : Long) : Articolo
-        + aggiornaCatalogo() : void
-        + rimuoviArticolo() : void
-        + verificaArticolo() : Boolean
-        + associaScontoAdArticolo(articolo : Articolo, sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
-        + rimuoviRiferimentoOfferta(articolo : Articolo, offerta : Promozione) : void
-        + verificaProdotti(listaProdottiSelezionati : List<Articolo>) : List<Articolo>
-    }
-    class CatalogoOfferte <<repository>> {
-        + cercaSconti() : List<Sconto>
-        + salvaSconto(dati : Object) : Long
-        + rimuoviSconto(id : Long) : void
-        + cercaPromozioni() : List<Promozione>
-        + cercaPromozione(id : Long) : Promozione
-        + salvaPromozione(dati : Object) : Long
-        + rimuoviPromozione(id : Long) : void
-        + getArticoliAssociati(offertaId : Long, tipo : String) : List<Articolo>
-        + cercaOfferteValide() : List<Promozione>
-        + recuperaOfferteAttive() : List<Promozione>
+    class GestoreFornitori <<control>> {
+        + aggiungiFornitore(nome : String, contatti : String, tipologia : String, servizioDomicilio : Boolean) : Fornitore
+        + validaDatiFornitore(nome : String, contatti : String, tipologia : String) : void
+        + modificaFornitore(id : Long, nome : String, contatti : String, tipologia : String, domicilio : Boolean) : Fornitore
+        + eliminaFornitore(id : Long) : void
+        + getFornitore(id : Long) : Fornitore
+        + visualizzaFornitori() : List<Fornitore>
     }
 
-    ' Relazioni interne al package
+    class "InterfacciaCliente" <<boundary>> {
+        + mostraDashboardCliente() : void
+        + mostraCampi(tipo : String) : void
+        + mostraElencoRichieste(richieste : List<Richiesta>) : void
+        + mostraCatalogo(articoli : List<Articolo>) : void
+        + mostraDettagliArticolo(dettagli : Map) : void
+        + mostraTabellaOrari(orari : List<Orario>) : void
+        + mostraOfferte(offerte : List<Promozione>) : void
+        + mostraMessaggio(messaggio : String) : void
+        + mostraConferma(messaggio : String) : void
+        + mostraErrore(messaggio : String) : void
+    }
+
+    class "InterfacciaNegoziante" <<boundary>> {
+        + mostraDashboardNegoziante() : void
+        + mostraElencoArticoli(articoli : List<Articolo>) : void
+        + mostraModuloInserimentoArticolo() : void
+        + mostraModuloModificaArticolo(dati : Map) : void
+        + mostraElencoFornitori(fornitori : List<Fornitore>) : void
+        + mostraModuloInserimentoFornitore() : void
+        + mostraModuloModificaFornitore(dati : Map) : void
+        + mostraTabellaOrariConModifica(orari : List<Orario>) : void
+        + mostraModuloOrario(data : Date) : void
+        + mostraElencoSconti(sconti : List<Sconto>) : void
+        + mostraElencoPromozioni(promozioni : List<Promozione>) : void
+        + mostraModuloCreazioneSconto() : void
+        + mostraModuloCreazionePromozione() : void
+        + mostraElencoNotifiche(notifiche : List<Notifica>) : void
+        + mostraDettagliRichiesta(richiesta : Richiesta) : void
+        + mostraDettagliConsegna(consegna : Consegna) : void
+        + mostraConferma(messaggio : String) : void
+        + mostraErrore(messaggio : String) : void
+    }
+
     Offerte <|-- Sconto
     Offerte <|-- Promozione
-    Articolo "0..*" --> "0..*" Offerte : associato
+    Fornitore "1" --> "0..*" Articolo : possiede
+    Articolo "1" --> "0..*" Offerte : associato
 
-    SistemaInfoNegozio ..> CatalogoOrari
+    InterfacciaCliente ..> SistemaCatalogo
+    InterfacciaCliente ..> SistemaOfferte
+    InterfacciaCliente ..> SistemaInfoNegozio
+    InterfacciaCliente ..> GestoreConsegne
+    InterfacciaCliente ..> SistemaRichieste
+
+    InterfacciaNegoziante ..> GestoreCatalogo
+    InterfacciaNegoziante ..> GestoreFornitori
+    InterfacciaNegoziante ..> GestoreOrari
+    InterfacciaNegoziante ..> GestoreOfferte
+    InterfacciaNegoziante ..> GestorePromozioni
+    InterfacciaNegoziante ..> GestoreNotifiche
+
     SistemaCatalogo ..> CatalogoArticoli
     SistemaOfferte ..> CatalogoOfferte
-
+    SistemaInfoNegozio ..> OrarioRepository
+    GestoreConsegne ..> ConsegnaRepository
+    GestoreConsegne ..> NotificaRepository
+    GestoreConsegne ..> UtenteRepository
     GestoreCatalogo ..> CatalogoArticoli
+    GestorePromozioni ..> CatalogoOfferte
     GestoreOfferte ..> CatalogoOfferte
     GestoreOfferte ..> CatalogoArticoli
-    GestoreOrari ..> CatalogoOrari
+    GestoreOrari ..> OrarioRepository
+    GestoreFornitori ..> CatalogoFornitori
 
-    CatalogoOrari ..> Orario
     CatalogoArticoli ..> Articolo
     CatalogoOfferte ..> Offerte
-}
-
-' =========================================================================
-' PACKAGE FORNITORI
-' =========================================================================
-package "Package Fornitori" <<Folder>> {
-    class Fornitore {
-        - id : Long
-        - nome : String
-        - contatti : String
-        - tipologiaMerce : String
-        - servizioDomicilio : Boolean
-        --
-        + aggiornaProprietà(nuoviDati : Map) : void
-        + findAll() : List<Fornitore>
-        + find(fornitore : Fornitore) : Fornitore
-    }
-
-    class GestoreFornitori <<control>> {
-        + visualizzaFornitori() : List<Fornitore>
-        + aggiungiFornitore(dati : Object) : void
-        + validaDatiFornitore(dati : Object) : Boolean
-        + modificaFornitore(fornitore : Fornitore, nuoviDati : Object) : void
-        + eliminaFornitore(fornitore : Fornitore) : void
-        + aggiornaListaFornitori() : void
-        + visualizzaListaFornitori() : List<Fornitore>
-        + getFornitore(fornitore : Fornitore) : Fornitore
-    }
-
-    class CatalogoFornitori <<repository>> {
-        + cercaFornitori() : List<Fornitore>
-        + caricaListaFornitori() : List<Fornitore>
-        + cercaFornitore(fornitore : Fornitore) : Fornitore
-        + salvaFornitore(dati : Object) : Fornitore
-        + aggiornaFornitore(id : Long, dati : Object) : void
-        + rimuoviFornitore(fornitore : Fornitore) : void
-    }
-
-    ' Relazioni interne al package
-    GestoreFornitori ..> CatalogoFornitori
+    OrarioRepository ..> Orario
     CatalogoFornitori ..> Fornitore
 }
 
 ' =========================================================================
-' PLANCE DI INTERFACCIA GLOBALI (Macro Boundary rimaste esterne per pulizia)
+' CROSS-PACKAGE RELATIONS (Package Notifiche -> Autenticazione, Locale -> Notifiche)
 ' =========================================================================
-class "InterfacciaCliente" <<boundary>> {
-    + mostraDashboardCliente() : void
-    + mostraCampi(tipo : String) : void
-    + mostraElencoRichieste(richieste : List<Richiesta>) : void
-    + mostraCatalogo(articoli : List<Articolo>) : void
-    + mostraDettagliArticolo(dettagli : Map) : void
-    + mostraTabellaOrari(orari : List<Orario>) : void
-    + mostraOfferte(offerte : List<Promozione>) : void
-    + mostraMessaggio(messaggio : String) : void
-    + mostraConferma(messaggio : String) : void
-    + mostraErrore(messaggio : String) : void
-}
 
-class "InterfacciaNegoziante" <<boundary>> {
-    + mostraDashboardNegoziante() : void
-    + mostraElencoArticoli(articoli : List<Articolo>) : void
-    + mostraModuloInserimentoArticolo() : void
-    + mostraModuloModificaArticolo(dati : Map) : void
-    + mostraElencoFornitori(fornitori : List<Fornitore>) : void
-    + mostraModuloInserimentoFornitore() : void
-    + mostraModuloModificaFornitore(dati : Map) : void
-    + mostraTabellaOrariConModifica(orari : List<Orario>) : void
-    + mostraModuloOrario(data : Date) : void
-    + mostraElencoSconti(sconti : List<Sconto>) : void
-    + mostraElencoPromozioni(promozioni : List<Promozione>) : void
-    + mostraModuloCreazioneSconto() : void
-    + mostraModuloCreazionePromozione() : void
-    + mostraElencoNotifiche(notifiche : List<Notifica>) : void
-    + mostraDettagliRichiesta(richiesta : Richiesta) : void
-    + mostraDettagliConsegna(consegna : Consegna) : void
-    + mostraConferma(messaggio : String) : void
-    + mostraErrore(messaggio : String) : void
-}
+' Cliente and Negoziante from Autenticazione used in Notifiche and Locale
+SistemaRichieste ..> ArchivioRichieste
+InterfacciaCliente ..> SistemaRichieste
 
-' ─────────────────────────────────────────────
-' COLLEGAMENTI E REINDERIZZAMENTI TRA PACKAGE ED ESTERNO
-' ─────────────────────────────────────────────
+' NotificaRepository used by GestoreConsegne (Locale) and GestoreNotifiche (Notifiche)
+NotificaRepository ..> Notifica
 
-SistemaAccesso ..> "InterfacciaCliente"
-SistemaAccesso ..> "InterfacciaNegoziante"
+' UtenteRepository used across packages
+UtenteRepository ..> Utente
+UtenteRepository ..> Cliente
+UtenteRepository ..> Negoziante
 
-' Interfaccia Cliente -> Controllers nei vari package
-"InterfacciaCliente" ..> SistemaRichieste
-"InterfacciaCliente" ..> GestoreConsegne
-"InterfacciaCliente" ..> SistemaInfoNegozio
-"InterfacciaCliente" ..> SistemaCatalogo
-"InterfacciaCliente" ..> SistemaOfferte
-
-' Interfaccia Negoziante -> Controllers nei vari package
-"InterfacciaNegoziante" ..> GestoreCatalogo
-"InterfacciaNegoziante" ..> GestoreFornitori
-"InterfacciaNegoziante" ..> GestoreOrari
-"InterfacciaNegoziante" ..> GestoreOfferte
-"InterfacciaNegoziante" ..> GestoreNotifiche
-
-' Relazioni cross-package strutturali o di controllo necessarie
+' Entity relationships across packages
 Cliente "1" --> "0..*" Richiesta : possiede
 Cliente "1" --> "0..*" Consegna : possiede
-GestoreConsegne ..> UtenteRepository : verifica cliente
-Fornitore "1" --> "0..*" Articolo : fornisce cross-package
+Negoziante "1" --> "0..*" Fornitore : gestisce
+Negoziante "1" --> "0..*" Articolo : gestisce
+Negoziante "1" --> "1..*" Consegna : effettua
+Negoziante "1" --> "0..*" Offerte : assegna
+Cliente "1" --> "1" Orario : seleziona
 
 @enduml

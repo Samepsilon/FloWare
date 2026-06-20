@@ -28,19 +28,13 @@ alt Nessuna notifica
 else Notifiche presenti
     G --> IN: elencoNotifiche
     IN --> N: Mostra notifiche (Appuntamenti, Preventivi, Consegne)
-    deactivate G
-    deactivate IN
     
     N -> IN: Seleziona notifica
-    activate IN
     
     alt Tipo = "Appuntamento"
         IN -> G: confermaAppuntamento(Richiesta)
-        activate G
-        
     else Tipo = "Preventivo"
         IN -> G: confermaPreventivo(Richiesta)
-        
     end
     
     G -> AR: verificaAnnullamento(Richiesta)
@@ -62,32 +56,45 @@ else Notifiche presenti
         AR --> G: richiesta
         deactivate AR
         
-        G -> AR: aggiornaStatoRichiesta(Richiesta, stato)
-        activate AR
-        AR -> R: setStato("Confermata" o "Presa in carico")
-        activate R
-        R --> AR: conferma
-        deactivate R
-        AR --> G: statoAggiornato
-        deactivate AR
-        
-        G -> Notif: <<create>> NotificaConferma(destinatario, richiesta)
-        activate Notif
-        Notif --> G: notificaConferma
-        deactivate Notif
-        
-        G -> AN: salvaNotifica(notificaConferma)
-        activate AN
-        AN -> AN: ArchiviaNotifica(notificaConferma)
-        
-        AN --> G: notificaSalvata
-        deactivate AN
-        
-        G -> IC: inviaNotificaCliente(notificaConferma)
-        activate IC
-        IC -> C: Mostra notifica di conferma
-        deactivate IC
+        alt richiesta.tipo != tipo_atteso [ValueError]
+            G --> IN: errore "Tipo richiesta non corrispondente"
+            IN --> N: Mostra errore
+        else Tipo corrispondente
+            G -> G: confermaRichiesta(richiesta, tipo_atteso)
+            G -> AR: aggiornaStatoRichiesta(Richiesta, "confermata")
+            activate AR
+            AR -> R: setStato("Confermata" o "Presa in carico")
+            activate R
+            R --> AR: conferma
+            deactivate R
+            AR --> G: statoAggiornato
+            deactivate AR
+            
+            G -> Notif: <<create>> Notifica(destinatario, messaggio, letta, tipo, richiestaId)
+            activate Notif
+            Notif --> G: notifica
+            deactivate Notif
+            
+            G -> AN: salvaNotifica(notifica)
+            activate AN
+            AN -> AN: ArchiviaNotifica(notifica)
+            AN --> G: notificaSalvata
+            deactivate AN
+            
+            G -> G: inviaNotificaCliente(destinatario, messaggio)
+            
+            G -> IC: inviaNotificaCliente(notifica)
+            activate IC
+            IC -> C: Mostra notifica di conferma
+            deactivate IC
+            
+            G --> IN: confermaOperazione
+            IN --> N: Mostra successo operazione
+        end
     end
+    
+    G --> IN: esitoConfermaRichiesta
+    
     deactivate G
     deactivate IN
 end

@@ -1,3 +1,9 @@
 id,giorno,apertura,chiusura,tipo,dataSpecifica
-1,Lunedì,08:20,17:20,settimanale,
+1,Lunedì,8:00,20:30,settimanale,
 2,,,,chiusura,2026-05-06
+3,Martedì,8:00,20:30,settimanale,
+4,Mercoledì,8:00,20:30,settimanale,
+5,Giovedì,8:00,20:30,settimanale,
+6,Venerdì,8:00,20:30,settimanale,
+7,Sabato,8:00,20:00,settimanale,
+8,Domenica,8:00,16:00,settimanale,

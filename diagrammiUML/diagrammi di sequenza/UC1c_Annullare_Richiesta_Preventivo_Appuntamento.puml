@@ -32,6 +32,16 @@ activate Repo
 Repo --> S : Richiesta
 deactivate Repo
 
+S -> Repo : cercaRichiesta(Richiesta)
+activate Repo
+Repo --> S : richiestaConfermata
+deactivate Repo
+
+S -> R : getStato()
+activate R
+R --> S : statoCorrente
+deactivate R
+
 S -> Repo : verificaAnnullamento(Richiesta)
 activate Repo
 Repo --> S : conferma
@@ -48,6 +58,18 @@ S --> UI : "Annullamento avvenuto con successo"
 deactivate S
 
 UI --> Cliente : mostraMessaggio("Annullamento avvenuto con successo")
+
+UI -> Cliente : mostraConferma("Richiesta annullata")
+
+UI -> S : recuperaRichieste(clienteId)
+activate S
+S -> Repo : trovaPerCliente(clienteId)
+activate Repo
+Repo --> S : listaRichieste
+deactivate Repo
+S --> UI : richiesteAggiornate
+deactivate S
+UI -> Cliente : mostraElencoRichieste(richiesteAggiornate)
 
 note right of S
 Notifica di annullamento inviata al negoziante

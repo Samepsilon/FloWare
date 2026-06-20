@@ -16,17 +16,32 @@ activate SistemaInfoNegozio
 
 SistemaInfoNegozio -> Repo : getOrariSettimanali()
 activate Repo
-Repo --> SistemaInfoNegozio : listaOrari (ListaOrario)
+Repo --> SistemaInfoNegozio : orariSettimanali (List<Orario>)
 deactivate Repo
 
-loop per ogni giorno della settimana
-    SistemaInfoNegozio -> ORA : getDettagliOrario()
-    activate ORA
-    ORA --> SistemaInfoNegozio : giorno, apertura, chiusura
-    deactivate ORA
-end
+SistemaInfoNegozio -> Repo : cercaOrari()
+activate Repo
+Repo --> SistemaInfoNegozio : orariSpeciali (List<Orario>)
+deactivate Repo
 
-SistemaInfoNegozio --> InterfacciaCliente : mostraTabellaOrari(dati)
+alt orariSettimanali vuota
+    SistemaInfoNegozio --> InterfacciaCliente : nessunOrario
+    InterfacciaCliente -> InterfacciaCliente : mostraMessaggio("Nessun orario disponibile")
+else
+    loop per ogni giorno della settimana
+        SistemaInfoNegozio -> Repo : cercaOrarioPerGiorno(giorno, "settimanale")
+        activate Repo
+        Repo --> SistemaInfoNegozio : orarioGiorno
+        deactivate Repo
+
+        SistemaInfoNegozio -> ORA : getDettagliOrario()
+        activate ORA
+        ORA --> SistemaInfoNegozio : giorno, apertura, chiusura
+        deactivate ORA
+    end
+
+    SistemaInfoNegozio --> InterfacciaCliente : mostraTabellaOrari(orari)
+end
 deactivate SistemaInfoNegozio
 
 InterfacciaCliente -> Cliente : Visualizza tabella

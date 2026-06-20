@@ -39,6 +39,10 @@ GC -> CA: trovaPerId(id)
 activate CA
 CA --> GC: articolo esistente
 deactivate CA
+GC -> CA: verificaArticolo()
+activate CA
+CA --> GC: articolo verificato
+deactivate CA
 
 alt articolo non trovato
     GC --> IN: ValueError "Articolo con id={id} non trovato."

@@ -49,6 +49,7 @@ else dati validi
         activate CF
         CF --> GF: fornitore salvato
         deactivate CF
+        GF -> GF: aggiornaListaFornitori()
 
         GF --> IN: esito positivo
         deactivate GF

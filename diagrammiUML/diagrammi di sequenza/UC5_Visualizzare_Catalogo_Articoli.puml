@@ -27,7 +27,10 @@ else listaArticoli non vuota
 
     SistemaCatalogo -> CatalogoArticoli : trovaPerId(idArticolo)
     CatalogoArticoli --> SistemaCatalogo : articolo
-
+    SistemaCatalogo -> CatalogoArticoli : verificaArticolo()
+    activate CatalogoArticoli
+    CatalogoArticoli --> SistemaCatalogo : articoloValido (Boolean)
+    deactivate CatalogoArticoli
     SistemaCatalogo -> SistemaCatalogo : PrezzoF(idArticolo)
 
     SistemaCatalogo -> Articolo : getDettagli()

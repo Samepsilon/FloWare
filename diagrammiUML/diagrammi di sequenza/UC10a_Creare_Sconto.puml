@@ -86,6 +86,10 @@ else dati validi
         activate CS
         CS --> G: elenco aggiornato
         deactivate CS
+        G -> CS: sconti()
+        activate CS
+        CS --> G: elenco completo sconti
+        deactivate CS
         G --> IN: elenco aggiornato
         IN --> N: Mostra elenco aggiornato
     end

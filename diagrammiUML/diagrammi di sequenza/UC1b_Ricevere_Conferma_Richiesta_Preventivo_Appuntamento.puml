@@ -46,4 +46,28 @@ RepoNotifica --> Control : conferma aggiornamento
 deactivate RepoNotifica
 deactivate Control
 
+BoundaryCli -> Cliente : mostraConferma("Richiesta confermata dal negoziante")
+
+Control -> RepoRichiesta : cercaRichiesta(richiesta)
+activate Control
+activate RepoRichiesta
+RepoRichiesta --> Control : richiestaTrovata
+deactivate RepoRichiesta
+
+Control -> RepoNotifica : creaNotifica(cliente, "Confermata")
+activate RepoNotifica
+RepoNotifica --> Control : notifica
+deactivate RepoNotifica
+deactivate Control
+
+BoundaryCli -> Control : recuperaRichieste(clienteId)
+activate Control
+Control -> RepoRichiesta : trovaPerCliente(clienteId)
+activate RepoRichiesta
+RepoRichiesta --> Control : listaRichieste
+deactivate RepoRichiesta
+Control --> BoundaryCli : richieste
+deactivate Control
+BoundaryCli --> Cliente : mostraElencoRichieste(richieste)
+
 @enduml

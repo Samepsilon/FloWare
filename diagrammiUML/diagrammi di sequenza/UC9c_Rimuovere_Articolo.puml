@@ -45,7 +45,8 @@ alt articolo non trovato
     GC --> IN: ValueError "Articolo con id={id} non trovato."
     IN --> N: mostraErrore()
 else articolo trovato
-    GC -> CA: <<destroy>> Rimuovi Articolo
+    GC -> A: rimuoviOfferta()
+    GC -> CA: rimuoviArticolo()
     activate CA
     CA --> GC: conferma
     deactivate CA

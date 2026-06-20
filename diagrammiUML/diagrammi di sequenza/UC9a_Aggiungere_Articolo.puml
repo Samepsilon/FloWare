@@ -39,6 +39,10 @@ GC -> CA: salvaArticolo(articolo)
 activate CA
 CA --> GC: articolo salvato
 deactivate CA
+GC -> CA: aggiungiACatalogo(articolo)
+activate CA
+CA --> GC: articolo aggiunto al catalogo
+deactivate CA
 
 GC --> IN: esito positivo
 deactivate GC

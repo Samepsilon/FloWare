@@ -12,11 +12,16 @@ N -> IN: Accede a "Gestione Orari"
 activate IN
 IN -> G: visualizzaOrari()
 activate G
+G -> CO: getOrariSettimanali()
+activate CO
+CO --> G: orariSettimanali
+deactivate CO
 G -> CO: cercaOrari()
 activate CO
 CO --> G: listaOrari (settimanali + speciali)
 deactivate CO
-G --> IN: Mostra orari
+G --> IN: orari
+IN -> IN: mostraTabellaOrariConModifica(orari)
 IN --> N: Mostra tabella orari
 deactivate G
 deactivate IN
@@ -25,17 +30,22 @@ N -> IN: Seleziona giorno della settimana (es. Lunedì)
 activate IN
 IN -> G: visualizzaOrari()
 activate G
-G -> CO: trovaperId(Id)
+G -> CO: trovaPerId(Id)
 CO --> G: orario individuato
-G --> IN: mostra orario
+G -> O: getDettagliOrario()
+activate O
+O --> G: dettagliOrario
+deactivate O
+G --> IN: orario
 deactivate G
 N -> IN: Modifica orari (apertura, chiusura)
-IN -> IN: Mostra modulo modifica
+IN -> IN: mostraModuloOrario(data)
 deactivate IN
 
 break Annullamento
     N -> IN: Clicca "Annulla"
     activate IN
+    IN -> IN: mostraConferma("Operazione annullata")
     IN --> N: Mostra "Operazione annullata"
     deactivate IN
 end
@@ -49,6 +59,7 @@ G -> G: validaOrario(nuoviOrari)
 
 alt apertura >= chiusura
     G --> IN: errore "L'orario di apertura deve essere precedente alla chiusura"
+    IN -> IN: mostraErrore("L'orario di apertura deve essere precedente alla chiusura")
     IN --> N: Mostra errore   
 else Orari validi
     G -> CO: cercaOrarioPerGiorno(giorno, "settimanale")
@@ -64,14 +75,21 @@ else Orari validi
         deactivate O
         deactivate CO
     else orario non esistente
+        G -> CO: nuovoOrario(giorno, nuoviOrari, "settimanale")
+        activate CO
+        CO -> O: <<create>>
+        activate O
+        O --> CO: orarioCreato
+        deactivate O
+        CO --> G: orarioCreato
+        deactivate CO
         G -> CO: salvaOrario(giorno, nuoviOrari, "settimanale")
         activate CO
-        CO -> O: <<create>> nuovoOrario
-        activate O
-        deactivate O
+        CO --> G: ok
         deactivate CO
     end
     G --> IN: conferma "Orario settimanale aggiornato"
+    IN -> IN: mostraConferma("Orario settimanale aggiornato")
     IN --> N: Mostra conferma
 end
 
@@ -92,15 +110,22 @@ opt Chiusura straordinaria
         deactivate O
         deactivate CO
     else
+        G -> CO: nuovoOrario(data, {"chiuso": true}, "chiusura")
+        activate CO
+        CO -> O: <<create>>
+        activate O
+        O --> CO: chiusuraStraordinaria
+        deactivate O
+        CO --> G: chiusuraStraordinaria
+        deactivate CO
         G -> CO: salvaOrario()
         activate CO
-        CO -> O: <<create>> ChiusuraStraordinaria
-        activate O
-        deactivate O
+        CO --> G: ok
         deactivate CO
     end
     
-    G --> IN: messaggio "Chiusura straordinaria impostata"
+    G --> IN: conferma "Chiusura straordinaria impostata"
+    IN -> IN: mostraConferma("Chiusura straordinaria impostata")
     IN --> N: Mostra messaggio
 end
 
@@ -113,6 +138,7 @@ opt Orario temporaneo
     
     alt orario non valido
         G --> IN: errore "Orario non valido"
+        IN -> IN: mostraErrore("Orario non valido")
         IN --> N: Mostra errore
         
     else orario valido
@@ -129,15 +155,22 @@ opt Orario temporaneo
             deactivate O
             deactivate CO
         else
+            G -> CO: nuovoOrario(data, orario, "temporaneo")
+            activate CO
+            CO -> O: <<create>>
+            activate O
+            O --> CO: orarioTemporaneo
+            deactivate O
+            CO --> G: orarioTemporaneo
+            deactivate CO
             G -> CO: salvaOrario()
             activate CO
-            CO -> O: <<create>> OrarioTemporaneo
-            activate O
-            deactivate O
+            CO --> G: ok
             deactivate CO
         end
         
-        G --> IN: messaggio "Orario temporaneo impostato"
+        G --> IN: conferma "Orario temporaneo impostato"
+        IN -> IN: mostraConferma("Orario temporaneo impostato")
         IN --> N: Mostra messaggio
     end
 end
@@ -148,6 +181,7 @@ activate CO
 CO --> G: listaOrariAggiornata
 deactivate CO
 G --> IN: orariAggiornati
+IN -> IN: mostraTabellaOrariConModifica(orariAggiornati)
 IN --> N: Mostra tabella aggiornata
 
 deactivate G

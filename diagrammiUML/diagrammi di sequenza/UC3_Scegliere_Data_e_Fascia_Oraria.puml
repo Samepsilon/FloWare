@@ -56,10 +56,15 @@ activate Repo
 Repo --> Control : scelta memorizzata
 deactivate Repo
 
+Control -> Repo : trovaPerId(idSlot)
+activate Repo
+Repo --> Control : slotOrario
+deactivate Repo
+
 Control --> Boundary : conferma visiva
 deactivate Control
 
-Boundary --> Cliente : mostra "Scelta effettuata con successo"
+Boundary -> Cliente : mostraConferma("Scelta effettuata con successo")
 deactivate Boundary
 
 @enduml

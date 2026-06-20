@@ -28,16 +28,24 @@ GF -> CF: trovaPerId(id)
 activate CF
 CF --> GF: fornitore esistente
 deactivate CF
+GF -> GF: validaDatiFornitore(nuoviDati)
 
 alt fornitore non trovato
     GF --> IN: ValueError "Fornitore con id={id} non trovato."
     IN --> N: mostraErrore()
 else fornitore trovato
-    GF -> F: aggiornaFornitore(id, dati)
-    GF -> CF: salvaFornitore(fornitore)
+    GF -> CF: cercaFornitore(fornitore)
+    activate CF
+    CF --> GF: fornitore confermato
+    deactivate CF
+
+    GF -> F: aggiornaProprietà(nuoviDati)
+    GF -> CF: aggiornaFornitore(id, dati)
     activate CF
     CF --> GF: fornitore aggiornato
     deactivate CF
+
+    GF -> GF: aggiornaListaFornitori()
 
     GF --> IN: esito positivo
     deactivate GF

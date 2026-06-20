@@ -9,3 +9,4 @@ id,destinatario,messaggio,letta,tipo,richiestaId
 8,test,Stato aggiornato: in consegna,False,stato,
 9,test,Stato aggiornato: consegnata,False,stato,
 10,test,Stato aggiornato: in attesa,False,stato,
+11,test,Stato aggiornato: consegnata,False,stato,

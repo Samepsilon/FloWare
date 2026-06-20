@@ -47,6 +47,9 @@ class SistemaAccesso <<control>> {
     + inviaCredenziali(username : String, password : String) : void
     + impostaSessione(ruolo : String) : void
     + reindirizzaPerRuolo(ruolo : String) : void
+    + getSessione(): void
+    + verificaFormatoemail(email)
+    + confrontaPassword(password, conferma)
 }
 
 Utente <|-- Cliente

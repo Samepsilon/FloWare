@@ -3,7 +3,7 @@ title UC0b - Accesso al Sistema
 skinparam actorStyle awesome
 actor "Cliente / Negoziante" as Utenti
 participant "InterfacciaLogin" <<boundary>>
-participant "Sistema di Accesso" as Sistema <<control>>
+participant "SistemaAccesso" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
 participant "Utente" <<entity>> 
 
@@ -24,6 +24,7 @@ activate Repo
 Repo -> Utente : getUsername()
 Repo -> Utente: getPassword()
 Repo -> Utente: getEmail()
+Repo -> Utente: getRuolo()
 Utente --> Repo : Restituisci dati
 Repo --> Sistema : utilizzatore (Utenti o null)
 deactivate Repo

@@ -10,3 +10,5 @@ id,destinatario,messaggio,letta,tipo,richiestaId
 9,test,Stato aggiornato: consegnata,False,stato,
 10,test,Stato aggiornato: in attesa,False,stato,
 11,test,Stato aggiornato: consegnata,False,stato,
+12,negoziante,Nuova richiesta appuntamento da cliente id=4,False,appuntamento,3
+13,negoziante,Nuova richiesta preventivo da cliente id=4,False,preventivo,4

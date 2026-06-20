@@ -1,6 +1,7 @@
 @startuml
 title UC0b - Accesso al Sistema
 skinparam actorStyle awesome
+
 actor "Cliente / Negoziante" as Utenti
 participant "InterfacciaLogin" <<boundary>>
 participant "SistemaAccesso" as Sistema <<control>>
@@ -14,42 +15,50 @@ deactivate InterfacciaLogin
 
 Utenti -> InterfacciaLogin : Inserisce credenziali
 activate InterfacciaLogin
-InterfacciaLogin -> Sistema : InviaCredenziali(username/email, password, Email)
+
+InterfacciaLogin -> Sistema : getSessione()
+activate Sistema
+Sistema --> InterfacciaLogin : sessioneCorrente
+deactivate Sistema
+
+InterfacciaLogin -> Sistema : inviaCredenziali(username, password)
 activate Sistema
 deactivate InterfacciaLogin
 
+Sistema -> Sistema : verificaFormatoEmail(email)
 
-Sistema -> Repo : trovaPerCredenziali(username, password, Email)
+Sistema -> Repo : trovaPerCredenziali(username, password)
 activate Repo
 Repo -> Utente : getUsername()
-Repo -> Utente: getPassword()
-Repo -> Utente: getEmail()
-Repo -> Utente: getRuolo()
-Utente --> Repo : Restituisci dati
-Repo --> Sistema : utilizzatore (Utenti o null)
+Repo -> Utente : getPassword()
+Repo -> Utente : getEmail()
+Repo -> Utente : getRuolo()
+activate Utente
+Utente --> Repo : ruolo
+deactivate Utente
+Repo --> Sistema : utente (oggetto o None)
 deactivate Repo
 
-alt Credenziali errate (utilizzatore== null)
-    Sistema -> InterfacciaLogin : Messaggio "Username o password non validi"
+alt Credenziali errate (utente == None) [ValueError]
+    Sistema -> InterfacciaLogin : Messaggio "Credenziali non valide."
     activate InterfacciaLogin
     InterfacciaLogin -> Utenti : mostraErroreLogin()
     deactivate InterfacciaLogin
-else Credenziali corrette (utilizzatore != null)
+else Credenziali corrette (utente != None)
     
-    Sistema -> Utente : reindirizzaPerRuolo()
-    activate Utente
-    Utente --> Sistema : ruolo (Cliente/Negoziante)
-    deactivate Utente
+    Sistema -> Sistema : impostaSessione(ruolo)
+    
+    Sistema -> Sistema : reindirizzaPerRuolo(ruolo)
+    
+    Sistema -> Sistema : confrontaPassword(password, password)
 
-    alt ruolo == "Cliente"
-        Sistema -> Sistema : impostaSessione("Cliente")
-        Sistema -> InterfacciaLogin : Reindirizza a Dashboard Cliente
+    alt ruolo == "cliente"
+        Sistema -> InterfacciaLogin : Reindirizza a InterfacciaCliente
         activate InterfacciaLogin
         InterfacciaLogin -> Utenti : mostraDashboardCliente()
         deactivate InterfacciaLogin
-    else ruolo == "Negoziante"
-        Sistema -> Sistema : impostaSessione("Negoziante")
-        Sistema -> InterfacciaLogin : Reindirizza a Dashboard Negoziante
+    else ruolo == "negoziante"
+        Sistema -> InterfacciaLogin : Reindirizza a InterfacciaNegoziante
         activate InterfacciaLogin
         InterfacciaLogin -> Utenti : mostraDashboardNegoziante()
         deactivate InterfacciaLogin
@@ -58,4 +67,3 @@ end
 
 deactivate Sistema
 @enduml
-

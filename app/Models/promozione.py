@@ -1,6 +1,9 @@
-from offerte import Offerte
-class Promozione (Offerte):
+from app.Models.offerte import Offerte
 
-    def __init__(self,id,descrizione,dataInizio,dataFine):
-      super().__init__(dataInizio, dataFine, ruolo = "promozione", id=id)  
-      self.descrizione = descrizione
+
+class Promozione(Offerte):
+
+    def __init__(self, descrizione, dataInizio, dataFine, id=None):
+        super().__init__(dataInizio, dataFine, id=id)
+        self.descrizione = descrizione
+        self.tipo = "promozione"

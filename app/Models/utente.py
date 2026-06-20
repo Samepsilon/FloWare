@@ -6,7 +6,10 @@ class Utente:
         self.username = username
         self.email = email
         self.password = password
-        self.ruolo = ruolo  # "cliente" or "negoziante"
+        self.ruolo = ruolo
+
+    def getRuolo(self):
+        return self.ruolo
 
     def getUsername(self):
         return self.username
@@ -16,11 +19,3 @@ class Utente:
 
     def getEmail(self):
         return self.email
-    
-    def getRuolo(self):        
-        return self.ruolo
-
-
-
-
-

@@ -1,37 +1,45 @@
-from app.Models.utente import Utente
+"""
+Questo modulo gestisce il sistema di registrazione dei nuovi utenti del negozio,
+validando i requisiti di email e password e salvando i dati degli utenti.
+"""
+
+import re
 from app.Models.negoziante import Negoziante
 from app.Models.cliente import Cliente
-from app.Repos import utenteRepository as repo
+from app.Repos.utenteRepository import UtenteRepository
 
-#Regex per verificatoEmail e verificatoCriteriPassword
-import re
-mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-password_pattern =  r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#%])[A-Za-z\d@$#%]{6,20}$"
+class SistemaRegistrazione:
+    mail_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    password_pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#%])[A-Za-z\d@$#%]{6,20}$"
 
+    @classmethod
+    def inviaRegistrazione(cls, dati):
+        username = dati["username"]
+        email = dati["email"]
+        password = dati["password"]
+        ruolo = dati.get("ruolo", "cliente")
 
-def inviaRegistrazione(username, email, password, ruolo):
+        if UtenteRepository.trovaPerUsername(username):
+            raise ValueError(f"Username '{username}' già in uso.")
+        if not cls.verificaFormatoEmail(email):
+            raise ValueError("Formato email non valido.")
+        if not cls.verificaCriteriPassword(password):
+            raise ValueError("La password non rispetta i criteri richiesti.")
+
         if ruolo == "negoziante":
-            u = Negoziante(username, email, password, ruolo)
-        else :
-            u = Cliente(username, email, password, ruolo)
-        return repo.salva_utente(u)
+            utente = Negoziante(username, email, password)
+        else:
+            utente = Cliente(username, email, password)
+        return UtenteRepository.salva(utente)
 
+    @classmethod
+    def verificaFormatoEmail(cls, email):
+        return bool(re.match(cls.mail_pattern, email))
 
-def verificatoFormatoEmail(mail):
-    return bool(re.match(mail_pattern, mail))
+    @classmethod
+    def verificaCriteriPassword(cls, password):
+        return bool(re.search(cls.password_pattern, password))
 
-def verificatoCriteriPassword(password):
-    """
-    La password deve:
-    Contenere almeno un numero
-    Contenere almeno una lettera maiuscola
-    Contenere almeno una lettera minuscola
-    Contenere almeno un carattere speciale ($, @, #, %)
-    Avere una lunghezza compresa tra 6 e 20 caratteri
-    """
-    return bool(re.search(password_pattern, password))
-
-
-
-def confrontaPassword(password , conferma ):
-    return password == conferma
+    @classmethod
+    def confrontaPassword(cls, password, conferma):
+        return password == conferma

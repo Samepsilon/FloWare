@@ -1,53 +1,70 @@
-from app.Models.richiesta import Richiesta
-from app.Models.slotOrario import slotOrario
+"""
+Questo modulo gestisce l'invio e il ciclo di vita delle richieste dei clienti (es. preventivi,
+appuntamenti), inclusa la ricerca di date libere nel calendario e la selezione delle fasce orarie.
+"""
+
+from app.Models.richiesta import Richiesta, TIPI_VALIDI
 from app.Models.notifica import Notifica
+from app.Repos.archivioRichieste import ArchivioRichieste
+from app.Repos.notificaRepository import NotificaRepository
+from app.Repos.utenteRepository import UtenteRepository
+from app.Repos.archivioCalendario import ArchivioCalendario
 
-from app.Repos import archivioRichieste as repo
-from app.Repos import notificaRepository as repoN
-from app.Repos import utenteRepository as repoU
+class SistemaRichieste:
+    @classmethod
+    def richiediOpzioni(cls):
+        return list(TIPI_VALIDI)
 
-TIPI_VALIDI = ["preventivo", "appuntamento"]
-STATI_VALIDI = ["in attesa", "confermata", "annullata"]
+    @classmethod
+    def inviaRichiesta(cls, richiesta):
+        if isinstance(richiesta, dict):
+            richiesta = Richiesta(**richiesta)
+        #All type of value error to be raise by the program
+        if richiesta.tipo not in TIPI_VALIDI:
+            raise ValueError(f"Tipo non valido. Scegli tra: {TIPI_VALIDI}")
+        if not richiesta.descrizione or not richiesta.descrizione.strip():
+            raise ValueError("La descrizione non può essere vuota.")
+        if not richiesta.contatti or not richiesta.contatti.strip():
+            raise ValueError("I contatti non possono essere vuoti.")
+        if UtenteRepository.trovaPerId(richiesta.clienteId) is None:
+            raise ValueError(f"Cliente con id={richiesta.clienteId} non trovato.")
 
+        richiesta = ArchivioRichieste.salva(richiesta)
+        notifica = Notifica(
+            destinatario="negoziante",
+            messaggio=f"Nuova richiesta {richiesta.tipo} da cliente id={richiesta.clienteId}",
+            letta=False,
+            tipo=richiesta.tipo,
+            richiestaId=richiesta.id,
+        )
+        NotificaRepository.salvaNotifica(notifica)
+        return richiesta
 
-def invia_richiesta(cliente_id, tipo, descrizione, contatti, data="", ora=""):
-    if tipo not in TIPI_VALIDI:
-        raise ValueError(f"Tipo non valido. Scegli tra: {TIPI_VALIDI}")
-    if not descrizione or not descrizione.strip():
-        raise ValueError("La descrizione non può essere vuota.")
-    if not contatti or not contatti.strip():
-        raise ValueError("I contatti non possono essere vuoti.")
-    if repoU.trova_utente(cliente_id) is None:
-        raise ValueError(f"Cliente con id={cliente_id} non trovato.")
+    @classmethod
+    def annullaRichiesta(cls, idRichiesta):
+        richiesta = ArchivioRichieste.trovaPerId(idRichiesta)
+        if richiesta is None:
+            raise ValueError(f"Richiesta con id={idRichiesta} non trovata.")
+        if not ArchivioRichieste.verificaAnnullamento(richiesta):
+            raise ValueError("La richiesta non è più annullabile.")
+        return ArchivioRichieste.aggiornaStatoRichiesta(richiesta, "annullata")
 
-    r = Richiesta(tipo=tipo, descrizione=descrizione,contatti=contatti, data=data, ora=ora, clienteId=cliente_id)
+    @classmethod
+    def recuperaRichieste(cls, clienteId):
+        return ArchivioRichieste.trovaPerCliente(clienteId)
 
-    richiesta = repo.salva_richiesta(r)
+    @classmethod
+    def getDettagliRichiesta(cls, idRichiesta):
+        return ArchivioRichieste.trovaPerId(idRichiesta)
 
+    @classmethod
+    def recuperaDateDisponibili(cls):
+        return ArchivioCalendario.trovaDateLibere()
 
-    # notify the shop owner
-    n = Notifica(
-        destinatario="negoziante",
-        messaggio=f"Nuova richiesta {tipo} da cliente id={cliente_id}: {descrizione[:60]}",
-        tipo=tipo,
-        richiestaId=richiesta.id,)
-    repoN.salvaNotifica(n)
-    return richiesta
+    @classmethod
+    def recuperaFasceOrarie(cls, data):
+        return ArchivioCalendario.trovaFascePerData(data)
 
-def annullaRichiesta(richiesta_id, cliente_id):
-    r = repo.trovaPerId(richiesta_id)
-    if r is None:
-        raise ValueError(f"Richiesta con id={richiesta_id} non trovata.")
-    if r.cliente_id != cliente_id:
-        raise ValueError("Non puoi annullare una richiesta di un altro cliente.")
-    if not repo.verificaAnnullamento(richiesta_id):
-        raise ValueError("La richiesta non è più annullabile (non è in attesa).")
-    return repo.aggiornaStatoRichiesta(richiesta_id, "annullata")
-
-def recuperaRichieste(cliente_id):
-    return repo.trovaPerCliente(cliente_id)
-
-def recuperaRichiesteInAttesa():
-
-    return repo.richieste_in_attesa()
-
+    @classmethod
+    def confermaScelta(cls, data, ora):
+        return ArchivioCalendario.salvaScelta(data, ora)

@@ -1,4 +1,5 @@
-from utente import Utente
+from app.Models.utente import Utente
+
 
 class Negoziante(Utente):
 

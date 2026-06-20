@@ -1,0 +1,8 @@
+id,giorno,apertura,chiusura,tipo,dataSpecifica
+1,Lunedì,8:00,20:30,settimanale,
+2,Martedì,8:00,20:30,settimanale,
+3,Mercoledì,8:00,20:30,settimanale,
+4,Giovedì,8:00,20:30,settimanale,
+5,Venerdì,8:00,20:30,settimanale,
+6,Sabato,8:00,20:00,settimanale,
+7,Domenica,8:00,13:00,settimanale,

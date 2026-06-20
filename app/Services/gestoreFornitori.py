@@ -1,50 +1,71 @@
+"""
+Questo modulo si occupa della gestione dei fornitori associati al negozio,
+consentendo la visualizzazione, l'inserimento, la modifica e la rimozione dei fornitori.
+"""
+
 from app.Models.fornitore import Fornitore
-from app.Repos import fornitoreRepository as repo
-from app.Repos import articoloRepository as repoA
+from app.Repos.catalogoFornitori import CatalogoFornitori
+from app.Repos.catalogoArticoli import CatalogoArticoli
 
-def visualizzaFornitori():
-    return repo.caricaListaForniori()
+class GestoreFornitori:
+    @classmethod
+    def visualizzaFornitori(cls):
+        return CatalogoFornitori.caricaListaFornitori()
 
-def getFornitore(id):
-    f = repo.trova_fornitore(id)
-    if f is None:
-        raise ValueError(f"Fornitore con id={id} non trovato.")
-    return f
+    @classmethod
+    def aggiungiFornitore(cls, dati):
+        if not cls.validaDatiFornitore(dati):
+            raise ValueError("Dati fornitore non validi.")
+        esistenti = [f for f in CatalogoFornitori.caricaListaFornitori() if f.nome.lower() == dati["nome"].lower()]
+        if esistenti:
+            raise ValueError(f"Esiste già un fornitore con nome '{dati['nome']}'.")
+        fornitore = Fornitore(
+            nome=dati["nome"],
+            contatti=dati["contatti"],
+            tipologiaMerce=dati.get("tipologiaMerce", dati.get("tipologia", "")),
+            servizioDomicilio=dati.get("servizioDomicilio", False),
+        )
+        return CatalogoFornitori.salvaFornitore(fornitore)
 
-def validaDatiFornitore(nome, contatti, tipologia):
-    if not nome or not nome.strip():
-        raise ValueError("Il nome del fornitore non può essere vuoto.")
-    if not contatti or not contatti.strip():
-        raise ValueError("I contatti non possono essere vuoti.")
-    if not tipologia or not tipologia.strip():
-        raise ValueError("La tipologia merce non può essere vuota.")
+    @classmethod
+    def validaDatiFornitore(cls, dati):
+        nome = dati.get("nome", "")
+        contatti = dati.get("contatti", "")
+        tipologia = dati.get("tipologiaMerce", dati.get("tipologia", ""))
+        return bool(nome.strip() and contatti.strip() and tipologia.strip())
 
+    @classmethod
+    def modificaFornitore(cls, fornitore, nuoviDati):
+        if isinstance(fornitore, int):
+            fornitore = cls.getFornitore(fornitore)
+        fornitore.aggiornaProprieta(nuoviDati)
+        return CatalogoFornitori.salvaFornitore(fornitore)
 
-def aggiungiFornitore(nome, contatti, tipologia, servizioDomicilio=False):
-    esistenti = [f for f in repo.caricaListaForniori() if f.nome.lower() == nome.lower()]
-    if esistenti:
-        raise ValueError(f"Esiste già un fornitore con nome '{nome}'.")
-    f = Fornitore(nome=nome, contatti=contatti, tipologia=tipologia, servizioDomicilio=servizioDomicilio)
-    return repo.salva_fornitore(f)
+    @classmethod
+    def eliminaFornitore(cls, fornitore):
+        if isinstance(fornitore, int):
+            fornitore = cls.getFornitore(fornitore)
+        for articolo in CatalogoArticoli.articoliDelFornitore(fornitore.id):
+            articolo.fornitore_id = None
+            CatalogoArticoli.salvaArticolo(articolo)
+        CatalogoFornitori.rimuoviFornitore(fornitore)
 
-def modificaFornitore(id, nome=None, contatti=None, tipologia=None, domicilio=None):
-    f = getFornitore(id)
-    if nome is not None:
-        f.nome = nome
-    if contatti is not None:
-        f.contatti = contatti
-    if tipologia is not None:
-        f.tipologia = tipologia
-    if domicilio is not None:
-        f.domicilio = domicilio
-    return repo.salva_fornitore(f)
+    @classmethod
+    def aggiornaListaFornitori(cls):
+        return cls.visualizzaListaFornitori()
 
-def eliminaFornitore(id):
-    getFornitore(id)
-    for a in repoA.articoli_del_fornitore(id):
-        a.fornitore_id = None
-        repoA.salva_articolo(a)
-    repo.rimuoviFornitore(id)
+    @classmethod
+    def visualizzaListaFornitori(cls):
+        return CatalogoFornitori.caricaListaFornitori()
 
-
-
+    @classmethod
+    def getFornitore(cls, fornitore):
+        if isinstance(fornitore, int):
+            risultato = CatalogoFornitori.cercaFornitori(fornitore)
+        elif isinstance(fornitore, Fornitore):
+            risultato = CatalogoFornitori.cercaFornitori(fornitore.id)
+        else:
+            raise ValueError("Fornitore non valido.")
+        if risultato is None:
+            raise ValueError("Fornitore non trovato.")
+        return risultato

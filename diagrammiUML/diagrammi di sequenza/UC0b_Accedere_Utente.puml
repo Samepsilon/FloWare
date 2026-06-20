@@ -50,7 +50,7 @@ else Credenziali corrette (utente != None)
     
     Sistema -> Sistema : reindirizzaPerRuolo(ruolo)
     
-    Sistema -> Sistema : confrontaPassword(password, password)
+    Sistema -> Sistema : confrontaPassword(password, conferma)
 
     alt ruolo == "cliente"
         Sistema -> InterfacciaLogin : Reindirizza a InterfacciaCliente

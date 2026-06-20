@@ -1,7 +1,5 @@
 id,tipo,dataInizio,dataFine,descrizione,percentuale,evento
-3,promozione,2006-06-01,2006-06-02,zsdqfg,,
-4,promozione,2006-05-02,2006-05-03,jfgfgfgfg,,
-5,sconto,2027-02-13,2027-02-15,,20.0,
-6,promozione,2026-12-01,2027-01-31,"Durante il periodo natalizio, ogni 50€ di spesa, una Stella di Natale in omaggio",,
-7,promozione,2027-03-05,2027-04-10,Promozione Mimose - prendi 3 mazzetti di mimose e ne paghi 2,,
-8,sconto,2026-10-30,2026-11-02,,15.0,
+1,sconto,2027-02-13,2027-02-15,,20.0,
+2,promozione,2026-12-01,2027-01-31,"Durante il periodo natalizio, ogni 50€ di spesa, una Stella di Natale in omaggio",,
+3,promozione,2027-03-05,2027-04-10,Promozione Mimose - prendi 3 mazzetti di mimose e ne paghi 2,,
+4,sconto,2026-10-30,2026-11-02,,15.0,

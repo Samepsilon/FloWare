@@ -1,5 +1,2 @@
 id,tipo,stato,data,ora,contatti,descrizione,clienteId
-1,preventivo,confermata,,,gfdgdfgdfg,svfvdfvgfdgdf,1
-2,appuntamento,confermata,2026-06-17,,Samuel,rgijjgi,3
-3,appuntamento,annullata,2026-06-20,,12345678,appuntamento per compleanno,4
-4,preventivo,annullata,,,34567,preventivo married,4
+

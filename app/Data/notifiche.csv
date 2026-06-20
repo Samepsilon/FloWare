@@ -6,3 +6,5 @@ id,destinatario,messaggio,letta,tipo,richiestaId
 5,1,Richiesta preventivo confermata.,False,generica,
 6,1,Richiesta preventivo confermata.,False,generica,
 7,3,Richiesta appuntamento confermata.,False,generica,
+8,test,Stato aggiornato: in consegna,False,stato,
+9,test,Stato aggiornato: consegnata,False,stato,

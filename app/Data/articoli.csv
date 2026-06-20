@@ -1,15 +1,24 @@
 id,nome,descrizione,prezzo,quantita,disponibile,fornitore_id,percentuale
-1,Rose rosse,,3.0,20,True,,0.0
+1,Rose rosse,,3.0,20,True,1,0.0
 2,Orchidee,,3.0,20,True,,0.0
-3,Lilium,,1.5,20,True,,0.0
+3,Lilium,,1.5,20,True,1,0.0
 4,Tulipani,,2.5,20,True,,0.0
 5,Girasoli,,2.0,20,True,,0.0
 6,Peonie,,1.5,20,True,,0.0
 7,Anthurium,,1.5,20,True,,0.0
 8,Dalia,,1.5,20,True,,0.0
-9,Garofani,,0.7,20,True,,0.0
+9,Garofani,,0.7,20,True,1,0.0
 10,Ortensia,,3.0,20,True,,0.0
 11,Rose bianche,"Un' fiore adatto a tutte le vostre occasioni che, su richiesta, e possibile colorare",2.0,20,True,,0.0
 12,Rosa rosè,,2.0,20,True,,0.0
 13,Rose arancio,,2.0,20,True,,0.0
 14,Rose gialle,,2.0,20,True,,0.0
+15,Fertilizzante (1L),,10.0,20,True,,0.0
+16,Vasi di terracotta (20cm),,4.0,20,True,,0.0
+17,Vasi di terracotta (80cm),,15.0,20,True,,0.0
+18,Vasi di terracotta (40cm),,8.0,20,True,,0.0
+19,Paletta (piccola),,4.0,20,True,,0.0
+20,Sottovasi di terracotta (20cm),,2.0,20,True,,0.0
+21,Sottovasi di terracotta (40cm),,5.0,20,True,,0.0
+22,Sottovasi di terracotta (80cm),,10.0,20,True,,0.0
+23,Mimose,,1.0,20,True,,0.0

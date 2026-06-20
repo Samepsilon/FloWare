@@ -78,4 +78,4 @@ class GestoreOfferte:
 
     @classmethod
     def visualizzaOfferteAttive(cls):
-        return CatalogoOfferte.recuperaOfferteAttive()
+        return CatalogoOfferte.cercaPromozioni()

@@ -1,5 +1,5 @@
 id,nome,descrizione,prezzo,quantita,disponibile,fornitore_id,percentuale
-1,Rose rosse,,3.0,20,True,1,0.0
+1,Rose rosse,,3.0,20,True,1,20.0
 2,Orchidee,,3.0,20,True,,0.0
 3,Lilium,,1.5,20,True,1,0.0
 4,Tulipani,,2.5,20,True,,0.0

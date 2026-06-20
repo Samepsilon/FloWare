@@ -6,7 +6,7 @@ actor "Cliente / Negoziante" as Utenti
 participant "InterfacciaLogin" <<boundary>>
 participant "SistemaAccesso" as Sistema <<control>>
 participant "UtenteRepository" as Repo <<repository>>
-participant "Utente" <<entity>> 
+participant "Utente" <<entity>>
 
 Utenti -> InterfacciaLogin : Accede alla pagina di login
 activate InterfacciaLogin
@@ -45,12 +45,8 @@ alt Credenziali errate (utente == None) [ValueError]
     InterfacciaLogin -> Utenti : mostraErroreLogin()
     deactivate InterfacciaLogin
 else Credenziali corrette (utente != None)
-    
     Sistema -> Sistema : impostaSessione(ruolo)
-    
     Sistema -> Sistema : reindirizzaPerRuolo(ruolo)
-    
-    Sistema -> Sistema : confrontaPassword(password, conferma)
 
     alt ruolo == "cliente"
         Sistema -> InterfacciaLogin : Reindirizza a InterfacciaCliente

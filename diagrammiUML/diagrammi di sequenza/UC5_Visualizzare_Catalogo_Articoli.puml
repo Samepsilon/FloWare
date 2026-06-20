@@ -8,38 +8,36 @@ participant "SistemaCatalogo" <<control>>
 participant "CatalogoArticoli" <<repository>>
 participant "Articolo" <<entity>>
 
-Cliente -> "InterfacciaCliente" : accede alla sezione catalogo
-"InterfacciaCliente" -> "SistemaCatalogo" : visualizzaCatalogo()
+Cliente -> InterfacciaCliente : accede alla sezione catalogo
+InterfacciaCliente -> SistemaCatalogo : visualizzaCatalogo()
 
-activate "SistemaCatalogo"
+activate SistemaCatalogo
 
-"SistemaCatalogo" -> "CatalogoArticoli" : getArticoliDisponibili()
-"CatalogoArticoli" --> "SistemaCatalogo" : listaArticoli
+SistemaCatalogo -> CatalogoArticoli : getArticoliDisponibili()
+CatalogoArticoli --> SistemaCatalogo : listaArticoli
 
 alt listaArticoli vuota
-    "SistemaCatalogo" --> "InterfacciaCliente" : esitoVuoto
-    "InterfacciaCliente"--> Cliente : mostra("Nessun articolo disponibile")
+    SistemaCatalogo --> InterfacciaCliente : esitoVuoto
+    InterfacciaCliente --> Cliente : mostra("Nessun articolo disponibile")
 else listaArticoli non vuota
-    "SistemaCatalogo" --> "InterfacciaCliente" : listaArticoli
-    
-    Cliente -> "InterfacciaCliente" : selezionaArticolo(idArticolo)
-    "InterfacciaCliente" -> "SistemaCatalogo" : richiediDettagli(idArticolo)
-    
-    "SistemaCatalogo" -> "CatalogoArticoli" : trovaPerId(idArticolo)
-    "CatalogoArticoli" --> "SistemaCatalogo" : articolo
-    
-    
-    "SistemaCatalogo" -> "SistemaCatalogo" : prezzoF(idArticolo)
-    
-    
-    "SistemaCatalogo" -> "Articolo" : getDettagli()
-    "Articolo" --> "SistemaCatalogo" : dettagli
-    
-    "SistemaCatalogo" --> "InterfacciaCliente" : dettagli
+    SistemaCatalogo --> InterfacciaCliente : listaArticoli
+
+    Cliente -> InterfacciaCliente : selezionaArticolo(idArticolo)
+    InterfacciaCliente -> SistemaCatalogo : richiediDettagli(idArticolo)
+
+    SistemaCatalogo -> CatalogoArticoli : trovaPerId(idArticolo)
+    CatalogoArticoli --> SistemaCatalogo : articolo
+
+    SistemaCatalogo -> SistemaCatalogo : PrezzoF(idArticolo)
+
+    SistemaCatalogo -> Articolo : getDettagli()
+    Articolo --> SistemaCatalogo : dettagli
+
+    SistemaCatalogo --> InterfacciaCliente : dettagli
 end
 
-deactivate "SistemaCatalogo"
+deactivate SistemaCatalogo
 
-"InterfacciaCliente" --> Cliente : mostraDettagli(dettagli)
+InterfacciaCliente --> Cliente : mostraDettagli(dettagli)
 
 @enduml

@@ -12,7 +12,7 @@ participant "NotificaRepository" as RepoNotifica <<Repository>>
 participant "Consegna" as Consegna <<entity>>
 
 loop (per ogni cambio di stato: Presa in carico, In consegna, Eseguita)
-    Cliente --> BoundaryCli : clicca per ricerca di consegna
+    Cliente --> BoundaryCli : clicca per verifica consegna
     activate BoundaryCli
     BoundaryCli -> Control : cercaConsegne()
     deactivate BoundaryCli
@@ -21,11 +21,11 @@ loop (per ogni cambio di stato: Presa in carico, In consegna, Eseguita)
     activate RepoConsegna
     RepoConsegna --> Control : consegna
     deactivate RepoConsegna
-    
+
     Control -> Consegna : setStato(nuovoStato)
     activate Consegna
     deactivate Consegna
-    
+
     Control -> RepoConsegna : salva(consegna)
     activate RepoConsegna
     RepoConsegna --> Control : confermaSalvataggio
@@ -36,17 +36,16 @@ loop (per ogni cambio di stato: Presa in carico, In consegna, Eseguita)
     RepoUtente --> Control : cliente
     deactivate RepoUtente
 
-    Control -> RepoNotifica : creaNotifica(clienteEntity, nuovoStato)
+    Control -> RepoNotifica : creaNotifica(cliente, nuovoStato)
     activate RepoNotifica
     RepoNotifica --> Control : notificaCreata
     deactivate RepoNotifica
 
-    Control -> BoundaryCli : inviaNotifica("Stato aggiornato: " + nuovoStato)
+    Control --> BoundaryCli : inviaNotifica("Stato aggiornato: " + nuovoStato)
     activate BoundaryCli
     BoundaryCli --> Cliente : visualizza notifica sul dispositivo
     deactivate BoundaryCli
     deactivate Control
-    
 end
 
 @enduml

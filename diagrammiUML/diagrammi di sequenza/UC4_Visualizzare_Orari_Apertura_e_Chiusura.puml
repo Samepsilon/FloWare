@@ -6,7 +6,7 @@ actor Cliente
 participant "InterfacciaCliente" <<boundary>>
 participant "SistemaInfoNegozio" <<control>>
 participant "OrarioRepository" as Repo <<repository>>
-participant "Orario" as ORA <<entity>> 
+participant "Orario" as ORA <<entity>>
 
 Cliente -> InterfacciaCliente : Accede alla sezione "Orari del negozio"
 activate InterfacciaCliente
@@ -20,17 +20,16 @@ Repo --> SistemaInfoNegozio : listaOrari (ListaOrario)
 deactivate Repo
 
 loop per ogni giorno della settimana
-    SistemaInfoNegozio -> "ORA" : getDettagliOrario()
-    activate "ORA"
-    "ORA" --> SistemaInfoNegozio : giorno, apertura, chiusura
-    deactivate "ORA"
+    SistemaInfoNegozio -> ORA : getDettagliOrario()
+    activate ORA
+    ORA --> SistemaInfoNegozio : giorno, apertura, chiusura
+    deactivate ORA
 end
 
 SistemaInfoNegozio --> InterfacciaCliente : mostraTabellaOrari(dati)
 deactivate SistemaInfoNegozio
 
-InterfacciaCliente -> Cliente : Visualizza tabella 
+InterfacciaCliente -> Cliente : Visualizza tabella
 deactivate InterfacciaCliente
-
 
 @enduml

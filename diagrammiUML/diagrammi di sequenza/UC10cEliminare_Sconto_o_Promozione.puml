@@ -1,91 +1,37 @@
 @startuml
-title UC10c - Eliminazione di un offerta
+
 skinparam actorStyle awesome
+title UC10c - Eliminare sconto o promozione
 
-actor Negoziante as N
+actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreOfferte" as G <<control>>
+participant "GestoreOfferte" as GP <<control>>
 participant "CatalogoOfferte" as CO <<repository>>
-participant "CatalogoArticoli" as CA <<repository>>
 participant "Offerta" as O <<entity>>
-participant "Articolo" as Articolo <<entity>>
 
-N -> IN: Accede a "Gestione Promozioni"
+N -> IN: Apre sezione offerte
 activate IN
-IN -> G: visualizzaOfferteAttive()
-activate G
-G -> CO: cercaOfferteValide()
+IN -> GP: visualizzaOfferteAttive()
+activate GP
+GP -> CO: cercaOfferteValide()
 activate CO
-CO --> G: elenco offerte (sconti e promozioni)
+CO --> GP: lista offerte (sconti e promozioni)
 deactivate CO
-G --> IN: elenco offerte
-IN --> N: Mostra elenco offerte
-deactivate G
-deactivate IN
+GP --> IN: lista offerte
+deactivate GP
+IN --> N: mostra elenco completo
 
-N -> IN: Seleziona offerta da eliminare (sconto o promozione)
-activate IN
-N -> IN: Clicca "Elimina"
+N -> IN: Seleziona offerta da eliminare
+IN -> GP: eliminaOfferta(idOfferta)
+activate GP
 
-IN --> N: Mostra "Sei sicuro? [Conferma/Annulla]"
-deactivate IN
+GP -> CO: eliminaOfferta(idOfferta)
+activate CO
+CO --> GP: conferma
+deactivate CO
 
-break Annullamento
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN --> N: Mostra "Operazione annullata"
-    deactivate IN
-end
-
-N -> IN: Clicca "Conferma"
-activate IN
-IN -> G: eliminaOfferta()
-activate G
-
-alt Offerta non trovata
-    G -> CO: cercaOfferta()
-    activate CO
-    CO --> G: Nessuna offerta presente
-    deactivate CO
-    G --> IN: errore "Offerta non trovato"
-    IN --> N: Mostra errore
-    
-else Offerta trovata
-    G -> CO: getArticoliAssociati()
-    activate CO
-    CO --> G: listaArticoli
-    deactivate CO
-    
-    loop Per ogni Articolo selezionato in CatalogoArticoli
-        G -> CA: rimuoviRiferimentoOfferta(Articolo, Offerta)
-        activate CA
-        CA -> Articolo: rimuoviOfferta()
-        activate Articolo
-        Articolo --> CA: conferma
-        deactivate Articolo
-        deactivate CA
-    end
-    
-    G -> CO: rimuoviOfferta()
-    activate CO
-    CO -> O: <<destroy>> Offerta
-    activate O
-    deactivate O
-    CO --> G: messaggio "Offerta rimossa con successo"
-    deactivate CO
-    
-    G --> IN: conferma rimozione
-    IN --> N: Mostra "Offerta eliminata con successo"
-    
-    IN -> G: aggiornaListaOfferte()
-    G -> CO: cercaOfferte()
-    activate CO
-    CO --> G: elenco aggiornato
-    deactivate CO
-    G --> IN: elenco aggiornato
-    IN --> N: Mostra elenco aggiornato
-end
-
-deactivate G
+GP --> IN: esito positivo
+deactivate GP
+IN --> N: mostra "Offerta eliminata con successo"
 deactivate IN
 @enduml

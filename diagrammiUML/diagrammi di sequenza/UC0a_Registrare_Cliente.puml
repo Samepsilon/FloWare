@@ -20,7 +20,7 @@ deactivate InterfacciaLogin
 
 Sistema -> Repo : trovaPerUsername(username)
 activate Repo
-Repo --> Sistema : cliente (o null)
+Repo --> Sistema : utente (o null)
 deactivate Repo
 
 opt Username non univoco
@@ -28,26 +28,25 @@ opt Username non univoco
     activate InterfacciaLogin
     InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
-end  
+end
 
 Sistema -> Sistema : verificaFormatoEmail(email)
 opt E-mail non valida
     Sistema -> InterfacciaLogin : Errore "Inserire un indirizzo email valido"
     activate InterfacciaLogin
-    InterfacciaLogin -> Utente : mostraErrore()   
+    InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
 end
 
-Sistema -> Sistema : VerificaCriteriPassword(min 8 car., 1 num, 1 spec)
+Sistema -> Sistema : verificaCriteriPassword(min 8 car., 1 num, 1 spec)
 opt Password non valida
     Sistema -> InterfacciaLogin : Mostra criteri richiesti
     activate InterfacciaLogin
     InterfacciaLogin -> Utente : mostraErrore()
     deactivate InterfacciaLogin
-end    
+end
 
-
-Sistema -> Sistema : ConfrontaPassword(password, conferma)
+Sistema -> Sistema : confrontaPassword(password, conferma)
 opt Le password non coincidono
     Sistema -> InterfacciaLogin : Errore "Le password non corrispondono"
     activate InterfacciaLogin
@@ -63,16 +62,12 @@ activate Repo
 Repo --> Sistema : conferma salvataggio
 deactivate Repo
 
-
 Sistema -> InterfacciaLogin : Mostra "Account Cliente creato con successo"
 activate InterfacciaLogin
-Sistema -> InterfacciaLogin : reindirizzaLogin()
+Sistema -> InterfacciaLogin : reindirizzaPerRuolo(utente)
 InterfacciaLogin --> Utente : Mostra conferma e pagina login
 deactivate InterfacciaLogin
 
 deactivate Sistema
 
 @enduml
-
-
-

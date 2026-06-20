@@ -7,8 +7,8 @@ participant "SistemaRichieste" as S <<control>>
 participant "ArchivioRichieste" as Repo <<repository>>
 participant "Richiesta" as R <<entity>>
 
-
 Cliente -> UI : clicca "Richiedi appuntamento/preventivo"
+activate UI
 UI -> S : richiediOpzioni()
 activate S
 S --> UI : listaOpzioni (Appuntamento, Preventivo)
@@ -25,11 +25,11 @@ else opzione = Preventivo
 end
 
 Cliente -> UI : clicca "Conferma"
-UI -> S : inviaRichiesta(richiesta)
+UI -> S : inviaRichiesta(datiRichiesta)
 activate S
 
 create R
-S -> R : <<create>> Richiesta(richiesta)
+S -> R : <<create>> Richiesta(tipo, descrizione, contatti, data, ora, clienteId)
 
 S -> Repo : salva(Richiesta)
 activate Repo

@@ -4,91 +4,45 @@ skinparam actorStyle awesome
 
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreFornitori" as G <<control>>
+participant "GestoreFornitori" as GF <<control>>
 participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
-N -> IN: Accede a "Gestione Fornitori"
+N -> IN: Seleziona fornitore da modificare
 activate IN
-IN -> G: visualizzaListaFornitori()
-activate G
-G -> CF: cercaFornitori()
+IN -> GF: getFornitore(id)
+activate GF
+GF -> CF: trovaPerId(id)
 activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitori
-deactivate F
-CF --> G: elencoFornitori
+CF --> GF: fornitore
 deactivate CF
-G --> IN: elencoFornitori
-IN --> N: Mostra elenco fornitori
-deactivate G
-deactivate IN
+GF --> IN: dettagli fornitore
+deactivate GF
+IN --> N: mostra form modifica (precompilato)
 
-N -> IN: seleziona fornitore 
-activate IN
-N -> IN: Clicca "Modifica Fornitore"
+N -> IN: Modifica i campi (nome, contatti, tipologia, domicilio)
+IN -> GF: modificaFornitore(id, nome, contatti, tipologia, domicilio)
+activate GF
 
-IN -> G: getFornitore(Fornitore)
-activate G
-G -> CF: cercaFornitore(Fornitore)
+GF -> CF: trovaPerId(id)
 activate CF
-CF -> F: findAll(Fornitore)
-activate F
-F --> CF: datiFornitore
-deactivate F
-CF --> G: datiFornitore
+CF --> GF: fornitore esistente
 deactivate CF
-G --> IN: datiFornitore
-IN --> N: Mostra modulo con dati correnti
-deactivate G
-deactivate IN
 
-N -> IN: Modifica campi desiderati (nome, contatti, tipologiaMerce, servizioDomicilio)
-
-break Annullamento
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN -> IN: Chiudi modulo senza salvare
-    IN --> N: Mostra "Modifica annullata"
-    deactivate IN
-end
-
-activate IN
-N -> IN: Conferma modifica
-IN -> G: modificaFornitore(Fornitore, nuoviDati)
-activate G
-G -> G: validaDatiFornitore(nuoviDati)
-
-alt nuoviDati non validi
-    G --> IN: errore("Nuovi dati non validi")
-    IN --> N: Mostra messaggio di errore
-
-else nuoviDati validi
-    G -> CF: aggiornaFornitore(idFornitore, nuoviDati)
+alt fornitore non trovato
+    GF --> IN: ValueError "Fornitore con id={id} non trovato."
+    IN --> N: mostraErrore()
+else fornitore trovato
+    GF -> F: aggiornaFornitore(id, dati)
+    GF -> CF: salvaFornitore(fornitore)
     activate CF
-    CF -> F: aggiornaProprietà(nuoviDati)
-    activate F
-    F --> CF: confermaAggiornamento
-    deactivate F
-    CF --> G: successo
+    CF --> GF: fornitore aggiornato
     deactivate CF
-    G --> IN: messaggio("Fornitore modificato con successo")
-    IN --> N: Mostra messaggio di successo
+
+    GF --> IN: esito positivo
+    deactivate GF
+    IN --> N: mostra "Fornitore modificato con successo"
 end
 
-IN -> G: aggiornaListaFornitori()
-G -> CF: cercaFornitori()
-activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitoriAggiornata
-deactivate F
-CF --> G: elencoAggiornato
-deactivate CF
-G --> IN: elencoAggiornato
-IN --> N: Mostra elenco aggiornato
-
-deactivate G
 deactivate IN
 @enduml

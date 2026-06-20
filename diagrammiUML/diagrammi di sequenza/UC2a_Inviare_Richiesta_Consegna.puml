@@ -7,9 +7,8 @@ actor Cliente
 participant "InterfacciaCliente" as Boundary <<boundary>>
 participant "GestoreConsegne" as Control <<control>>
 participant "ArchivioRichieste" as RepoConsegna <<repository>>
-participant "NotificheRopository" as RepoNotifica <<repository>>
+participant "NotificaRepository" as RepoNotifica <<repository>>
 participant "Consegna" as Consegna <<entity>>
-
 
 Cliente -> Boundary : seleziona "Richiedi consegna"
 activate Boundary
@@ -26,22 +25,23 @@ alt (Dati incompleti o non validi)
     Control --> Boundary : erroreDatiIncompleti
     Boundary --> Cliente : mostra "Compila tutti i campi richiesti"
 else (Dati Validi)
-    
-    Control -> Consegna : <<crea>> (dati, stato="in attesa di presa in carico")
+    Control -> Consegna : <<crea>> (dati, stato="in attesa")
+    activate Consegna
+    deactivate Consegna
+
     Control -> RepoConsegna : salva(consegna)
     activate RepoConsegna
     RepoConsegna --> Control : confermaSalvataggio
     deactivate RepoConsegna
-    
-    Control -> RepoNotifica : inviaNotifica(negoziante, "Nuova consegna")
+
+    Control -> RepoNotifica : inviaNotifica("negoziante", "Nuova consegna")
     activate RepoNotifica
     RepoNotifica --> Control : confermaInvio
     deactivate RepoNotifica
-    
+
     Control --> Boundary : esitoPositivo
     deactivate Control
     Boundary --> Cliente : mostraConferma()
     deactivate Boundary
 end
 @enduml
-

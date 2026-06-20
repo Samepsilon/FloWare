@@ -4,83 +4,68 @@ skinparam actorStyle awesome
 
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreCatalogo" as G <<control>>
+participant "GestoreCatalogo" as GC <<control>>
 participant "CatalogoArticoli" as CA <<repository>>
+participant "CatalogoFornitori" as CF <<repository>>
 participant "Articolo" as A <<entity>>
 
 N -> IN: Accede a "Gestione Catalogo"
 activate IN
-IN -> G: visualizzaCatalogo()
-activate G
-G -> CA: getArticoliDisponibili()
+IN -> GC: visualizzaCatalogo()
+activate GC
+GC -> CA: getArticoliDisponibili()
 activate CA
-CA --> G: elenco articoli
+CA --> GC: elenco articoli
 deactivate CA
-G --> IN: mostraElencoArticoli(articoli)
+GC --> IN: mostraElencoArticoli(articoli)
 IN --> N: Mostra catalogo
-deactivate G
-deactivate IN
 
-N -> IN: Seleziona articolo dall'elenco
-activate IN
-N -> IN: Clicca "Modifica"
-IN -> G: getArticolo(id)
-activate G
-G -> CA: trovaPerId(id)
+N -> IN: Seleziona articolo da modificare
+
+IN -> GC: richiediDettagli(idArticolo)
+GC -> CA: trovaPerId(id)
 activate CA
-CA --> G: restituisce Articolo
+CA --> GC: articolo
 deactivate CA
-G --> IN: mostraModuloModificaArticolo(dati correnti)
-IN --> N: Mostra dati articolo (nome, tipologia, prezzo, quantità, descrizione)
-deactivate G
-deactivate IN
+GC --> IN: dettagli articolo
+deactivate GC
+IN --> N: mostra form modifica (precompilato)
 
-break Annullamento
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN -> G: annullaOperazione()
-    IN --> N: mostraMessaggio("Operazione annullata")
-    deactivate IN
-end
+N -> IN: Modifica i campi (nome, descrizione, prezzo, ecc.)
+IN -> GC: validaArticolo(articolo)
+activate GC
 
-N -> IN: Modifica uno o più campi
-activate IN
-N -> IN: Clicca "Conferma"
+GC -> CA: trovaPerId(id)
+activate CA
+CA --> GC: articolo esistente
+deactivate CA
 
-IN -> G: modificaArticolo(id, nuoviDati)
-activate G
+alt articolo non trovato
+    GC --> IN: ValueError "Articolo con id={id} non trovato."
+    IN --> N: mostraErrore()
+else articolo trovato
+    opt fornitore_id != None
+        GC -> CF: cercaFornitore(id)
+        activate CF
+        CF --> GC: fornitore (o None)
+        deactivate CF
 
-alt Dati non validi (es. prezzo negativo, quantità non numerica)
-    G --> IN: mostraErrore("Dati inseriti non validi")
-    IN --> N: Mostra errore
-    
-else Dati validi
-    G -> CA: trovaPerId(id)
-    activate CA
-    CA --> G: restituisce Articolo esistente
-    deactivate CA
-    
-    alt Articolo non trovato
-        G --> IN: mostraErrore("Articolo non trovato")
-        IN --> N: Mostra errore
-        
-    else Articolo trovato
-        G -> A: setDati(nuoviDati)
-        activate A
-        A --> G: dati aggiornati
-        deactivate A
-        
-        G -> CA: aggiornaCatalogo()
-        activate CA
-        CA --> G: conferma aggiornamento
-        deactivate CA
-        
-        G --> IN: mostraConferma("Articolo modificato con successo")
-        IN --> N: Mostra conferma
+        alt fornitore non trovato
+            GC --> IN: ValueError "Fornitore con id={fornitore_id} non esiste."
+            IN --> N: mostraErrore()
+        end
     end
+
+    GC -> A: getDettagli()
+    GC -> CA: salva(articolo)
+    activate CA
+    CA --> GC: articolo aggiornato
+    deactivate CA
+
+    GC --> IN: esito positivo
+    deactivate GC
+    IN --> N: mostra "Articolo modificato con successo"
 end
 
-deactivate G
 deactivate IN
-
 @enduml

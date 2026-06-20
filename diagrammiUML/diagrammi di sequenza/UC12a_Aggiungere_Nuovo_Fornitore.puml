@@ -4,74 +4,57 @@ skinparam actorStyle awesome
 
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreFornitori" as G <<control>>
+participant "GestoreFornitori" as GF <<control>>
 participant "CatalogoFornitori" as CF <<repository>>
 participant "Fornitore" as F <<entity>>
 
-N -> IN: Accede a "Gestione Fornitori"
+N -> IN: Apre sezione fornitori
 activate IN
-IN -> G: visualizzaListaFornitori()
-activate G
-G -> CF: cercaFornitori()
+IN -> GF: visualizzaFornitori()
+activate GF
+GF -> CF: caricaListaForniori()
 activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitori
-deactivate F
-CF --> G: elencoFornitori
+CF --> GF: lista fornitori
 deactivate CF
-G --> IN: elencoFornitori
-IN --> N: Mostra elenco fornitori
-deactivate G
-deactivate IN
+GF --> IN: lista fornitori
+deactivate GF
+IN --> N: mostra elenco fornitori
 
-N -> IN: Clicca "Aggiungi nuovo fornitore"
-activate IN
-IN -> IN: Mostra modulo inserimento
-deactivate IN
-N -> IN: Inserisce dati fornitore (nome, contatti, tipologiaMerce, servizioDomicilio)
+N -> IN: Clicca "Aggiungi fornitore"
+IN --> N: mostra form (nome, contatti, tipologia, servizioDomicilio)
 
-break Annullamento
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN -> IN: Chiudi modulo
-    IN --> N: Mostra "Operazione annullata"
-    deactivate IN
-end
+N -> IN: Inserisce dati fornitore
+IN -> GF: aggiungiFornitore(nome, contatti, tipologia, servizioDomicilio)
+activate GF
 
-activate IN
-IN -> G: aggiungiFornitore(datiFornitore)
-activate G
-G -> G: validaDatiFornitore(datiFornitore)
+GF -> GF: validaDatiFornitore(nome, contatti, tipologia)
 
-alt dati non validi (campi mancanti o formato errato)
-    G --> IN: errore "Dati fornitori non validi"
-    IN --> N: Mostra errore
-    
+alt validazione fallita
+    GF --> IN: ValueError (es. "Il nome del fornitore non può essere vuoto.")
+    IN --> N: mostraErrore()
 else dati validi
-    G -> CF: salvaFornitore(datiFornitore)
+    GF -> CF: caricaListaForniori()
     activate CF
-    CF -> F: <<create>> Fornitore
-    activate F
-    deactivate F
-    CF --> G: NuovoFornitore
+    CF --> GF: lista esistente
     deactivate CF
-    G --> IN: messaggio "Fornitore aggiunto con successo"
-    IN --> N: Mostra messaggio
+
+    alt fornitore duplicato (stesso nome)
+        GF --> IN: ValueError "Esiste già un fornitore con nome '{nome}'."
+        IN --> N: mostraErrore()
+    else nome univoco
+        create F
+        GF -> F: <<create>> Fornitore(nome, contatti, tipologia, servizioDomicilio)
+
+        GF -> CF: salvaFornitore(fornitore)
+        activate CF
+        CF --> GF: fornitore salvato
+        deactivate CF
+
+        GF --> IN: esito positivo
+        deactivate GF
+        IN --> N: mostra "Fornitore aggiunto con successo"
+    end
 end
 
-IN -> G: aggiornaListaFornitori()
-G -> CF: cercaFornitori()
-activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitoriAggiornata
-deactivate F
-CF --> G: elencoAggiornato
-deactivate CF
-G --> IN: elencoAggiornato
-IN --> N: Mostra elenco aggiornato
-
-deactivate G
 deactivate IN
 @enduml

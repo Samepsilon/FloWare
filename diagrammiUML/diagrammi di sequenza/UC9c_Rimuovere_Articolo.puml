@@ -1,75 +1,59 @@
 @startuml
-title UC9c - Rimozione di un articolo
+title UC9c - Rimuovere articolo
 skinparam actorStyle awesome
+
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreCatalogo" as G <<control>>
-participant "CatalogoArticolo" as CA <<repository>>
-participant "Articolo" as Articolo <<entity>>
+participant "GestoreCatalogo" as GC <<control>>
+participant "CatalogoArticoli" as CA <<repository>>
+participant "Articolo" as A <<entity>>
 
 N -> IN: Accede a "Gestione Catalogo"
 activate IN
-IN -> G: visualizzaCatalogo()
+IN -> GC: visualizzaCatalogo()
 activate G
-G -> CA: mostraCatalogo()
+GC -> CA: mostraCatalogo()
 activate CA
-CA --> G: Mostra elenco articoli 
+CA --> GC: Mostra elenco articoli 
 deactivate CA
-G --> IN: elenco articoli
+GC --> IN: elenco articoli
 IN --> N: Mostra catalogo
-deactivate G
+deactivate GC
 deactivate IN
-
 N -> IN: Seleziona articolo da rimuovere
 activate IN
-N -> IN: Clicca "Rimuovi"
+IN -> GC: getArticolo(id)
+activate GC
+GC -> CA: trovaPerId(id)
+activate CA
+CA --> GC: articolo
+deactivate CA
+GC --> IN: dettagli articolo
+deactivate GC
+IN --> N: mostra dettagli e chiede conferma
 
-IN -> G: richiediConfermaRimozione()
-activate G
-G --> IN: dati articolo
-deactivate G
-IN --> N: "Sei sicuro? [Conferma/Annulla]"
-deactivate IN
+N -> IN: Conferma rimozione
+IN -> GC: rimuoviArticolo(id)
+activate GC
 
-break Annullamento
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN --> N: Mostra "Operazione annullata"
-    deactivate IN
-end
+GC -> CA: trovaperId
+activate CA
+CA --> GC: articolo (o None)
+deactivate CA
 
-alt Negoziante conferma
-    IN -> G: rimuoviArticolo(id : Long)
-    activate IN
-    activate G
-    G -> CA: verificaArticolo()
+alt articolo non trovato
+    GC --> IN: ValueError "Articolo con id={id} non trovato."
+    IN --> N: mostraErrore()
+else articolo trovato
+    GC -> CA: <<destroy>> Rimuovi Articolo
     activate CA
+    CA --> GC: conferma
     deactivate CA
-    
-    alt Articolo non esiste
-        G --> IN: errore "Articolo non trovato"
-        IN --> N: Mostra errore
-        
-    else Articolo esiste
-        G -> CA: rimuoviArticolo()
-        activate CA
-        CA -> Articolo: <<destroy>> Rimuovi Articolo
-        activate Articolo
-        deactivate Articolo
-        CA --> G: Articolo rimosso
-        deactivate CA
-        G --> IN: conferma rimozione
-        IN --> N: Mostra "Articolo rimosso"
-        
-        IN -> G: visualizzaCatalogo()
-        G -> CA: mostraCatalogo()
-        activate CA
-        CA --> G: elenco articoli aggiornato 
-        deactivate CA
-        G --> IN: elenco aggiornato
-        IN --> N: Mostra catalogo aggiornato
-    end
-    deactivate G
-    deactivate IN
+
+    GC --> IN: esito positivo
+    deactivate GC
+    IN --> N: mostra "Articolo rimosso con successo"
 end
+
+deactivate IN
 @enduml

@@ -32,9 +32,14 @@ activate Repo
 Repo --> S : Richiesta
 deactivate Repo
 
+S -> Repo : verificaAnnullamento(Richiesta)
+activate Repo
+Repo --> S : conferma
+deactivate Repo
+
 S -> R : setStato("Annullata")
 
-S -> Repo : verificaAnnullamento(Richiesta)
+S -> Repo : aggiornaStatoRichiesta(idRichiesta, "annullata")
 activate Repo
 Repo --> S : conferma
 deactivate Repo

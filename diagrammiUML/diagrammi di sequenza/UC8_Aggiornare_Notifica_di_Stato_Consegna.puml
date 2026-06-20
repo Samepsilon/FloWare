@@ -17,11 +17,11 @@ N -> IN: accede a "Gestione Notifiche/Consegne"
 activate IN
 IN -> GN: visualizzaConsegne()
 activate GN
-GN -> CR: trovaConsegne(Id, Stato)
+GN -> CR: cercaConsegne()
 activate CR
 CR --> GN: lista di Consegna
 deactivate CR
-GN --> IN: mostra elenco consegne 
+GN --> IN: mostra elenco consegne
 IN --> N: visualizza lista consegne
 deactivate GN
 deactivate IN
@@ -41,22 +41,22 @@ alt Consegna in sospeso
     activate CON
     CON --> GN: stato aggiornato
     deactivate CON
-    
+
     GN -> CR: salva(consegna)
     activate CR
     CR --> GN: conferma salvataggio
     deactivate CR
-    
-    GN -> NR: inviaNotificaCliente(Notifica)
+
+    GN -> NR: inviaNotifica(destinatario, messaggio)
     activate NR
     NR --> GN: notifica inviata
     deactivate NR
-    
+
     GN -> IC: mostraMessaggio(messaggio)
     activate IC
     IC --> C: visualizza messaggio (es. "La tua consegna è stata presa in carico")
     deactivate IC
-    
+
     GN --> IN: mostraConferma()
     IN --> N: mostra messaggio "Stato consegna aggiornato a [nuovoStato]"
 
@@ -69,4 +69,3 @@ deactivate GN
 deactivate IN
 
 @enduml
-

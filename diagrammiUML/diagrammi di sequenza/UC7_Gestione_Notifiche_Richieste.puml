@@ -10,91 +10,79 @@ participant "GestoreNotifiche" as G <<control>>
 participant "NotificaRepository" as AN <<repository>>
 participant "ArchivioRichieste" as AR <<repository>>
 participant "Richiesta" as R <<entity>>
-participant "Notifica" as Notif <<entity>>
 
 N -> IN: Accede a "Notifiche"
 activate IN
 IN -> G: visualizzaNotifiche()
 activate G
-G -> AR: findNotificheNonLette()
-activate AR
-AR --> G: elencoNotifiche
-deactivate AR
+G -> AN: notificheNonLette()
+activate AN
+AN --> G: elencoNotifiche
+deactivate AN
 
 alt Nessuna notifica
     G --> IN: "Nessuna nuova notifica"
     IN --> N: Mostra messaggio
-    
+
 else Notifiche presenti
     G --> IN: elencoNotifiche
     IN --> N: Mostra notifiche (Appuntamenti, Preventivi, Consegne)
-    
+
     N -> IN: Seleziona notifica
-    
+
     alt Tipo = "Appuntamento"
-        IN -> G: confermaAppuntamento(Richiesta)
+        IN -> G: confermaAppuntamento(idRichiesta)
     else Tipo = "Preventivo"
-        IN -> G: confermaPreventivo(Richiesta)
+        IN -> G: confermaPreventivo(idRichiesta)
     end
-    
+
     G -> AR: verificaAnnullamento(Richiesta)
     activate AR
     AR --> G: isAnnullata
     deactivate AR
-    
+
     alt Notifica già annullata
         G --> IN: errore "Notifica annullata"
         IN --> N: Mostra errore
-        
+
     else Notifica valida
-        G -> AR: cercaRichiesta(Richiesta)
+        G -> AR: trovaPerId(idRichiesta)
         activate AR
-        AR -> R: TrovaRichiesta()
+        AR -> R: getStato()
         activate R
         R --> AR: richiesta
         deactivate R
         AR --> G: richiesta
         deactivate AR
-        
+
         alt richiesta.tipo != tipo_atteso [ValueError]
             G --> IN: errore "Tipo richiesta non corrispondente"
             IN --> N: Mostra errore
         else Tipo corrispondente
             G -> G: confermaRichiesta(richiesta, tipo_atteso)
-            G -> AR: aggiornaStatoRichiesta(Richiesta, "confermata")
+            G -> AR: aggiornaStatoRichiesta(richiesta, "confermata")
             activate AR
-            AR -> R: setStato("Confermata" o "Presa in carico")
+            AR -> R: setStato("Confermata")
             activate R
             R --> AR: conferma
             deactivate R
             AR --> G: statoAggiornato
             deactivate AR
-            
-            G -> Notif: <<create>> Notifica(destinatario, messaggio, letta, tipo, richiestaId)
-            activate Notif
-            Notif --> G: notifica
-            deactivate Notif
-            
-            G -> AN: salvaNotifica(notifica)
-            activate AN
-            AN -> AN: ArchiviaNotifica(notifica)
-            AN --> G: notificaSalvata
-            deactivate AN
-            
+
             G -> G: inviaNotificaCliente(destinatario, messaggio)
-            
-            G -> IC: inviaNotificaCliente(notifica)
+
+            G -> IC: inviaNotificaCliente(destinatario, messaggio)
             activate IC
             IC -> C: Mostra notifica di conferma
             deactivate IC
-            
+
             G --> IN: confermaOperazione
             IN --> N: Mostra successo operazione
         end
     end
-    
+
     G --> IN: esitoConfermaRichiesta
-    
+
     deactivate G
     deactivate IN
 end

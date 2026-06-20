@@ -25,15 +25,15 @@ alt nessuna offerta attiva
 else sono presenti offerte attive
     Control --> Boundary : elenco delle offerte valide
     Boundary --> Cliente : mostra elenco offerte disponibili
-    
+
     Cliente -> Boundary : seleziona una specifica offerta(idOfferta)
-    Boundary -> Control: visualizzaDettagliOfferta(idOfferta)
-    
+    Boundary -> Control : visualizzaDettagliOfferta(idOfferta)
+
     Control -> Repo : trovaPerId(idOfferta)
     activate Repo
     Repo --> Control : offerta
     deactivate Repo
-    
+
     Control --> Boundary : dettagli offerta
     Boundary --> Cliente : mostra dettagli dell'offerta
 end
@@ -41,4 +41,4 @@ end
 deactivate Control
 deactivate Boundary
 
-@endluml
+@enduml

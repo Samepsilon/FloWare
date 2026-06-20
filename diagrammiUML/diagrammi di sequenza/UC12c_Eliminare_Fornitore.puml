@@ -1,82 +1,60 @@
 @startuml
-title UC12c - Eliminare Fornitore
+title UC12c - Eliminare fornitore
 skinparam actorStyle awesome
 
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreFornitori" as G <<control>>
+participant "GestoreFornitori" as GF <<control>>
 participant "CatalogoFornitori" as CF <<repository>>
+participant "CatalogoArticoli" as CA <<repository>>
 participant "Fornitore" as F <<entity>>
 
-N -> IN: Accede a "Gestione Fornitori"
+N -> IN: Seleziona fornitore da eliminare
 activate IN
-IN -> G: visualizzaFornitori()
-activate G
-G -> CF: cercaFornitori()
+IN -> GF: getFornitore(id)
+activate GF
+GF -> CF: trovaPerId(id)
 activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitori
-deactivate F
-CF --> G: elencoFornitori
+CF --> GF: fornitore
 deactivate CF
-G --> IN: elencoFornitori
-IN --> N: Mostra elenco fornitori
-deactivate G
-deactivate IN
+GF --> IN: dettagli fornitore
+deactivate GF
+IN --> N: mostra dettagli e chiede conferma
 
-N -> IN: Seleziona fornitore dalla lista
-activate IN
-N -> IN: Clicca "Elimina fornitore"
-N -> IN: Clicca "Rimuovi"
-IN -> IN: Mostra conferma "Sei sicuro?"
-deactivate IN
+N -> IN: Conferma eliminazione
+IN -> GF: eliminaFornitore(id)
+activate GF
 
-break Annullamento Rimozione
-    N -> IN: Clicca "Annulla"
-    activate IN
-    IN -> IN: Chiudi conferma
-    IN --> N: Mostra "Operazione annullata"
-    deactivate IN
+GF -> CF: trovaPerid(id)
+activate CF
+CF --> GF: fornitore
+deactivate CF
+
+alt fornitore non trovato
+    GF --> IN: ValueError "Fornitore con id={id} non trovato."
+    IN --> N: mostraErrore()
+else fornitore trovato
+    GF -> CA: articoliDelFornitore(fornitoreId)
+    activate CA
+    CA --> GF: lista articoli collegati
+    deactivate CA
+
+    loop per ogni articolo del fornitore
+        GF -> CA: salvaArticolo(articolo)
+        activate CA
+        CA --> GF: conferma
+        deactivate CA
+    end
+
+    GF -> CF: rimuoviFornitore(fornitore)
+    activate CF
+    CF --> GF: conferma
+    deactivate CF
+
+    GF --> IN: esito positivo
+    deactivate GF
+    IN --> N: mostra "Fornitore eliminato con successo"
 end
 
-N -> IN: Conferma
-activate IN
-IN -> G: eliminaFornitore(Fornitore)
-activate G
-
-alt Fornitore non trovato
-    G -> CF: cercaFornitore(Fornitore)
-    activate CF
-    CF --> G: Nessun fornitore presente con tali dati
-    deactivate CF
-    G --> IN: errore "Fornitore non trovato"
-    IN --> N: Mostra errore
-    
-else Fornitore trovato
-    G -> CF: rimuoviFornitore(Fornitore)
-    activate CF
-    CF -> F: <<destroy>> Fornitore
-    activate F
-    deactivate F
-    CF --> G: messaggio "Fornitore rimosso con successo"
-    deactivate CF
-    G --> IN: conferma rimozione
-    IN --> N: Mostra "Fornitore rimosso con successo"
-end
-
-IN -> G: aggiornaListaFornitori()
-G -> CF: cercaFornitori()
-activate CF
-CF -> F: findAll()
-activate F
-F --> CF: listaFornitoriAggiornata
-deactivate F
-CF --> G: elencoAggiornato
-deactivate CF
-G --> IN: elencoAggiornato
-IN --> N: Mostra elenco aggiornato
-
-deactivate G
 deactivate IN
 @enduml

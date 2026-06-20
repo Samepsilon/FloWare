@@ -4,66 +4,44 @@ skinparam actorStyle awesome
 
 actor "Negoziante" as N
 participant "InterfacciaNegoziante" as IN <<boundary>>
-participant "GestoreCatalogo" as G <<control>>
-participant "CatalogoArticolo" as CA <<repository>>
-participant "Articolo" as Articolo <<entity>>
+participant "GestoreCatalogo" as GC <<control>>
+participant "CatalogoArticoli" as CA <<repository>>
+participant "CatalogoFornitori" as CF <<repository>>
+participant "Articolo" as A <<entity>>
 
-N -> IN: Accede a "Gestione Catalogo"
+N -> IN: Richiede di aggiungere un articolo
 activate IN
-IN -> G: visualizzaCatalogo()
-activate G
-G -> CA: mostraCatalogo()
+IN --> N: mostraFormAggiuntaArticolo
+deactivate IN
+
+N -> IN: Inserisce (nome, descrizione, prezzo, fornitore)
+activate IN
+IN -> GC: aggiungiArticolo(nome, descrizione, prezzo, fornitore_id, disponibile)
+activate GC
+deactivate IN
+
+opt fornitore_id != None
+    GC -> CF: cercaFornitore(id)
+    activate CF
+    CF --> GC: fornitore (o None)
+    deactivate CF
+
+    alt fornitore non trovato
+        GC --> IN: ValueError "Fornitore con id={fornitore_id} non esiste."
+        IN --> N: mostraErrore()
+    end
+end
+
+create A
+GC -> A: <<create>> Articolo(nome, descrizione, prezzo, disponibile, fornitore_id)
+
+GC -> CA: salvaArticolo(articolo)
 activate CA
-CA --> IN: Elenco articoli
-deactivate G
+CA --> GC: articolo salvato
 deactivate CA
-IN --> N: Mostra catalogo
 
+GC --> IN: esito positivo
+deactivate GC
+IN --> N: mostra "Articolo aggiunto con successo"
 deactivate IN
-
-N -> IN: Clicca "Aggiungi nuovo articolo"
-activate IN
-IN -> IN: Mostra modulo inserimento
-
-
-break annullamento
-    N -> IN: Clicca "Annulla"
-    
-    IN -> G: annullaCreazione()
-    activate G
-    G --> IN: operazione annullata
-    deactivate G
-    IN --> N: Mostra "Operazione annullata"
-    deactivate IN
-end
-
-N -> IN: Inserisce dati articolo e clicca "Conferma"
-activate IN
-IN -> G: aggiungiArticolo(dati)
-activate G
-
-G -> Articolo: <<create>> Articolo(dati)
-activate Articolo
-deactivate Articolo
-
-alt dati non validi
-    G --> IN: errore "Dati non validi"
-    IN --> N: Mostra errore
-    
-else articolo duplicato
-    G --> IN: errore "Articolo già esistente"
-    IN --> N: Mostra errore
-    
-else dati validi
-    G -> CA: aggiornaCatalogo()
-    activate CA
-    CA --> G: Articolo aggiunto
-    deactivate CA
-    G --> IN: conferma "Articolo aggiunto"
-    IN --> N: Mostra conferma
-end
-
-deactivate G
-deactivate IN
-
 @enduml

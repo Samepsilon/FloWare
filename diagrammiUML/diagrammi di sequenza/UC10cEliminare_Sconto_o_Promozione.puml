@@ -27,6 +27,10 @@ activate GP
 
 GP -> CO: eliminaOfferta(idOfferta)
 activate CO
+CO -> O : <<destroy>> Elimina Offerta
+activate O
+O --> CO : offerta eliminata
+deactivate O
 CO --> GP: conferma
 deactivate CO
 

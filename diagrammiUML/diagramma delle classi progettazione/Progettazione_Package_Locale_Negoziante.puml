@@ -116,7 +116,7 @@ class Articolo <<entity>> {
     + applicaSconto(sconto : Sconto, percentuale : Double, dataInizio : Date, dataFine : Date) : void
     + rimuoviOfferta() : void
     + setDati(nuoviDati : Map) : void
-    + getPrezzoFinale(): Double 
+    + prezzoFinale(): Double 
 
 }
 

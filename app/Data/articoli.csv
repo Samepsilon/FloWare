@@ -22,3 +22,16 @@ id,nome,descrizione,prezzo,quantita,disponibile,fornitore_id,percentuale
 21,Sottovasi di terracotta (40cm),,5.0,20,True,,0.0
 22,Sottovasi di terracotta (80cm),,10.0,20,True,,0.0
 23,Mimose,,1.0,20,True,,0.0
+24,Aloee,,15.0,20,True,,0.0
+25,Crisantemi,Disponibili di diversa taglia,15.0,5,True,,0.0
+26,Cactus,,10.0,5,True,,0.0
+27,Crassula,,10.0,5,True,,0.0
+28,Anthurium,,13.5,5,True,,0.0
+29,Dracaena,Disponibili in due grandezze diverse: piccole o medie,15.0,5,True,,0.0
+30,Filodentro,,15.0,5,True,,0.0
+31,Sanseveria,,12.0,5,True,,0.0
+32,Begonia,,15.0,5,True,,0.0
+33,Gerani,,7.0,5,True,,0.0
+34,Surfinea,,15.0,10,True,,0.0
+35,Candele profumate,,8.0,15,True,,0.0
+36,Peluche,,15.0,15,True,,0.0
